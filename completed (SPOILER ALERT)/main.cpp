@@ -20,6 +20,7 @@
 #include "Ship.h"
 
 void updateInput() {
+	//updates the key registers with current values
 	scanKeys();
 }
 
