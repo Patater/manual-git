@@ -121,16 +121,17 @@ void initSprites(Ship * ship, SpriteEntry * spriteEntry, SpriteRotation * sprite
 	dmaCopy(OrangeShuttlePalette_bin, (uint16 *)SPRITE_PALETTE, OrangeShuttlePalette_bin_size);
 	
 	//copy the sprite grahics in obj graphics mem
-	for(unsigned int i = 0; i < OrangeShuttle_bin_size << 16; i++) {
+	/*
+    for(unsigned int i = 0; i < OrangeShuttle_bin_size << 16; i++) {
 		SPRITE_GFX[orangeShipGfxID * 16 + i] = ((uint16*)OrangeShuttle_bin)[i];
 		SPRITE_GFX_SUB[orangeShipGfxID * 16 + i] = ((uint16*)OrangeShuttle_bin)[i];
 	}
+	*/
 	
-	/*
 	DMA_SRC(3) = ((uint32 *)OrangeShuttle_bin);
 	DMA_DST(3) = ((uint32 *)SPRITE_GFX) + (orangeShipGfxID << 4);
 	DMA_CR(3) = DMA_ENABLE | DMA_32BIT | 4096;
-	 */
+    
 }
 
 int main() {
