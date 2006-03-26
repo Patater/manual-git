@@ -39,7 +39,7 @@ private:
 	float mass;
 	
 	//internal conversion routines
-	float deg512ToRadians(int deg512);
+	int radToDeg512(float rad);
 	
 	void init(const Ship & other);
 	
