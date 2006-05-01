@@ -54,16 +54,16 @@ void handleInput(Ship * ship) {
 }
 
 void displaySplash() {
-	dmaCopy(Splash_bin, (uint16 *)BG_BMP_RAM_SUB(3), Splash_bin_size);
+	dmaCopy(Splash_bin, (uint16 *)BG_BMP_RAM_SUB(0), Splash_bin_size);
 }
 
 void displayStarField() {
-	dmaCopy(StarField_bin, (uint16 *)BG_BMP_RAM(3), StarField_bin_size);
+	dmaCopy(StarField_bin, (uint16 *)BG_BMP_RAM(0), StarField_bin_size);
 }
 
 void initBackgrounds() {
 	//setup exrot bg 3 on main as a 16bit color background
-	BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(3) | BG_PRIORITY(3);
+	BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) | BG_PRIORITY(3);
 	//attributes of the affine translation matrix
 	BG3_XDX = 1 << 8; //scale x
 	BG3_XDY = 0; //rotation x
@@ -73,7 +73,7 @@ void initBackgrounds() {
 	BG3_CY = 0; //translation y
 	
 	//setup exrot bg 3 on sub
-	SUB_BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(3) | BG_PRIORITY(3);
+	SUB_BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) | BG_PRIORITY(3);
 	//attributes of the affine translation matrix
 	SUB_BG3_XDX = 1 << 8; //scale x
 	SUB_BG3_XDY = 0; //rotation x
@@ -116,7 +116,7 @@ void initSprites(Ship * ship, SpriteEntry * spriteEntry, SpriteRotation * sprite
 	Coordinate position = ship->getPosition();
 	
 	spriteEntry[0].attribute[0] = ATTR0_COLOR_256 | ATTR0_ROTSCALE_DOUBLE | (int)position.y;
-	spriteEntry[0].attribute[1] = ATTR1_ROTDATA(0) | ATTR1_SIZE_64 | (int)position.x; // size 64x64
+	spriteEntry[0].attribute[1] = ATTR1_ROTDATA(0) | ATTR1_SIZE_64 | (int)position.x; //size 64x64
 	spriteEntry[0].attribute[2] = orangeShipGfxID;
 	
 	//set initial rotation attributes
@@ -125,7 +125,7 @@ void initSprites(Ship * ship, SpriteEntry * spriteEntry, SpriteRotation * sprite
 	//copy in the sprite palettes
 	dmaCopy(OrangeShuttlePalette_bin, SPRITE_PALETTE, OrangeShuttlePalette_bin_size);
 	
-	//copy the sprite grahics in obj graphics mem
+	//copy the sprite graphics in obj graphics mem
 	dmaCopy(OrangeShuttle_bin, &SPRITE_GFX[orangeShipGfxID * 16], OrangeShuttle_bin_size);
 	
 }
