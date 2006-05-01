@@ -16,9 +16,7 @@ int Ship::radToDeg512(float rad) {
 	//return rad * (256/PI);
 	
 	//optimized
-	return ((radians * 163) >> 1);
-	
-	//super optimized an more innacurate
+	return (((int)(rad * 163)) >> 1);
 }
 
 void Ship::init(const Ship & other) {

@@ -85,12 +85,16 @@ void initBackgrounds() {
 
 void initVideo() {
 	//enable vram and map it to the right places
-    vramSetMainBanks(   VRAM_A_MAIN_SPRITE,        //A and B maped consecutively as sprite memory
-                        VRAM_B_MAIN_SPRITE,        //this gives us 256KB which is the max
-                        VRAM_C_SUB_BG_0x6200000,   //map C to sub background memory
-                        VRAM_D_MAIN_BG_0x6000000   //mac C to main background memory
+    vramSetMainBanks(   VRAM_A_MAIN_BG_0x6000000,		//map A and B to main background memory
+                        VRAM_B_MAIN_BG_0x6020000,		//this gives us 256KB which is a healthy amount for 16-bit gfx
+                        VRAM_C_SUB_BG_0x6200000,		//map C to sub background memory
+                        VRAM_D_LCD						//map D to LCD free space
+						//allows adjacent banks to overflow into D if a bug like that was ever to occur
                         );
 	
+	//map a bank for use with sprites
+	vramSetBankE(VRAM_E_MAIN_SPRITE); //mapping E to main sprites gives us 64k for sprites
+	//(64k is the max space that 1024 tiles take up in 256 color mode)
 	
 	//set the video mode
     videoSetMode(  MODE_5_2D | 
@@ -119,20 +123,11 @@ void initSprites(Ship * ship, SpriteEntry * spriteEntry, SpriteRotation * sprite
 	rotateSprite(&spriteRotation[0], ship->getAngleDeg512());
 	
 	//copy in the sprite palettes
-	dmaCopy(OrangeShuttlePalette_bin, (uint16 *)SPRITE_PALETTE, OrangeShuttlePalette_bin_size);
+	dmaCopy(OrangeShuttlePalette_bin, SPRITE_PALETTE, OrangeShuttlePalette_bin_size);
 	
 	//copy the sprite grahics in obj graphics mem
+	dmaCopy(OrangeShuttle_bin, &SPRITE_GFX[orangeShipGfxID * 16], OrangeShuttle_bin_size);
 	
-    for(unsigned int i = 0; i < OrangeShuttle_bin_size / sizeof(uint16); i++) {
-		SPRITE_GFX[orangeShipGfxID * 16 + i] = ((uint16*)OrangeShuttle_bin)[i];
-		SPRITE_GFX_SUB[orangeShipGfxID * 16 + i] = ((uint16*)OrangeShuttle_bin)[i];
-	}
-	
-	/*
-	DMA_SRC(3) = ((uint32 *)OrangeShuttle_bin);
-	DMA_DST(3) = ((uint32 *)SPRITE_GFX) + (orangeShipGfxID << 4);
-	DMA_CR(3) = DMA_ENABLE | DMA_32BIT | 4096;
-    */
 }
 
 int main() {
