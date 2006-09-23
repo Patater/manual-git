@@ -8,12 +8,15 @@
  */
 
 #include <nds.h>
+//#include <nds/arm9/sound.h>
 
 //gfx
 #include "OrangeShuttle_bin.h"
 #include "OrangeShuttlePalette_bin.h"
 #include "StarField_bin.h"
 #include "Splash_bin.h"
+//snd
+#include "thrust_1_22050_8_s_raw.h"
 
 #include "Sprites.h"
 #include "Coordinate.h"
@@ -24,28 +27,32 @@ void updateInput() {
 	scanKeys();
 }
 
-void handleInput(Ship * ship) {
+void handleInput(Ship * ship, TransferSoundData * soundData) {
 	
 	//up
-	if ((keysDown() & KEY_UP) || (keysHeld() & KEY_UP)) {
+	if (keysDown() & KEY_UP) {
+		//play our sound only when the button is initially pressed
+		playSound(soundData);
+    }
+	if (keysHeld() & KEY_UP) {
 		//accelerate ship
 		ship->accelerate();
-    }
+	}
 	
 	//down
-	if ((keysDown() & KEY_DOWN) || (keysHeld() & KEY_DOWN)) {
+	if (keysHeld() & KEY_DOWN) {
 		//reverse ship direction
 		ship->reverseTurn();
     }
 	
 	//left
-	if ((keysDown() & KEY_LEFT) || (keysHeld() & KEY_LEFT)) {
+	if (keysHeld() & KEY_LEFT) {
 		//rotate counter clockwise
 		ship->turnCounterClockwise();
     }
 
 	//right
-	if ((keysDown() & KEY_RIGHT) || (keysHeld() & KEY_RIGHT)) {
+	if (keysHeld() & KEY_RIGHT) {
 		//rotate clockwise
 		ship->turnClockwise();
 	}
@@ -159,10 +166,19 @@ int main() {
 	//initSprites(ship, weapon, spritesMain, spriteRotationsMain);
 	initSprites(ship, spritesMain, spriteRotationsMain);
 	
+	//////////////////////////// Sound Data setup ////////////////////////////
+	TransferSoundData * thrust_sound = new TransferSoundData();
+	thrust_sound->data = thrust_1_22050_8_s_raw;
+	thrust_sound->len = thrust_1_22050_8_s_raw_size;
+	thrust_sound->rate = 22050; //22050Hz Sample Rate
+	thrust_sound->vol = 127; //Volume can be from 0 to 127
+	thrust_sound->pan = 64; //Sound comes equally from both speakers (0-127, left to right)
+	thrust_sound->format = 1; //1 - 8bit, 0 - 16bit
+	
 	for (;;) {
 		updateInput();
 		
-		handleInput(ship);
+		handleInput(ship, thrust_sound);
 		
 		//update sprite attributes (put inside a function for each sprite)
 		ship->moveShip();
