@@ -84,7 +84,7 @@ void initBackgrounds() {
 	//attributes of the affine translation matrix
 	SUB_BG3_XDX = 1 << 8; //scale x
 	SUB_BG3_XDY = 0; //rotation x
-	SUB_BG3_YDX = 0; //scale y
+	SUB_BG3_YDX = 0; //rotation y
 	SUB_BG3_YDY = 1 << 8; //scale y
 	SUB_BG3_CX = 0; //translation x
 	SUB_BG3_CY = 0; //translation y
