@@ -1,0 +1,260 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN">
+
+<book>
+
+    <bookinfo>
+        <title>Introduction to Nintendo DS Programming</title>
+        <author><firstname>Jaeden</firstname><surname>Amero</surname></author>
+        <copyright><year>2006-2007</year><holder>Jaeden Amero</holder></copyright>
+    </bookinfo>
+
+    <preface>
+        <title>Preface</title>
+        <sect1>
+            <title>The Main Issue</title>
+            <para>
+                You love playing games on your Nintendo DS. Every game you've played has been a wonderful
+                experience, each one leaving a lovely aftertaste on your gaming tongue. You may have
+                wondered to yourself what itd be like to create games, to offer your own software up for
+                licking. You've drawn diagrams of games you'd love to make, worlds you want to share with
+                others. But how to go about it? You think and are lost: you are stuck. Where do I start?
+                Whats going on inside that pretty little dual-screen box?
+            </para>
+            <para>
+                This manual is designed to help you get an idea of whats going on inside the Nintendo DS.
+                With a bit of effort and time, you'll be on your way to creating your own games. Join us, the
+                homebrew community. You'll have a great time giving others a great time, collaborating on
+                projects, and feeling the rush of intense and under pressure coding for numerous coding
+                competitions.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The Solution</title>
+            <para>
+                This manual is the start of the solution. In it, I will cover the basics of programming the
+                Nintendo DS starting with an explanation of the politics behind the homebrew movement
+                and through the emergence of passthrough devices, how to choose a passthrough device,
+                setting up the programming environment, displaying backgrounds, using sprites, and basic
+                game programming techniques. All these things will be discussed in the context of the creation
+                of a simple game I concocted one weekend entitled "Orange Spaceship."
+            </para>
+        </sect1>
+        <sect1>
+            <title>How to Use this Manual</title>
+            <para>
+                I assume you know a bit of C or C++ coding. If not, spend at least 20 hours making a variety
+                of programs on your own in addition to completing some tutorials. It doesn't matter what
+                you write, but make sure you have a solid understanding of structs, classes, the heap, loops,
+                bitwise and logical operators. I recommend the following tutorial and reference as a great
+                place to get started learning, <ulink url="http://www.cplusplus.com/doc/tutorial/"/> and
+                <ulink url="http://www.cppreference.com/"/>.
+            </para>
+            <para>
+                Next, just read through the chapters one by one, making sure you understand the current
+                chapter before moving to the next. Code listings will be on a gray background. Follow along
+                with the code listings, writing your own code based on the listings.
+            </para>
+        </sect1>
+    </preface>
+    
+    <chapter>
+        <title>Chapter 1</title>
+        <subtitle>Politics of the Nintendo DS Homebrew Movement</subtitle>
+        <sect1>
+            <title>Background Information</title>
+            <para>
+                Since the Nintendo DS debut, Nintendo enthusiasts ranging from pre-pubescent kids to 30-
+                year-old college dropouts have been wanting to develop their own games and applications
+                for the Nintendo DS. Nintendo has stated that the DS stands for "Developer's System". For
+                those worthy enough to land a nice developing contract with Nintendo, it truly is. However,
+                most people will never receive this contract, special permission from Nintendo to commercially
+                produce games for the Nintendo DS. In order to obtain a contract with Nintendo, you
+                must prove your worthiness by showcasing an amazing game or other piece of software to
+                them. You must have a stable financial history and expected stable financial future. You must
+                have ample funding to buy all the official Nintendo equipment to develop for the system.
+                Most game development houses don't even get that far. Most games on the market today are
+                put out by what is referred to as a publisher. Game development houses will produce their
+                game partially, show it to a publisher, and the publisher (who already has this development
+                contract with Nintendo) will fund the game development house and market their game. All
+                this bureaucracy makes it very difficult for the common person to produce their own,
+                personal-use games.
+            </para>
+            <para>
+                This is where the homebrew movement comes in. Dedicated hobbyists spend weeks reverse
+                engineering the Nintendo DS hardware, just to make it possible for common people to produce
+                for the system (by providing a cheap alternative to official Nintendo development).
+                These dedicated hobbyists come from all walks of life and cultures, many from Europe and
+                the U.S., and bring with them great knowledge. These people make up the homebrew
+                movement.
+            </para>
+            <example> ... </example>
+        </sect1>
+        <sect1>
+            <title>Is Homebrew Legal?</title>
+            <para>
+                Homebrew is legal for a number of reasons. You own the hardware you reverse engineer, so
+                you are free to do with it as you will so long as you don't break the law. Breaking the law
+                would include breaking proprietary copy protection, pirating video games, publishing trade
+                secrets, or otherwise trying to profit off someone else's hard work. Homebrew poses no
+                threat to the official developer kit, as it is so primitive in comparison. Even if you made
+                something to compete with officially produced hardware, it would be near impossible to
+                publish it. Companies often benefit from homebrew communities. Although software pi-
+                rates often steal from homebrew discoveries to pirate software, the homebrew community
+                abhors piracy and takes a strong stance against it.
+            </para>
+            <para>
+                When you buy a piece of hardware, you own it. This means that you are free to break it
+                open, dive into it, reverse engineer it, and so forth. You may void your warranty, but thats
+                the price for learning the intimacies of any system. The only illegal things on this line would
+                be to put into production and sell products made with patented features (without negotiating
+                a production deal with he patent owner), bypassing copy-protection, or stealing software
+                code. Reverse engineering to learn about how the hardware works and to make something
+                fun for the community is totally fine.
+            </para>
+            <para>
+                The homebrew tools available for game programming are far behind anything the game
+                company who produced the system could provide (the official development kits). Game system
+                developers have an intimate knowledge of the hardware, as they developed it. The
+                homebrew community has only outsider knowledge through experimentation with the
+                hardware.
+            </para>
+            <para>
+                It would be close to impossible to publish a game made with homebrew tools. Nintendo
+                would not license your game. It would be hard to find another publisher who would try to
+                publish something made with homebrew tools against Nintendo's will. On other systems
+                besides the Nintendo DS, this is also true.
+            </para>
+            <para>
+                Companies often don't have a problem with homebrew because it increases the demand for
+                their gaming systems and helps them to learn more about their consumer base. One example
+                of this is with the Xbox. The Xbox homebrew community made the Xbox do things that
+                Microsoft never thought consumers wanted, like emulation of classic game systems, running
+                the Linux operating system, and so forth. Microsoft then included a lot of these features
+                (excepting Linux, of course) in their new gaming console, the Xbox 360. If a company wants
+                to squash homebrew developers for whatever reason, they'll be smashing an essential fan
+                base that loves that company's hardware design and has potential to improve it (all at no
+                cost to the company). Homebrew caused such a high demand for the Xbox that it would not
+                have been in Microsofts best interests to ignore or punish it.
+            </para>
+            <para>
+                The downside of homebrew is that software pirates often steal from the discoveries of
+                homebrew and use that information to bypass copy-protection and to pirate games. Some
+                companies may take a stance against homebrew for this reason, but doing so is unproductive.
+                Piracy is regrettably inevitable in any industry. It is extremely destructive, annihilating
+                game development houses because publishers will no longer publish their games due to a
+                high piracy rating on the platform the game developers are developing for. Homebrew
+                knows this, and as the amateur brothers of the official game developers, they share the pain.
+                Homebrew will usually keep all information regarding copy-protection in high secrecy; even
+                if they know how to copy games, they will not share the information. The homebrew community
+                does not want to see the death of the system they love come to an early death.
+            </para>
+        </sect1>
+    </chapter>
+    
+    <chapter>
+        <title>Chapter 2</title>
+        <subtitle>What is a passthrough device and how do I use one?</subtitle>
+        <sect1>
+            <title>Purpose of the Passthrought</title>
+            <para>
+                The purpose of the pass through is to allow the running of programs on the Nintendo DS
+                through the Game Boy Advance (GBA) cartridge slot. This is done because normal Nintendo
+                DS games, which run from the Nintendo DS (NDS) card slot, are encrypted. Since it
+                might be illegal to break that encryption, as it is a form of proprietary copy protection, we
+                have to get the Nintendo DS to run code from a different place than the NDS card slot.
+                Also, it is much easier to bypass the encryption than to try and break it.
+            </para>
+        </sect1>
+        <sect1>
+            <title>How it Works</title>
+            <para>
+                When the Nintendo DS first boots, it reads a header from the Nintendo DS card inserted
+                into the NDS card slot. The Nintendo DS will read a small block of information from the
+                beginning of the game, known as the header, which contains information about the game
+                (including the title of the game, date it was released and by who, the icon, and some hardware
+                information). This header contains a pointer to a location in memory to begin executing
+                code. The passthrough's job is to read this header and modify it to point to a location
+                someplace on the GBA cartridge inserted into the GBA cart slot. What location would this
+                be? Why, our code of course.
+            </para>
+        </sect1>
+        <sect1>
+            <title>History of the Passthrough</title>
+            <para>
+                DarkFader (Rafael Vuijk) may have been the first to create a passthrough device. He designed
+                his passthrough with an FPGA (Field Programmable Gate Array) and later packaged
+                it into a single CPLD. Many other people (including Kraln, Firefly, and natrium42) have developed
+                a passthrough independently from DarkFader, but he is self-credited as its initial
+                creator.
+            </para>
+            <para>
+                Over the next few months following the creation of the passthrough, Lynx and Natrium42,
+                both major players in the early homebrew community, started their own online stores selling
+                pre-made passthrough devices called "PassMe"s. Many budding DS programmers bought
+                their first passthrough from Lynx or Natrium42's stores (myself included). Lynx's store,
+                DSPassme.com, is still up and running today, providing a great option when looking to purchase
+                a passthrough device.
+            </para>
+        </sect1>
+        <imageobject>
+            <title>Picture of an early PassMe</title>
+            <imagedata fileref="images/passme.png"/>
+        </imageobject>
+        <imageobject>
+            <title>Picture of an FPGA</title>
+            <imagedata fileref="images/ufb-x_profil.jpg"/>
+        </imageobject>
+        <sect1>
+            <title>How do I get a Passthrough</title>
+            <para>
+                Today, many passthrough devices are on the market. It is highly recommended by the
+                homebrew community to buy one from a fellow developer and not a company that commercially
+                produces hardware meant for pirating Nintendo DS software. Thus, one should not
+                buy a SuperPass or SuperKey from SuperCard, a MagicKey from NeoFlash, a PassKey from
+                G6Flash, a PassKey or PassCard 3 from M3Adapter, or a Max Media Loader from the horrid
+                Datel (a very unprofessional company run by immature anti-Nintendo kiddies). Each of
+                these companies manufactures hardware that is used to pirate Nintendo DS software and
+                should be avoided at all costs. The best place to buy a passthrough device today is from
+                <ulink url="http://www.dspassme.com/oscommerce/catalog/index.php">DSPassme.com</ulink>.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Which Passthrough Should I Buy?</title>
+            <para>
+                Depending on what kind of Nintendo DS you have, you can buy either of two different
+                types of passthrough devices. The first one, akin to the original made by DarkFader, is the
+                "PassMe". The PassMe will probably work on most Nintendo DS systems.
+            </para>
+            <para>
+                However, if your Nintendo DS is newer, you will most likely need a "PassMe 2". The need
+                for a PassMe 2 came about because of a change in the firmware of newer Nintendo DS sys-
+                tems. These newer systems do not allow the header to be changed to point to code in the
+                GBA slot. However, it is possible to point to code in the GBA carts SRAM still. The
+                PassMe 2 points to some certain instructions that have been loaded into memory by the
+                currently inserted DS game. This location is an SWI (software interrupt) call to the SRAM
+                on the GBA port. The GBA carts SRAM contains the necessary code to jump to code lo-
+                cated on GBA cart. The DS then is told to run this code and thus redirects to code in the
+                GBA slot. Each PassMe 2 has to be programmed to work with one specific game, as the cer-
+                tain code to redirect to the GBA slot is found in different places within different DS games.
+            </para>
+            <para>
+                There are a few tricks you can pull to determine your firmware version. It involves pictochat
+                and pulling a cartridge out of your Nintendo DS. The screen will change a certain color.
+                Based on this color you can determine if you need a PassMe 2 or not. See Figure 2.1.
+            </para>
+        </sect1>
+    </chapter>
+    
+    <chapter>
+        <title>Chapter 3</title>
+    </chapter>
+    
+    <appendix>
+    
+    </appendix>
+
+    <index>
+    
+    </index>
+    
+</book>
