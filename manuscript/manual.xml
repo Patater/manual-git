@@ -1,13 +1,52 @@
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
+                                         "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
 <book>
-
     <bookinfo>
         <title>Introduction to Nintendo DS Programming</title>
         <author><firstname>Jaeden</firstname><surname>Amero</surname></author>
         <copyright><year>2006-2007</year><holder>Jaeden Amero</holder></copyright>
+        <revhistory>
+            <revision>
+                <revnumber>5.0</revnumber>
+                <date>31 Mar 2007</date>
+                <authorinitials>jna</authorinitials>
+                <revremark>Made Editing improvements. Manual is now DocBook formatted.</revremark>
+            </revision>
+            <revision>
+                <revnumber>4.0</revnumber>
+                <date>31 Oct 2006</date>
+                <authorinitials>jna</authorinitials>
+                <revremark>Added VRAM Appendix, updated page layout, fixed even more typos.</revremark>
+            </revision>
+            <revision>
+                <revnumber>3.0</revnumber>
+                <date>23 Sep 2006</date>
+                <authorinitials>jna</authorinitials>
+                <revremark>Added a sound chapter</revremark>
+            </revision>
+            <revision>
+                <revnumber>2.2</revnumber>
+                <date>12 July 2006</date>
+                <authorinitials>jna</authorinitials>
+                <revremark>Various typo fixes</revremark>
+            </revision>
+            <revision>
+                <revnumber>2.1</revnumber>
+                <date>13 May 2006</date>
+                <authorinitials>jna</authorinitials>
+                <revremark>Fixed some code, spelling, and stupid little extra words.</revremark>
+            </revision>
+            <revision>
+                <revnumber>2.1</revnumber>
+                <date>21 Mar 2006</date>
+                <authorinitials>jna</authorinitials>
+                <revremark>Finalized many chapters and improved code.</revremark>
+            </revision>
+        </revhistory>
     </bookinfo>
-
+    
     <preface>
         <title>Preface</title>
         <sect1>
@@ -58,8 +97,7 @@
     </preface>
     
     <chapter>
-        <title>Chapter 1</title>
-        <subtitle>Politics of the Nintendo DS Homebrew Movement</subtitle>
+        <title>Politics of the Nintendo DS Homebrew Movement</title>
         <sect1>
             <title>Background Information</title>
             <para>
@@ -87,7 +125,6 @@
                 the U.S., and bring with them great knowledge. These people make up the homebrew
                 movement.
             </para>
-            <example> ... </example>
         </sect1>
         <sect1>
             <title>Is Homebrew Legal?</title>
@@ -152,10 +189,9 @@
     </chapter>
     
     <chapter>
-        <title>Chapter 2</title>
-        <subtitle>What is a passthrough device and how do I use one?</subtitle>
+        <title>What is a passthrough device and how do I use one?</title>
         <sect1>
-            <title>Purpose of the Passthrought</title>
+            <title>Purpose of the Passthrough</title>
             <para>
                 The purpose of the pass through is to allow the running of programs on the Nintendo DS
                 through the Game Boy Advance (GBA) cartridge slot. This is done because normal Nintendo
@@ -195,15 +231,20 @@
                 DSPassme.com, is still up and running today, providing a great option when looking to purchase
                 a passthrough device.
             </para>
+            <figure>
+                <title>Picture of an early PassMe (left) and an FPGA (right)</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/passme.png"/>
+                    </imageobject>
+                </mediaobject>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/ufb-x_profil.jpg"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
         </sect1>
-        <imageobject>
-            <title>Picture of an early PassMe</title>
-            <imagedata fileref="images/passme.png"/>
-        </imageobject>
-        <imageobject>
-            <title>Picture of an FPGA</title>
-            <imagedata fileref="images/ufb-x_profil.jpg"/>
-        </imageobject>
         <sect1>
             <title>How do I get a Passthrough</title>
             <para>
@@ -242,19 +283,1542 @@
                 and pulling a cartridge out of your Nintendo DS. The screen will change a certain color.
                 Based on this color you can determine if you need a PassMe 2 or not. See Figure 2.1.
             </para>
+            <procedure>
+                <title>Checking the Firmware Version</title>
+                <step performance="required">
+                    <para>
+                        Insert and Nintendo DS game into the DS card slot.
+                    </para>
+                </step>
+                <step performance="required">
+                    <para>
+                        Turn on the Nintendo DS. (If you have auto start enabled, hold down Start and Select
+                        when you boot the system.)
+                    </para>
+                </step>
+                <step performance="required">
+                    <para>
+                        Start Pictochat by pressing the Pictochat logo on the menu screen.
+                    </para>
+                </step>
+                <step performance="required">
+                    <para>
+                        Join any room you wish.
+                    </para>
+                </step>
+                <step performance="required">
+                    <para>
+                        Remove the Nintendo DS game inserted into the back of the system.
+                    </para>
+                </step>
+                <step performance="required">
+                    <para>
+                        You will notice either Pictochat freezing or both screens will change color.
+                    </para>
+                </step>
+            </procedure>
+            <table>
+                <title>When ejecting the game, you'll discover your firmware version as shown.</title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Observed Results</entry><entry>Firmware Version</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Pictochat froze</entry><entry>Version 1</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned periwinkle</entry><entry>Version 2</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned dark green</entry><entry>Version 3, iQue, or Flashme</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned marigold</entry><entry>Version 4</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned magenta</entry><entry>Version 5</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned dark blue</entry><entry>Version 6</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+            <para>
+                It is recommended that you purchase a PassMe 2 type passthrough device if you are unsure
+                which to get, as it is guaranteed to work with all Nintendo DS systems. Also, if you have a
+                friend with a newer DS who may need to borrow your passthrough to play your games, iťs
+                always helpful to have a passthrough that will work on any system.
+            </para>
+            <para>
+                When ordering a PassMe 2, be sure to select one pre-programmed to a common game that
+                you own, such as the Metroid Prime Hunters Demo or Super Mario 64 DS. Each PassMe 2
+                must be programmed to a speciﬁc game and it is best to select a game that is in large supply.
+                Also, you’ll need a GBA cart with some SRAM on it. Most GBA ﬂash carts have sram, and
+                many older GBA games do as well, if you don’t mind losing your save games on that cart.
+            </para>
+        </sect1>
+        <sect1>
+            <title>How do I use my Passthrough</title>
+            <para>
+                Using a passthrough device is quite simple. Simply insert a game into the card slot on the
+                passthrough and plug the device into the DS card slot on the top of your DS, like any other
+                game. See Figure 2.1.
+            </para>
+            <figure>
+                <title>The PassMe inserted into the DS card slot</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/passme_insert_ds.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </sect1>
+        <sect1>
+            <title>What to do with your Passthrough</title>
+            <para>
+                One of the best things to do once you get your passthrough is to install a patch to your Nintendo
+                DS ﬁrmware known as “FlashMe.” This ﬁrmware patch allows for the running of unsigned
+                wiﬁ binaries as well as redirecting the Nintendo DS to boot from the GBA slot in
+                NDS mode. This means that after installing FlashMe, you no longer need your PassMe.
+                FlashMe is the preferred and recommended method of running your own software. You no
+                longer have to lug around a passthrough or play with a large block sticking out of the back
+                of your DS. Also, you can send your code via wiﬁ if you so desire and avoid having to use a
+                ﬂash cart. In addition to all those things, in case you ever come across some malicious code
+                that zaps your ﬁrmware or otherwise messes up your DS, FlashMe keeps a recovery program
+                in the protected ﬁrmware space that you can run to save your DS. Because of this feature
+                alone, FlashMe is better than the standard ﬁrmware.
+            </para>
         </sect1>
     </chapter>
     
     <chapter>
-        <title>Chapter 3</title>
+        <title>How do I get programs into my Nintendo DS?</title>
+        <sect1>
+            <title>The Methods</title>
+            <para>
+                There are a few ways of getting your code into the Nintendo DS. The ﬁrst of which is the
+                simple GBA ﬂash cart. These ﬂash carts are generally quite expensive, have a low availability,
+                and don’t hold very much memory. They ﬁt into the DS perfectly and do not stick out from
+                the bottom as other things do. The second way of running code is on a removable memory
+                device, such as the M3 Adapter, G6 Flash, NeoFlash, SuperCard, or the GBA Movie Player.
+                The ﬁrst four of those devices are produced by supporters of piracy and should be avoided.
+                It is recommended to use the GBA Movie Player (GBAMP).
+            </para>
+            <para>
+                The GBA Movie Player is a wonderful device which can run your software from a Compact
+                Flash card. Compact Flash cards are very cheap and in high supply. If you have more SD
+                cards than CF cards around, unfortunately, the only way to run NDS software from an SD
+                card at this time is with the SD versions of the SuperCard or M3 Adapter. The GBAMP also
+                sticks out from the bottom of the Nintendo DS a little, as shown in Figure 3.0.
+            </para>
+            <figure>
+                <title>Comparison of GBAMP (left) and a GBA ﬂash cart (right) inserted into a DS</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/comparison_insertion.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+            <para>
+                With the GBA ﬂash cart, the process of loading your programs into memory is a bit slow.
+                Also, each GBA ﬂash cart writer is speciﬁc to certain carts and often have closed source
+                drivers. This means that most ﬂash carts will be incompatible with Linux or Macintosh
+                computers. In actuality, the only good thing about a GBA ﬂash cart is that it does not stick out
+                from the Nintendo DS, as can be seen in Figure 3.o.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Running Multiple Software Titles at Once</title>
+            <para>
+                If you chose to go with the GBA ﬂash cart, you can use a utility called Darkain’s MultiNDS
+                Loader to load multiple programs onto your ﬂash cart. This way, you don’t have to re-ﬂash
+                your cart each time you want to run a diﬀerent application.
+            </para>
+            <para>
+                If you chose to go with the GBAMP, then I’d highly recommend DragonMindeďs DSOr-
+                ganize. It supports booting multiple programs, text editing, address books, calendars, and
+                more. Iťs a great application for the DS. You can get it from
+                <ulink url="http://www.dragonminded.com/%3Floc%3Dndsdev/DSOrganize"/>.
+                However, you cannot use a stockGBAMP to run NDS programs. You have to ﬂash it
+                with some custom ﬁrmware. Instructions and ﬁrmware are available from
+                <ulink url="http://www.ndshb.com/modules.php%3Fname%3DContent%26pa%3Dshowpage%26pid%3D26">NDS Homebrew</ulink>.
+            </para>
+        </sect1>
     </chapter>
     
-    <appendix>
+    <chapter>
+        <title>How do I create programs?</title>
+        <sect1>
+            <title>All About DevkitPro</title>
+            <para>
+                DevkitPro is a collection of toolchains for homebrew developers. Toolchains are available
+                for Game Boy Advance, GP32, Playstation Portable, GameCube, and the Nintendo DS. The
+                toolchain we are most interested in is known as DevkitARM.
+            </para>
+            <para>
+                DevkitARM is a speciﬁc toolchain of devkitPro. It allows the compiling of ARM binaries
+                from most all computers. It is based on gcc, the gnu compiler collection. DevkitARM includes
+                everything you’ll need to create software for the Nintendo DS, GBA, and GP32; all of
+                which are run by the ARM processor. However, we will be using something to make our job
+                much easier in addition to just DevkitARM.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The Wonderful World of Libnds</title>
+            <para>
+                Libnds, the library for Nintendo DS, started out iťs life as NDSLIB. NDSLIB was a simple
+                library created by joat (Michael Noland) and dovoto (Jason Rogers). The name was changed
+                to libnds over the course of a few months and the maintainer has been changed to
+                WinterMute (Dave Murphy).
+            </para>
+            <para>
+                NDSLIB started out as a collection of deﬁnes for common memory locations in the DS.
+                This is useful so you can simply reference BG_BMP_RAM instead of 0x06000000. Eventually,
+                the library began to include structs and other useful constructs that help to simplify
+                the programmers job and abstract certain portions of the hardware from the programmer.
+            </para>
+            <para>
+                Today, libnds is an incredibly useful library that over 96% of the Nintendo DS homebrew
+                community uses.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Installing DevkitARM</title>
+            <para>
+                Installing DevkitArm is quite simple. Directions are already documented on their website.
+                Visit <ulink url="http://www.devkitpro.org/setup.shtml"/> for directions. Although more geared towards
+                Windows, the installation is fairly straight forward. Should there be more demand for it, I
+                would be happy to write up more complete instructions for Linux and Macintosh, but do to
+                the brevity of this edition of this manual, I will not be including directions at this time.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Installing Libnds</title>
+            <para>
+                Libnds’ install is less documented than DevkitPro’s install, but is also quite simple.
+            </para>
+            <procedure>
+                <title>To install libnds</title>
+                <step>
+                    <para>
+                        Simply download the latest source from
+                        <ulink url="http://sourceforge.net/project/showfiles.php%3Fgroup_id%3D114505%26package_id%3D151608">SourceForge.net</ulink>.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Extract it to <filename>$DEVKITPRO/libnds</filename>.
+                    </para>
+                    <screen>
+                        <prompt>patater@patatersoft:~$</prompt><command>mkdir $DEVKITPRO/libnds</command>
+                        <prompt>patater@patatersoft:~$</prompt><command>mv libnds-src-*.tar $DEVKITPRO/libnds/</command>
+                        <prompt>patater@patatersoft:~$</prompt><command>cd $DEVKITPRO/libnds</command>
+                        <prompt>patater@patatersoft:~$</prompt><command>tar -xvjf libnds-src-*.tar.bz2 $DEVKITPRO/libnds</command>
+                    </screen>
+                </step>
+                <step>
+                    <para>
+                        Change your current directory to <filename>$DEVKITPRO/libnds</filename> and type <command>make</command>.
+                    </para>
+                    <screen>
+                        <prompt>patater@patatersoft:~$</prompt><command>cd $DEVKITPRO/libnds</command>
+                        <prompt>patater@patatersoft:~$</prompt><command>make</command>
+                    </screen>
+                </step>
+                <step>
+                    <para>
+                        If DevkitARM is installed properly, libnds will compile in a matter of seconds and you’ll
+                        be on your way to developing software for the Nintendo DS.
+                    </para>
+                </step>
+            </procedure>
+        </sect1>
+        <sect1>
+            <title>The Next Step</title>
+            <para>
+                Now that you have devkitARM and libnds installed on your computer, you have everything
+                you need to start coding, excepting perhaps a bit of knowledge on how to code. In the next
+                chapter, we’ll cover the basics of displaying a bitmap on the screen.
+            </para>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="../images/manual/devkitlogo.png"/>
+                </imageobject>
+            </mediaobject>
+        </sect1>
+    </chapter>
     
-    </appendix>
+    <chapter>
+        <title>How do I display a background?</title>
+        <sect1>
+            <title>Initializing the Hardware</title>
+            <para>
+                In order to get the hardware to do what we want, we have to ﬁrst initialize it. This means
+                turning on the 2D core and setting up a VBlank IRQ handler. This is where we fall in love
+                with libnds. Libnds makes it incredibly simple to do these two things. Add the following
+                code to your main function in a new main.cpp C++ code ﬁle.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+#include &lt;nds.h&gt;
+int main () {
+      //turn on the 2D core
+      powerON(POWER_ALL_2D);
+      //turn on the 2D core
+      irqInit();
+      irqSet(IRQ_VBLANK, 0);
+      return 0;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Configuring the VRAM Banks</title>
+            <para>
+                After we get the basic setup done, we now have to set up the graphics hardware to display
+                data how we’d like it to be displayed. Leťs make a function called initVideo();
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void initVideo() {
+    /*map vram to display a bg on the main and sub screen and give us lots
+        of sprites*/
+    vramSetMainBanks( //map A and B to main background memory
+                         //this gives us 256KB which is a healthy amount for
+                         // 16-bit gfx
+                         VRAM_A_MAIN_BG_0x6000000,
+                         VRAM_B_MAIN_BG_0x6020000,
+                         //map C to sub background memory
+                         VRAM_C_SUB_BG_0x6200000,
+                         //map D to LCD free space
+                         VRAM_D_LCD);
+     //map a bank for use with sprites
+     vramSetBankE(VRAM_E_MAIN_SPRITE);
+     //mapping E to main sprites gives us 64k for sprites
+     //(64k is the max space that 1024 tiles take up in 256 color mode)
+     //set the video mode on the main screen
+    videoSetMode( MODE_5_2D |              //set the graphics mode to Mode 5
+                    DISPLAY_SPR_ACTIVE |    //turn on sprites
+                    DISPLAY_BG3_ACTIVE |    //turn on background 3
+                    DISPLAY_SPR_1D);        //this is used when in tile mode
+    //set the video mode on the sub screen
+     videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
+}
+            </programlisting>
+            <para>
+                There are nine VRAM banks in total on the Nintendo DS. See Figure 5.0 for details about
+                them. Our 16bit background images take up 128KB of memory each. Thus, each background
+                has to have one whole VRAM bank assigned to it. Not all VRAM banks can be used for all
+                purposes, however. Refer to Appendix A, for more detailed information.
+            </para>
+            <table>
+                <title>VRAM Bank Information</title>
+                <tgroup cols="4">
+                    <thead>
+                        <row>
+                            <entry>VRAM Bank</entry><entry>Control Register Address</entry>
+                            <entry>Control Register</entry><entry>VRAM Bank Size</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>VRAM_A</entry><entry>0x04000240</entry>
+                            <entry>VRAM_A_CR</entry><entry>128KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_B</entry><entry>0x04000241</entry>
+                            <entry>VRAM_B_CR</entry><entry>128KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_C</entry><entry>0x04000242</entry>
+                            <entry>VRAM_C_CR</entry><entry>128KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_D</entry><entry>0x04000243</entry>
+                            <entry>VRAM_D_CR</entry><entry>128KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_E</entry><entry>0x04000244</entry>
+                            <entry>VRAM_E_CR</entry><entry>64KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_F</entry><entry>0x04000245</entry>
+                            <entry>VRAM_F_CR</entry><entry>16KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_G</entry><entry>0x04000246</entry>
+                            <entry>VRAM_G_CR</entry><entry>16KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_H</entry><entry>0x04000248</entry>
+                            <entry>VRAM_H_CR</entry><entry>32KB</entry>
+                        </row>
+                        <row>
+                            <entry>VRAM_I</entry><entry>0x04000249</entry>
+                            <entry>VRAM_I_CR</entry><entry>16KB</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect1>
+        <sect1>
+            <title>Mode 5 Information</title>
+            <para>
+                Mode 5 is a very common graphics mode on the Nintendo DS. It is very ﬂexible and allows
+                for amazing special eﬀects. Mode 5 consists of four diﬀerent backgrounds each with their
+                own capabilities. Figure 5.1 shows how ﬂexible Mode 5 can be.
+            </para>
+            <table>
+                <title>Mode 5 Information</title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Background</entry><entry>Purpose</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>0</entry><entry>Tiled Mode, 2D with 3D support</entry>
+                        </row>
+                        <row>
+                            <entry>1</entry><entry>Tiled Mode, 2D</entry>
+                        </row>
+                        <row>
+                            <entry>2</entry><entry>Extended Rotation Background</entry>
+                        </row>
+                        <row>
+                            <entry>3</entry><entry>Extended Rotation Background</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect1>
+        <sect1>
+            <title>Setting up the Extended Rotation Backgrounds</title>
+            <para>
+                Extended rotation backgrounds, exrot bgs for short, extend beyond visible screen space and
+                can be rotated, scaled, sheered and translated. This transformation work is done by what is
+                called an Aﬃne Transformation Matrix. Since linear algebra is beyond the scope of this
+                manual, I will cover brieﬂy how to set up a basic exrot bg, but not get into rotating, scaling,
+                sheering, or translating it. Leťs proceed to make a function called initBackgrounds() which
+                will set up our exrot bgs.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void initBackgrounds() {
+    //setup exrot bg 3 on main as a 16bit color background
+    BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) | BG_PRIORITY(3);
+    //attributes of the affine translation matrix
+    BG3_XDX = 1 &lt;&lt; 8; //scale x
+    BG3_XDY = 0; //rotation x
+    BG3_YDX = 0; //rotation y
+    BG3_YDY = 1 &lt;&lt; 8; //scale y
+    BG3_CX = 0; //translation x
+    BG3_CY = 0; //translation y
+    //setup exrot bg 3 on sub
+    SUB_BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) | BG_PRIORITY(3);
+    //attributes of the affine translation matrix
+    SUB_BG3_XDX = 1 &lt;&lt; 8; //scale x
+    SUB_BG3_XDY = 0; //rotation x
+    SUB_BG3_YDX = 0; //scale y
+    SUB_BG3_YDY = 1 &lt;&lt; 8; //scale y
+    SUB_BG3_CX = 0; //translation x
+    SUB_BG3_CY = 0; //translation y
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>The Basics of DMA</title>
+            <para>
+                DMA stands for Direct Memory Access. DMA allows the reading and writing of memory
+                independently of the CPU. The Nintendo DS has special, dedicated DMA hardware to do
+                quick and eﬃcient moving of memory. Libnds provides us with a few functions to make use
+                of the DMA hardware in the Nintendo DS.
+            </para>
+            <para>
+                Whenever you have the opportunity to use DMA, you should. It is always better to use
+                DMA than to use a for loop to copy data. When using DMA to copy from main memory, do
+                not forget to ﬂush main memory before using DMA. Another issue would be that in the
+                middle of a DMA, the main CPUs are paused. This can cause awkward bugs with interrupt
+                handling. For this reason, and <function>swifastcopy</function> may be safer, and isn’t
+                too much slower. The safest bet is always <function>memcopy</function> and
+                <function>memset</function>, if you are running into some bugs.
+            </para>
+            <para>
+                The declaration of <function>dmaCopy</function> from libnds is as follows.
+            </para>
+            <funcsynopsis>
+                <funcprototype>
+                    <funcdef>static inline void <function>dmaCopy</function></funcdef>
+                    <paramdef>
+                        <parameter>const void * source</parameter>
+                        <parameter>void * dest</parameter>
+                        <parameter>uint32 size</parameter>
+                    </paramdef>
+                </funcprototype>
+            </funcsynopsis>
+            <para>
+                In our program, we will use <function>dmaCopy</function> to load some graphics into memory.
+                Leťs start out bywriting some functions to display our backgrounds. As we’ve already set up the
+                hardware to display the data in the desired manner, right after we copy we will get some nice images
+                displayed on our screens. If we didn’t set up our hardware ﬁrst, we’d most likely get garbage on
+                the screen.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void displaySplash() {
+      dmaCopy(Splash_bin, BG_BMP_RAM_SUB(0), Splash_bin_size);
+      //sub bg is BG_BMP_RAM_SUB(0)
+}
+void displayStarField() {
+      dmaCopy(StarField_bin, BG_BMP_RAM(0), StarField_bin_size);
+      //main bg is BG_BMP_RAM(0)
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Working with the Makefile</title>
+            <para>
+                The default template makeﬁle will turn your graphic ﬁles into object ﬁles for linking into
+                your program. Never include data as a header ﬁle.
+            </para>
+            <para>
+                The graphics must be in raw binary (.bin) format. Considering the scope of this edition of
+                the manual, I will not be covering how to convert graphics into .bin format. On Linux, im-
+                age conversion is usually done by a program called <command>gfx2gba</command>.
+                Be warned however that <command>gfx2gba</command> does not properly
+                convert to a 16bit graphics format compatible with the Nintendo DS. Some modiﬁcation
+                (setting the alpha bit) is still necessary. You can use <command>gfx2gba</command>
+                and a program from PataterSoft called <command>hConvert</command>
+                (<ulink url="http://www.patatersoft.info/hconvert.html"/>) to make the graphics you need.
+                <command>hConvert</command> can convert the output from <command>gfx2gba</command>
+                to a compatible format for use with the Nintendo DS, although it does not set the alpha bit for you.
+                On the Macintosh, programmers usually use Graphic Converter from Lemke Software
+                (<ulink url="http://www.lemkesoft.de/en/graphcon.htm"/>) saving as a “Byte-Array Header File” and
+                converting that .h ﬁle to a .bin with <command>hConvert</command>.
+            </para>
+            <para>
+                The default libnds template makeﬁle is a good base for most all projects. It will look in a
+                folder called <filename>data</filename> (in the same directory as the makeﬁle) for your graphics.
+                If any are found, it uses a special bin2o rule to convert your images into .o ﬁles which can be linked
+                into your program. The bin2o rule will create a header ﬁle (.h) for your data. The name format
+                for them works like so: if a ﬁle is called <filename>OrangeShip.bin</filename> the header ﬁle will
+                be called <filename>OrangeShip_bin.h</filename>.
+            </para>
+            <para>
+                For our project, we’ll be putting the .bin graphic ﬁles into the <filename>data</filename> directory
+                and having the makeﬁle use the bin2o rule on them.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Putting in the Star Fields</title>
+            <para>
+                Leťs now put these functions into our main() function to get everything working together.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+#include &lt;nds.h&gt;
+//gfx
+#include "StarField_bin.h"
+#include "Splash_bin.h"
+//other functions we made go here
+int main () {
+      //turn on the 2D core
+      powerON(POWER_ALL_2D);
+      //turn on the 2D core
+      irqInit();
+      irqSet(IRQ_VBLANK, 0);
+      initVideo();
+      initBackgrounds();
+      //display backgrounds
+      displayStarField();
+      displaySplash();
+      return 0;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Compiling</title>
+            <para>
+                Check over your code, referring to the included examples if needed. Make sure you have the
+                graphic ﬁles in the <filename>data</filename> directory in your project directory.
+                Bring up the command line and et your current working directory to the directory which
+                contains the makeﬁle for your project. Type <command>make</command> and if all goes
+                well, you’ll have good success. See Figure 5.2. Copy your program to your DS using the method
+                you have chosen.
+            </para>
+            <figure>
+                <title>The program should look like this when run.</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/splash.png"/>
+                    </imageobject>
+                </mediaobject>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/starfield.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </sect1>
+    </chapter>
+    
+    <chapter>
+        <title>What is a sprite? How do I use them?</title>
+        <sect1>
+            <title>Magical Fairies?</title>
+            <para>
+                No, sprites are not magical fairies. It is a term in 2D graphics programming which refers to
+                an image or animation. The Nintendo DS has dedicated hardware for dealing with sprites.
+                This makes the system very useful for 2D. Most gaming systems do not have a 2D core, and
+                all sprites and other 2D graphics have to be handled manually by painting 2D images on the
+                side of a quad within 3D space.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The OAM</title>
+            <para>
+                The OAM manages all the sprites. This is an immense job, most of it done behind the
+                scenes for us. After using it, you might think it magical. Iťs not as magical as it seems, however.
+                OAM stands for Object Attribute Memory. It is the place in memory we use to keep
+                track of and control our sprites. The OAM works with a SpriteEntry and a SpriteRotation
+                struct to manage the attributes of our sprites.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Sprite Attributes</title>
+            <para>
+                Sprites can spin and ﬂip and mosaic and all sorts of fun hardware eﬀects. We will cover how
+                to update, initialize, move, and rotate only. Leťs write some functions to do each of those, in
+                that order. Our ﬁrst step will be to create a new header ﬁle. Leťs call it
+                <filename>Sprites.h</filename>. Put that ﬁle into the include folder in your project directory.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Updating the OAM</title>
+            <para>
+                Updating the OAM is very straightforward. First, we ﬂush local memory (a must whenever
+                performing a DMA operation). Then, we tell the OAM to look into the SpriteEntry struct
+                we will create later for information about each one of our sprites.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+//Update the OAM
+void updateOAM(SpriteEntry * spriteEntry) {
+      DC_FlushAll();
+      dmaCopy(spriteEntry, OAM, 128 * sizeof(SpriteEntry));
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Initializing the OAM</title>
+            <para>
+                The ﬁrst thing we do when initializing the OAM is to clear all the sprite data in the OAM.
+                After that, we’ll make a call to our afore written updateOAM function.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+//Initialize the OAM
+void initOAM(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
+      //For all 128 sprites on the DS, disable and clear any attributes they
+      //might have. This prevents any garbage from being displayed and gives
+      //us a clean slate to work with.
+      for(int i = 0; i &lt; 128; i++) {
+            spriteEntry[i].attribute[0] = ATTR0_DISABLED;
+            spriteEntry[i].attribute[1] = 0;
+            spriteEntry[i].attribute[2] = 0;
+      }
+      //For all 32 possible sprite rotations, set them to default values
+      for(int i = 0; i &lt; 32; i++) {
+            spriteRotation[i].hdx = 256;
+            spriteRotation[i].hdy = 0;
+            spriteRotation[i].vdx = 0;
+            spriteRotation[i].vdy = 256;
+      }
+      updateOAM(spriteEntry);
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Moving Sprites</title>
+            <para>
+                Now for some real fun. Moving sprites in hardware, and not having to worry about clipping,
+                buﬀers, or anything, is such a wonderful feeling. To move a sprite, we simply change some
+                attributes in that sprite’s SpriteEntry. Attribute 1 in a sprite always contains, in bits 0-8, the
+                X position of the sprite. Attribute 0, among other things, contains the Y position of the
+                sprite, in bits 0-7.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+//Move a Sprite
+void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
+      spriteEntry->attribute[1] &amp;= 0xFE00;
+      spriteEntry->attribute[1] |= (x &amp; 0x01FF);
+      spriteEntry->attribute[0] &amp;= 0xFF00;
+      spriteEntry->attribute[0] |= (y &amp; 0x00FF);
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Rotating Sprites</title>
+            <para>
+                Leťs get to spinning. This is a bit more diﬃcult, but still fun. Iťs always nice to not have to
+                make a separate sprite for each rotation position the sprite will be presented in. We have to
+                use a transformation derived from our time spent playing with an aﬃne transformation matrix.
+                Lucky for you, I did this already. If you have a background in linear algebra, I’d
+                recommend reading up on this portion of the hardware at
+                <ulink url="http://user.chem.tue.nl/jakvijn/tonc/aﬃne.htm"/>.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+//Rotate a Sprite
+void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
+      s16 s = -SIN[angle &amp; 0x1FF] &gt;&gt; 4;
+      s16 c = COS[angle &amp; 0x1FF] &gt;&gt; 4;
+      spriteRotation-&gt;hdx = c;
+      spriteRotation-&gt;hdy = -s;
+      spriteRotation-&gt;vdx = s;
+      spriteRotation-&gt;vdy = c;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Using the Sprites</title>
+            <para>
+                Now that our Sprites.h ﬁle is ﬁnished, leťs get on to how sprites are stored in memory, how
+                to load them, and so forth. So put away your Sprites.h ﬁle into the include directory of your
+                home folder and leťs get back into our <filename>main.cpp</filename> ﬁle.
+            </para>
+        </sect1>
+        <sect1>
+            <title>How Sprites are Stored in Memory</title>
+            <para>
+                Sprites are broken into 8x8 pixel pieces. This is called tiling. When drawn to screen, the
+                hardware pieces these tiles together, like a puzzle where the pieces have no distinguishing
+                edges. See ﬁgure 6.0 for information about layout. The conversion process will not be covered
+                in the early editions of this manual, as iťs a more involved process. On Linux, programmers
+                usually use <command>gfx2gba</command>. On the Macintosh, programmers usually use
+                Graphic Converter from Lemke Software (<ulink url="http://www.lemkesoft.de/en/graphcon.htm"/>)
+                saving as a “Byte-Array Header File” and a program from PataterSoft called
+                <command>hConvert</command> (<ulink url="http://www.patatersoft.info /hconvert.html"/>).
+            </para>
+            <!--This code listing is pretty stupid unless colored in a custom fashion.
+                    http://www.mail-archive.com/docbook-apps@lists.oasis-open.org/msg08588.html-->
+            <figure>
+                <title>
+                    The upper text shows information as it would be on a non-tiled background. The lower
+                    text shows the same data, tiled, for use in tiled graphic modes.
+                </title>
+                <programlisting linenumbering="unnumbered" language="C++">
+const u16 data[] = {
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+0x0F0F, 0x0F0F, 0x0F0F, 0x0F0F, 0x0F0F, 0x0F0F, 0x0F0F, 0x0F0F,
+0x2020, 0x2020, 0x2020, 0x2020, 0x2020, 0x2020, 0x2020, 0x2020,
+0x2F2F, 0x2F2F, 0x2F2F, 0x2F2F, 0x2F2F, 0x2F2F, 0x2F2F, 0x2F2F,
+0x4040, 0x4040, 0x4040, 0x4040, 0x4040, 0x4040, 0x4040, 0x4040,
+0x4F4F, 0x4F4F, 0x4F4F, 0x4F4F, 0x4F4F, 0x4F4F, 0x4F4F, 0x4F4F,
+0x6060, 0x6060, 0x6060, 0x6060, 0x6060, 0x6060, 0x6060, 0x6060,
+0x6F6F, 0x6F6F, 0x6F6F, 0x6F6F, 0x6F6F, 0x6F6F, 0x6F6F, 0x6F6F,
+0x8080, 0x8080, 0x8080, 0x8080, 0x8080, 0x8080, 0x8080, 0x8080,
+0x8F8F, 0x8F8F, 0x8F8F, 0x8F8F, 0x8F8F, 0x8F8F, 0x8F8F, 0x8F8F,
+0xA0A0, 0xA0A0, 0xA0A0, 0xA0A0, 0xA0A0, 0xA0A0, 0xA0A0, 0xA0A0,
+0xAFAF, 0xAFAF, 0xAFAF, 0xAFAF, 0xAFAF, 0xAFAF, 0xAFAF, 0xAFAF,
+0xC0C0, 0xC0C0, 0xC0C0, 0xC0C0, 0xC0C0, 0xC0C0, 0xC0C0, 0xC0C0,
+0xCFCF, 0xCFCF, 0xCFCF, 0xCFCF, 0xCFCF, 0xCFCF, 0xCFCF, 0xCFCF,
+0xE0E0, 0xE0E0, 0xE0E0, 0xE0E0, 0xE0E0, 0xE0E0, 0xE0E0, 0xE0E0,
+0xEFEF, 0xEFEF, 0xEFEF, 0xEFEF, 0xEFEF, 0xEFEF, 0xEFEF, 0xEFEF};
+const u16 data[] = {
+0x0000, 0x0000, 0x0000, 0x0000, 0x0F0F, 0x0F0F, 0x0F0F, 0x0F0F,
+0x2020, 0x2020, 0x2020, 0x2020, 0x2F2F, 0x2F2F, 0x2F2F, 0x2F2F,
+0x4040, 0x4040, 0x4040, 0x4040, 0x4F4F, 0x4F4F, 0x4F4F, 0x4F4F,
+0x6060, 0x6060, 0x6060, 0x6060, 0x6F6F, 0x6F6F, 0x6F6F, 0x6F6F,
+0x0000, 0x0000, 0x0000, 0x0000, 0x0F0F, 0x0F0F, 0x0F0F, 0x0F0F,
+0x2020, 0x2020, 0x2020, 0x2020, 0x2F2F, 0x2F2F, 0x2F2F, 0x2F2F,
+0x4040, 0x4040, 0x4040, 0x4040, 0x4F4F, 0x4F4F, 0x4F4F, 0x4F4F,
+0x6060, 0x6060, 0x6060, 0x6060, 0x6F6F, 0x6F6F, 0x6F6F, 0x6F6F,
+0x8080, 0x8080, 0x8080, 0x8080, 0x8F8F, 0x8F8F, 0x8F8F, 0x8F8F,
+0xA0A0, 0xA0A0, 0xA0A0, 0xA0A0, 0xAFAF, 0xAFAF, 0xAFAF, 0xAFAF,
+0xC0C0, 0xC0C0, 0xC0C0, 0xC0C0, 0xCFCF, 0xCFCF, 0xCFCF, 0xCFCF,
+0xE0E0, 0xE0E0, 0xE0E0, 0xE0E0, 0xEFEF, 0xEFEF, 0xEFEF, 0xEFEF,
+0x8080, 0x8080, 0x8080, 0x8080, 0x8F8F, 0x8F8F, 0x8F8F, 0x8F8F,
+0xA0A0, 0xA0A0, 0xA0A0, 0xA0A0, 0xAFAF, 0xAFAF, 0xAFAF, 0xAFAF,
+0xC0C0, 0xC0C0, 0xC0C0, 0xC0C0, 0xCFCF, 0xCFCF, 0xCFCF, 0xCFCF,
+0xE0E0, 0xE0E0, 0xE0E0, 0xE0E0, 0xEFEF, 0xEFEF, 0xEFEF, 0xEFEF};
+                </programlisting>
+            </figure>
+        </sect1>
+        <sect1>
+            <title>Loading in a Sprite</title>
+            <para>
+                Now, to see a sprite in action. Leťs load in the OrangeShuttle graphic. Make a new function
+                called initSprites. Make sure to include OrangeShuttle_bin.h. The ﬁrst step is to initialize
+                the OAM. After that, we assign a graphics ID to our ship. After that, we set the initial sprite
+                attributes for our sprite (which we will place in the spriteEntry struct as index 0). Then, the
+                rotation attributes. Next, we simply copy over the palette data and then the graphics data.
+                Lastly,<!-- What was I trying to say here? XXX-->
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void initSprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
+      //init OAM
+      initOAM(spriteEntry, spriteRotation);
+      Coordinate position;
+      position.x = SCREEN_WIDTH/2 - 64;
+      position.y = SCREEN_HEIGHT/2 - 64;
+      //create the ship sprite
+      int orangeShipGfxID = 64;
+      spriteEntry[0].attribute[0] = ATTR0_COLOR_256 |
+                                    ATTR0_ROTSCALE_DOUBLE | //able to
+                                                               rotscale
+                                    (int)position.y;
+      spriteEntry[0].attribute[1] = ATTR1_ROTDATA(0) |
+                                    ATTR1_SIZE_64 | //size 64x64
+                                    (int)position.x;
+      spriteEntry[0].attribute[2] = orangeShipGfxID;
+      //set initial rotation attributes
+      rotateSprite(&amp;spriteRotation[0], 0);
+      //copy in the sprite palettes
+      dmaCopy(OrangeShuttlePalette_bin, //from address
+              (uint16 *)SPRITE_PALETTE, //to address
+              OrangeShuttlePalette_bin_size); //size of data to copy
+      //copy the sprite graphics in obj graphics  mem
+      dmaCopy(OrangeShuttle_bin,           //from address
+              &amp;SPRITE_GFX[orangeShipGfxID * 16],  //to address
+              OrangeShuttle_bin_size);     //size of data to copy
+      //update the OAM
+      updateOAM(spriteEntry);
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Displaying the Sprite</title>
+            <para>
+                In our main function, we now need to create the structs which hold our sprite data. Then,
+                we’ll make a call to the initSprites function we just created.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+#include &lt;nds.h&gt;
+//gfx
+#include "StarField_bin.h"
+#include "Splash_bin.h"
+#include “OrangeShuttle_bin.h”
+#include "OrangeShuttlePalette_bin.h"
+//other functions we made go here
+int main () {
+      //turn on the 2D core
+      powerON(POWER_ALL_2D);
+      //turn on the 2D core
+      irqInit();
+      irqSet(IRQ_VBLANK, 0);
+      initVideo();
+      initBackgrounds();
+      //display backgrounds
+      displayStarField();
+      displaySplash();
+      //create the sprite entry table
+      SpriteEntry * spritesMain = new SpriteEntry[128];
+      //create the sprite rotation table, assigning it to the same location
+      //as spritesMain because the attributes overlap in memory
+      SpriteRotation * spriteRotationsMain = (SpriteRotation *)spritesMain;
+      //load and init the sprites (just one sprite actually)
+      initSprites(spritesMain, spriteRotationsMain);
+      return 0;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Compiling</title>
+            <para>
+                If all goes well, you’ll compile with no problems and the output will look as in Figure 6.1.
+            </para>
+            <figure>
+                <title>Output with both backgrounds and a sprite.</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/splash.png"/>
+                    </imageobject>
+                </mediaobject>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/starfield_and_orange_shuttle"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </sect1>
+    </chapter>
+    
+    <chapter>
+        <title>Basic Game Mechanics Applied to the SPace Shooter Genre</title>
+        <sect1>
+            <title>The Importance of Object Oriented Programming</title>
+            <para>
+                Object oriented programming (OOP) is essential to making good games on a modern sys-
+                tem. Although it is very much possible without object oriented programming, OOP is an
+                incredible tool that greatly improves code reusability, readability, modularization, and
+                abstraction. It makes the programmer’s job a lot easier. Also, due to modularization,
+                collaborating on projects with your friends or coworkers is easily ten fold easier.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The Ship Class</title>
+            <para>
+                The ﬁrst thing we’ll make is a Ship class. This class will encapsulate all the properties and
+                functionality of any ship in an easy to use and understand format. Think of things a ship can
+                do, on a high level. What should come to mind is the ability to turn both ways, shoot weapons,
+                accelerate, move at a given velocity (coasting), and maybe some more things if you are
+                creative enough. What properties of a ship can you come up with? Perhaps turning speed,
+                thrust, mass, maximum speed, velocity, position, shields? Well, after you are done brain-
+                storming, the next step is to write out the functionality and properties we need to put into
+                our Ship class. You could make a table, as in Figure 7.0, or draw some diagrams on a piece of
+                paper. Either way, you want to make sure your ideas all get onto some physical paper.
+            </para>
+            <table>
+                <title>Table of Ship properties and functionality.</title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Properties</entry><entry>Functionality</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>shipHeight</entry><entry>accelerate</entry>
+                        </row>
+                        <row>
+                            <entry>shipWidth</entry><entry>moveShip</entry>
+                        </row>
+                        <row>
+                            <entry>position</entry><entry>turnClockwise</entry>
+                        </row>
+                        <row>
+                            <entry>velocity</entry><entry>turnCounterClockwise</entry>
+                        </row>
+                        <row>
+                            <entry>angle</entry><entry>getPosition</entry>
+                        </row>
+                        <row>
+                            <entry>turnSpeed</entry><entry>reverseTurn</entry>
+                        </row>
+                        <row>
+                            <entry>thrust</entry><entry>getAngle</entry>
+                        </row>
+                        <row>
+                            <entry>maxSpeed</entry>
+                        </row>
+                        <row>
+                            <entry>mass</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect1>
+        <sect1>
+            <title>Making the Ship Class</title>
+            <para>
+                I have provided a skeleton framework ﬁle for you to write your class in. It is all set and ready
+                for you to implement in the Ship.cpp ﬁle. The header ﬁle, Ship.h is also included. On your
+                own, with your own classes in the future, you should always make a skeleton framework class
+                to work from. It makes implementation straightforward and you do not have to worry about
+                the semantics of setting up a class so much.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The Constructor</title>
+            <para>
+                I have provided you with a simple constructor, copy constructor, = operator, and private init
+                method. These are often mundane things to make. Feel free to modify the default values to
+                try out diﬀerent eﬀects of changing the ship properties.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Acceleration</title>
+            <para>
+                Acceleration is probably one of the most important things your ships can do. To accelerate,
+                we simply increase out velocity by a certain increment, that being the thrust capability of
+                the ship, in the angle we are headed. Here is where some simple trig comes into play. Since
+                our velocity is stored as an x and y component, we have to shadow our thrust vector onto
+                each direction. We do this we multiply the thrust by sin(angle) for our x component, and by
+                -cos(angle) for the y direction. Next, after we have computed the increment for both x and y,
+                we add them onto our current velocity, making sure we don’t go over the ship’s maximum
+                speed.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void Ship::accelerate() {
+       float incX = thrust * sin(angle);
+       float incY = -(thrust * cos(angle));
+       velocity.x += incX;
+       //make sure can't go too fast in x direction
+       if (velocity.x &gt; maxSpeed) {
+                velocity.x = maxSpeed;
+       }
+       if (velocity.x &lt; -maxSpeed) {
+                velocity.x = -maxSpeed;
+       }
+       velocity.y += incY;
+       //make sure can't go too fast in y direction
+       if (velocity.y &gt; maxSpeed) {
+                velocity.y = maxSpeed;
+       }
+       if (velocity.y &lt; -maxSpeed) {
+                velocity.y = -maxSpeed;
+       }
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Moving the Ship</title>
+            <para>
+                This one is incredibly easy thanks to the Nintendo DS hardware. All we have to do isincrement
+                our position by our velocity. The hardware takes care of any wrapping or oﬀscreen issues.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void Ship::moveShip() {
+      //move the ship
+      position.x += velocity.x;
+      position.y += velocity.y;
+      //hw does wrap around for us
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Reversing the Ship's Direction</title>
+            <para>
+                This one took me a while to ﬁgure out, even though iťs just one line, but iťs very useful. We
+                can turn the ship around, not a 180 per se, but simply pointing into the opposite direction
+                of our current velocity. This will get the angle of our velocity with respect to 0 degrees, and
+                then will do a 180 from that angle.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void Ship::reverseTurn() {
+      angle = (2 * PI) - atan2(velocity.x, velocity.y);
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Rotating the Ship</title>
+            <para>
+                Rotating the ship is also quite simple. We just increment or by ship’s turning speed
+                depending on which direction we wish to turn.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void Ship::turnClockwise() {
+      angle += turnSpeed;
+}
+void Ship::turnCounterClockwise() {
+      angle -= turnSpeed;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Getting the Ship's Position</title>
+            <para>
+                Return the ship’s position.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+Coordinate Ship::getPosition() {
+      return position;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Getting the Ship's Angle</title>
+            <para>
+                This one is a bit more tricky and involved. I suppose I should start by explaining that a Nintendo
+                DS circle has 512 degrees. It doesn’t actually have 512 degrees, nor does a Nintendo DS
+                even know what a circle is, but it is easy to understand the hardware a bit better when we
+                think of it this way. I will say, however, that the reason for the 512 degrees is due to libnds’s
+                built-in look up tables for the sin and cos functions. In order for the Nintendo DS to know
+                how to rotate our sprites, we have to convert the internally stored radian angle value to a 512
+                degree system. This is an easy conversion.
+            </para>
+            <para>
+                The ﬁrst step is to convert to a 360 degree system, as you must have learned in junior high
+                school. This is done by multiplying the radian value by 180/π. The 180 part is half the number
+                of degrees in a circle. So, in a 512 degree system we can convert by multiplying the radian
+                value by 256/π. Lastly, just return that value as an integer (the hardware does not have any
+                ﬂoating point, so when rotating our sprites, must use a ﬁxed point value disguised as an integer).
+            </para>
+            <para>
+                Then, we make a function to return a converted angle value, for whenever we need it.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+int Ship::radToDeg512(float rad) {
+      return rad * (256/PI);
+}
+int Ship::getAngleDeg512() {
+      return radToDeg512(angle);
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Linking the Ship into our Program</title>
+            <para>
+                First oﬀ, we need to modify our initSprites function to use our ship class to keep track of
+                where to draw the sprite and how.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void initSprites(Ship * ship, SpriteEntry * spriteEntry, SpriteRotation *
+spriteRotation) {
+       //init OAM
+       initOAM(spriteEntry, spriteRotation);
+       //get the ship’s initial position
+       Coordinate position = ship->getPosition();
+       //create the ship sprite
+       int orangeShipGfxID = 64;
+       spriteEntry[0].attribute[0] = ATTR0_COLOR_256 |
+                                            ATTR0_ROTSCALE_DOUBLE | //able to
+                                                                      rotscale
+                                            (int)position.y;
+       spriteEntry[0].attribute[1] = ATTR1_ROTDATA(0) |
+                                            ATTR1_SIZE_64 | //size 64x64
+                                            (int)position.x;
+       spriteEntry[0].attribute[2] = orangeShipGfxID;
+       //set initial rotation attributes
+       rotateSprite(&amp;spriteRotation[0], ship-&gt;getAngleDeg512());
+       //copy in the sprite palettes
+      dmaCopy(OrangeShuttlePalette_bin, //from address
+              (uint16 *)SPRITE_PALETTE, //to address
+              OrangeShuttlePalette_bin_size); //size of data to copy
+      //copy the sprite graphics in obj graphics mem
+      dmaCopy(OrangeShuttle_bin,          //from address
+              &amp;SPRITE_GFX[orangeShipGfxID * 16], //to address
+              OrangeShuttle_bin_size);    //size of data to copy
+      //update the OAM
+      updateOAM(spriteEntry);
+}
+            </programlisting>
+            <para>
+                We now need to create an instance of the ship in our main function. Creating an instance of
+                a class, known as an object, is quite simple.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+#include &lt;nds.h&gt;
+//gfx
+#include   "StarField_bin.h"
+#include   "Splash_bin.h"
+#include   “OrangeShuttle_bin.h”
+#include   "OrangeShuttlePalette_bin.h"
+#include “Ship.h”
+//other functions we made go here
+int main () {
+       //turn on the 2D core
+       powerON(POWER_ALL_2D);
+       //turn on the 2D core
+       irqInit();
+       irqSet(IRQ_VBLANK, 0);
+       initVideo();
+       initBackgrounds();
+       //display backgrounds
+       displayStarField();
+       displaySplash();
+       //make the ship of size 64x64 pixels
+       Ship * ship = new Ship(64, 64);
+       //create the sprite entry table
+       SpriteEntry * spritesMain = new SpriteEntry[128];
+       //create the sprite rotation table, assigning it to the same location
+       //as spritesMain because the attributes overlap in memory
+       SpriteRotation * spriteRotationsMain = (SpriteRotation *)spritesMain;
+       //load and init the sprites (just one sprite actually)
+       //pass in the ship this time
+       initSprites(ship, spritesMain, spriteRotationsMain);
+       return 0;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Compiling</title>
+            <para>
+                Everything should compile for you ﬁne at this point if you wish to play around with your
+                new class. However, in the next chapter we will cover how to get Nintendo DS input to
+                affect the Ship. Be ready for it, we’re going to have some major fun.
+            </para>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="../images/manual/orange_shuttle.png"/>
+                </imageobject>
+            </mediaobject>
+        </sect1>
+    </chapter>
+    
+    <chapter>
+        <title>Nintendo DS Input Systems</title>
+        <sect1>
+            <title>Overview</title>
+            <para>
+                The Nintendo DS has many diﬀerent user input systems, including buttons, touch screen,
+                and a microphone. Most video game systems only have buttons and an analog stick or two.
+                While the Nintendo DS does not have an analog stick, it does have an amazing touch screen
+                which has millions of diﬀerent creative uses. In the ﬁrst edition of this manual, I will only
+                cover buttons though. If you wish to learn more about the touch screen and the microphone,
+                I’d recommend reading
+                <ulink url="http://www.bottledlight.com/ds/index.php/Misc/TouchScreen"/> and although
+                a bit outdated, the only microphone resource I know of
+                <ulink url="http://www.double.co.nz/nintendo_ds/nds_develop9.html"/>.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Key Input</title>
+            <para>
+                Libnds provides us with a very nice abstraction for key input. Instead of having to AND reg-
+                isters with cryptic masks to discover which keys we are pressing, we simply call scanKeys(),
+                then check one of three input functions, keysDown(), keysHeld(), or keysUp(). In order to
+                see which keys have been recently pressed, use keysDown(). To see which keys are currently
+                held, use keysHeld(). To see which keys have just been released, use keysUp(). Libnds pro-
+                vides us with deﬁnes for some key masks as well. How they are set up is explained in Figure
+                8.0.
+            </para>
+            <table>
+                <title> Libnds key deﬁnes.</title>
+                <tgroup cols="3">
+                    <thead>
+                        <row>
+                            <entry>Key Define</entry><entry>Mask Bit</entry><entry>Associated Input</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>KEY_A</entry><entry>1 &lt;&lt; 0</entry><entry>A Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_B</entry><entry>1 &lt;&lt; 1</entry><entry>B Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_SELECT</entry><entry>1 &lt;&lt; 2</entry><entry>Select Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_START</entry><entry>1 &lt;&lt; 3</entry><entry>Start Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_RIGHT</entry><entry>1 &lt;&lt; 4</entry><entry>Right D-pad</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_LEFT</entry><entry>1 &lt;&lt; 5</entry><entry>Left D-pad</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_UP</entry><entry>1 &lt;&lt; 6</entry><entry>Up D-pad</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_DOWN</entry><entry>1 &lt;&lt; 7</entry><entry>Down D-pad</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_R</entry><entry>1 &lt;&lt; 8</entry><entry>R Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_L</entry><entry>1 &lt;&lt; 9</entry><entry>L Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_X</entry><entry>1 &lt;&lt; 10</entry><entry>X Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_Y</entry><entry>1 &lt;&lt; 11</entry><entry>Y Button</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_TOUCH</entry><entry>1 &lt;&lt; 12</entry><entry>Pen Touching Screen (no coordinates)</entry>
+                        </row>
+                        <row>
+                            <entry>KEY_LID</entry><entry>1 &lt;&lt; 13</entry><entry>Lid shutting (useful for sleeping)</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect1>
+        <sect1>
+            <title>Writing an Input Updating Function</title>
+            <para>
+                Now that we know a bit about how input is laid out on the Nintendo DS, leťs write a func-tion
+                in our <filename>main.cpp</filename> to handle the input. We’ll call it <function>handleInput</function>.
+                First, we want the ship to accelerate when we press up. Do do this, we detect when the
+                Nintendo DS has the Up Key on the D-pad held (which included the initial down press)
+                and accelerate the ship if so. The Up key will constantly read as held, so long as it is held.
+                Reading the input does not aﬀect the keys register. We’ll do similar things for each of the other
+                keys. See if you can tell what each key does from the code listing below.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void handleInput(Ship * ship) {
+       //up
+       if (keysHeld() &amp; KEY_UP) {
+                //accelerate ship
+                ship-&gt;accelerate();
+       }
+       //down
+       if (keysHeld() &amp; KEY_DOWN) {
+                //reverse ship direction
+                ship-&gt;reverseTurn();
+       }
+       //left
+       if (keysHeld() &amp; KEY_LEFT) {
+                //rotate counter clockwise
+                ship-&gt;turnCounterClockwise();
+       }
+       //right
+       if (keysHeld() &amp; KEY_RIGHT) {
+                //rotate clockwise
+                ship-&gt;turnClockwise();
+       }
+       return;
+}
+            </programlisting>
+            <para>
+                As you’ve noticed, having that Ship class made input handling extremely easy. Our keys will
+                directly aﬀect various properties of the ship as we press them. This is really amazing, but the
+                true miracle is yet to come.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Creating the Main Game Loop</title>
+            <para>
+                Leťs check back in on our main function now. Iťs time for use to create an inﬁnite loop to
+                run our program. The ﬁrst thing we want to happen in our game loop is for the key registers
+                to get updated. We make a call to scanKeys and it all happens for us. Next, we handle the
+                input we just received by calling our recently created handleInput function, passing in our
+                ship object that it can change our ship for us. Next, we tell our ship to move at iťs current
+                velocity. This will change the ship’s position. Then we update the sprite attributes with new
+                information about our ship, as handleInput most likely changed some properties about the
+                ship. Finally, we call a function that will make sure our program does not exceed 60fps
+                (speed of the graphics on the Nintendo DS), and update the OAM, telling it that we
+                changed some attributes on the sprites and it need to handle that.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+//former functions above here
+int main() {
+      //our former code here
+      for (;;) {
+             scanKeys();
+             handleInput(ship);
+             ship-&gt;moveShip();
+             //update sprite attributes
+             Coordinate position = ship-&gt;getPosition();
+             moveSprite(&amp;spritesMain[0], (int)position.x, (int)position.y);
+             rotateSprite(&amp;spriteRotationsMain[0], ship-&gt;getAngleDeg512());
+             swiWaitForVBlank();
+             updateOAM(spritesMain);
+      }
+}
+            </programlisting>
+            <para>
+                The OAM really shines through here. The all powerful Nintendo DS hardware, an incredible
+                masterpiece, will rotate and move our ship with very little eﬀort on our part. In hindsight,
+                all we have done is ﬂip a few bits in a few registers in a structured manner, and our
+                ship comes to life. Incredible.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Compiling</title>
+            <para>
+                Now we can control our ship with the D-Pad. What fun! The game should now appear as in
+                Figure 8.1. Now if only we had some aliens to kill…
+            </para>
+            <figure>
+                <title>Flying around in the Orange Shuttle.</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/splash.png"/>
+                    </imageobject>
+                </mediaobject>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/starfield_with_moving_orange_shuttle.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </sect1>
+    </chapter>
+    
+    <chapter>
+        <title>What about the sounds?</title>
+        <sect1>
+            <title>A Sound Theory</title>
+            <para>
+                Sounds are essential in any game. Our little project should be no exception. Sounds bring
+                life to various elements in the game, such as space ships, weapon systems, rain, sword clashing,
+                car engines, and so forth.
+            </para>
+            <para>
+                Many games don’t need music. For instance, a game with the programmer’s or game designer’s favorite
+                song may annoy many players who have diﬀerent tastes of music. Instead,
+                give the player the option to listen to their own music, on their own audio equipment. Not
+                to mention, music is costly in data size.
+            </para>
+            <para>
+                Sound eﬀects on the other hand, are quite useful. A word of warning, however, a game with
+                bad sounds (scratchy, annoying, too repetitive, etc.) is worse than a silent game. Take care
+                when engineering sounds for your game.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The Hardware</title>
+            <para>
+                The Nintendo DS has amazing sound hardware. We will only be able to scratch the surface
+                of it, and even still, we won’t leave any scratch marks. The Nintendo DS has 16 channels to
+                play sounds, numbered 0 through 15. Channels 8-15 are special channels. All channels can
+                play ADPCM or PCM sounds, while 8-13 are the only channels that can play PSG sounds
+                and 14-15 the only that can generate noise. We will only be experimenting with PCM sounds.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Making the Sounds</title>
+            <para>
+                To play our sounds, we need to convert them into a PCM format that the DS will under-
+                stand. The format we will use is 8-bit signed 22050Hz raw audio. You can experiment with
+                other combinations if you’d like, but in the interest of keeping this manual simple we’ll just
+                be using the aforementioned format.
+            </para>
+            <para>
+                There are a myriad of programs our there to do sound conversion for us, but I will present
+                the most universal method of sound conversion: the open source program SoX. SoX stands
+                for Sound eXchange. It is available for Linux, Macintosh OS X, and Windows. I have included
+                pre-compiled versions for Mac OS X PPC, Mac OS X x86, and Windows. For Linux,
+                just compile the included SoX source.
+            </para>
+            <para>
+                To use SoX, simple convert your ﬁle as shown below. You can practice with my included
+                audio ﬁle “thrust.aif ”. The relevant command line options work as follows: -b 8-bit, -s
+                signed, -r 22050 22050Hz sample rate. SoX knows to turn your sound into a .raw by reading
+                the ﬁle extension on the output ﬁlename. Keep in mind since raw sounds have no headers,
+                to somehow label them with their formatting information. I use the ﬁlename to do this, as
+                you can see.
+            </para>
+            <screen>
+                <prompt>patater@patatersoft:~$</prompt><command>sox sounds/thrust.aif -bsr 22050 data/thrust_1_22050_8_s.raw</command>
+            </screen>
+        </sect1>
+        <sect1>
+            <title>Using the Sounds</title>
+            <para>
+                The makeﬁle I’ve included with my manual has a custom bin20 rule for creating .o ﬁles from
+                .raw ﬁles. There is really nothing special about it. It does the same thing that the .bin bin2o
+                rule does. The libnds default makeﬁles require you to explicitly specify the ﬁle types you
+                want to be processed.
+            </para>
+            <para>
+                After the makeﬁle processes the raw sound ﬁle, the header for it will look like so
+                <filename>thrust_1_22050_8_s_raw.h</filename> and will be located in the build directory.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Getting Down with the Code</title>
+            <para>
+                Now iťs ﬁnally time for some code. Libnds simpliﬁes sound playing quite a bit. It provides a
+                struct called “TransferSoundData” that we can use to encapsulate our sound. In a way, it acts
+                as a header to let the DS know how to handle it. Libnds will handle the transfer of the
+                sound to the ARM7 (the only processor that can control the sound hardware), although it is
+                a bit ineﬃcient, frumpy (and yes, for those of you who don’t know, libnds is a girl), and limited.
+                It will serve our purposes for now, as a springboard into more advanced forms of sound.
+                Enough with the chatter, here’s some code for our <filename>main.cpp</filename>.
+            </para>
+            <programlisting linenumbering="unnumbered"  language="C++">
+//... previous code here
+//snd
+#include "thrust_1_22050_8_s_raw.h"
+//... previous code here
+void handleInput(Ship * ship, TransferSoundData * soundData) {
+       //up
+       if (keysDown() &amp; KEY_UP) {
+                //play our sound only when the button is initially pressed
+                playSound(soundData);
+       }
+       if (keysHeld() &amp; KEY_UP) {
+                //accelerate ship
+                ship-&gt;accelerate();
+       }
+       //... previous code here
+}
+//... previous code here
+int main() {
+       //... previous code here
+       //immediately following sprite setup
+      /* Sound Data setup */
+      TransferSoundData * thrust_sound = new TransferSoundData();
+      thrust_sound->data = thrust_1_22050_8_s_raw;
+      thrust_sound->len = thrust_1_22050_8_s_raw_size;
+      thrust_sound->rate = 22050; //22050Hz Sample Rate
+      thrust_sound->vol = 127; //Volume can be from 0 to 127
+      thrust_sound->pan = 64; //Sound comes equally from both speakers
+                              // (0-127, left to right)
+      thrust_sound->format = 1; //1 - 8bit, 0 - 16bit
+      for (;;) {
+            updateInput();
+            handleInput(ship, thrust_sound);
+            //... previous code here
+      }
+}
+            </programlisting>
+            <para>
+                In summary, we simply set up our sound in the <function>main</function> function, modiﬁed the <function>handleInput</function>
+                function to accept a sound pointer, and had the <function>handleInput</function> function play our sound whenever
+                the up key is held.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Wait, What's Going on Here?</title>
+            <para>
+                Now, for an explanation of what libnds is doing behind the scenes. A pointer to your sound
+                data in shared memory (iwram) is given to the arm7 from the arm9 via the IPC. If the
+                pointer is null, then no sound will be played. If the pointer is not null, the arm7 ﬁnds an
+                open sound channel. If any channels are open, it reads the header information from your
+                TransferSoundData struct and then calls an internal function, startSound, which plays the
+                sound for us.
+            </para>
+            <para>
+                The startSound function is not very ﬂexible (nor is the TransferSoundData struct). The
+                sound can only be 8-bit or 16-bit. We have no way of signaling the arm7 that we want the
+                sound to loop, unfortunately. We also have no way of telling the sound to stop playing
+                (which is extremely unfortunate). If we wanted these very useful capabilities, we’d have to
+                create a nice inter-processor communication system.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The Need for Inter-processor Communication</title>
+            <para>
+                The need for a standard inter-processor communication system is real. Dekutree has perhaps
+                written the ﬁrst one for the Nintendo DS. Chris Double used Dekutree’s interprocessor
+                communication model in his tutorials. Tobias Weyand, the creator of NitroTracker
+                and the DS Sampling Keyboard, also used Dekutree’s interprocessor communication
+                model. Many programmers prefer to use the FIFO (a special queue for inter-processor
+                communication built into the Nintendo DS hardware). I will address both of these methods
+                and present a nice abstraction that will allow the programmer to choose either method
+                (according to their needs and opinions) in a later edition of this manual.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Compiling</title>
+            <para>
+                This is the ﬁnal iteration of the Orange Spaceship demo that we will cover in this edition of
+                the manual. Compile it and enjoy the fruits of your labors. Mmm, tasty. You should hear a
+                nice sound when you press the thrust button. The game output should now look like the
+                screen shots in Figure 9.1.
+            </para>
+            <figure>
+                <title>Flying around in the Orange Shuttle, with sound!</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/splash.png"/>
+                    </imageobject>
+                </mediaobject>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="../images/manual/starfield_with_moving_orange_shuttle.png"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </sect1>
+    </chapter>
 
+<!--
+    <appendix>
+        <title>A</title>
+    </appendix>
+    <appendix>
+        <title>About the Author</title>
+        <authorblurb>
+            <para>
+                Jaeden Amero is currently and Electrical Engineering student at Brigham Young University in Provo, Utah USA.
+                He enjoys programming for the Nintendo DS and Gameboy Advance, FPGA coding,
+                and unicycling in his free time.
+            </para>
+        </authorblurb>
+    </appendix>
     <index>
     
     </index>
-    
+-->
+
+<!--TODO: Finish Docbooking Appendix A
+                Finish Docbooking the postface
+                Add multiple sprite explanation (where to place the next one, etc)
+                Write section on interprocessor communication and FIFO
+                Build an index-->
 </book>
