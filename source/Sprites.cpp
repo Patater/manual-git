@@ -63,11 +63,17 @@ void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
 
 // Hide a Sprite
 void hideSprite(SpriteEntry * spriteEntry, bool hide) {
-	if (hide) {
-		spriteEntry->attribute[0] |= ATTR0_DISABLED;
-	} else {
-		spriteEntry->attribute[0] &= ~ATTR0_DISABLED;
-	}
+    if (hide) {
+        //make invisible
+        //attr0: bit 8 on, bit 9 off
+        spriteEntry->attribute[0] &= ~BIT(9); //bit 9 off 0xFFBF
+        spriteEntry->attribute[0] |= BIT(8); //bit 8 on 0x0080
+    } else {
+        //make visible
+        //attr0: bit 8 off, bit 9 on
+        spriteEntry->attribute[0] &= ~BIT(8); //bit 8 off 0xFF7F
+        spriteEntry->attribute[0] |= BIT(9); //bit 9 on 0x0040
+    }
 }
 
 void setSpritePriority(SpriteEntry * spriteEntry, int priority) {
