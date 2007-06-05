@@ -92,9 +92,9 @@ void initBackgrounds() {
 
 void initVideo() {
 	//enable vram and map it to the right places
-    vramSetMainBanks(   VRAM_A_MAIN_BG_0x6000000,		//map A and B to main background memory
-                        VRAM_B_MAIN_BG_0x6020000,		//this gives us 256KB which is a healthy amount for 16-bit gfx
-                        VRAM_C_SUB_BG_0x6200000,		//map C to sub background memory
+    vramSetMainBanks(   VRAM_A_MAIN_BG_0x06000000,		//map A and B to main background memory
+                        VRAM_B_MAIN_BG_0x06020000,		//this gives us 256KB which is a healthy amount for 16-bit gfx
+                        VRAM_C_SUB_BG_0x06200000,		//map C to sub background memory
                         VRAM_D_LCD						//map D to LCD free space
 						//allows adjacent banks to overflow into D if a bug like that was ever to occur
                         );
