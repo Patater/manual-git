@@ -275,8 +275,8 @@
                 currently inserted DS game. This location is an SWI (software interrupt) call to the SRAM
                 on the GBA port. The GBA carts SRAM contains the necessary code to jump to code lo-
                 cated on GBA cart. The DS then is told to run this code and thus redirects to code in the
-                GBA slot. Each PassMe 2 has to be programmed to work with one specific game, as the cer-
-                tain code to redirect to the GBA slot is found in different places within different DS games.
+                GBA slot. Each PassMe 2 has to be programmed to work with one specific game, as the certain
+                code to redirect to the GBA slot is found in different places within different DS games.
             </para>
             <para>
                 There are a few tricks you can pull to determine your firmware version. It involves pictochat
