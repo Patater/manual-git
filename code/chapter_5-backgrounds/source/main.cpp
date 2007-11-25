@@ -95,19 +95,19 @@ void init_backgrounds() {
 
 void display_star_field() {
     dmaCopy(star_fieldBitmap, // This variable is generated for us by grit
-            (void *)BG_BMP_RAM(0), // Our address for main background 3
+            (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
             star_fieldBitmapLen);
 }
 
 void display_planet() {
     dmaCopy(planetBitmap, // This variable is generated for us by grit
-            (void *)BG_BMP_RAM(8), // Our address for main background 2
+            (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
             planetBitmapLen);
 }
 
 void display_splash() {
     dmaCopy(splashBitmap, //This variable is generated for us by grit
-            (void *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
+            (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
             splashBitmapLen);
 }
 
