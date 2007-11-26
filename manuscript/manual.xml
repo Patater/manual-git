@@ -356,9 +356,11 @@
             <para>
                 When ordering a PassMe 2, be sure to select one pre-programmed to a common game that
                 you own, such as the Metroid Prime Hunters Demo or Super Mario 64 DS. Each PassMe 2
-                must be programmed to a speciﬁc game and it is best to select a game that is in large supply.
-                Also, you’ll need a GBA cart with some SRAM on it. Most GBA ﬂash carts have sram, and
-                many older GBA games do as well, if you don’t mind losing your save games on that cart.
+                must be programmed to a specific game and it is best to select a game that is in large supply.
+                Also, you'll need a GBA flash cart with some SRAM on it. Most GBA flash carts have SRAM, but
+                be sure to check your cart before trying to obtain a PassMe 2. Some newer GBA flash carts
+                might only support save games on flash, so simply knowing that your flash cart supports save
+                games isn't enough.
             </para>
         </sect1>
         <sect1>
@@ -381,16 +383,16 @@
             <title>What to do with your Passthrough</title>
             <para>
                 One of the best things to do once you get your passthrough is to install a patch to your Nintendo
-                DS ﬁrmware known as “FlashMe.” This ﬁrmware patch allows for the running of unsigned
-                wiﬁ binaries as well as redirecting the Nintendo DS to boot from the GBA slot in
+                DS firmware known as "FlashMe." This firmware patch allows for the running of unsigned
+                wifi binaries as well as redirecting the Nintendo DS to boot from the GBA slot in
                 NDS mode. This means that after installing FlashMe, you no longer need your PassMe.
                 FlashMe is the preferred and recommended method of running your own software. You no
                 longer have to lug around a passthrough or play with a large block sticking out of the back
-                of your DS. Also, you can send your code via wiﬁ if you so desire and avoid having to use a
-                ﬂash cart. In addition to all those things, in case you ever come across some malicious code
-                that zaps your ﬁrmware or otherwise messes up your DS, FlashMe keeps a recovery program
-                in the protected ﬁrmware space that you can run to save your DS. Because of this feature
-                alone, FlashMe is better than the standard ﬁrmware.
+                of your DS. Also, you can send your code via wifi if you so desire and avoid having to use a
+                Flash cart. In addition to all those things, in case you ever come across some malicious code
+                that zaps your firmware or otherwise messes up your DS, FlashMe keeps a recovery program
+                in the protected firmware space that you can run to save your DS. Because of this feature
+                alone, FlashMe is better than the standard firmware.
             </para>
         </sect1>
     </chapter>
@@ -541,8 +543,9 @@
             <title>The Next Step</title>
             <para>
                 Now that you have devkitARM and libnds installed on your computer, you have everything
-                you need to start coding, excepting perhaps a bit of knowledge on how to code. In the next
-                chapter, we’ll cover the basics of displaying a bitmap on the screen.
+                you need to start coding, excepting perhaps a bit of knowledge on how to code specifically
+                for the DS. In the next chapter, we’ll cover the basics of displaying a bitmap on the
+                screen.
             </para>
             <mediaobject>
                 <imageobject>
@@ -555,64 +558,249 @@
     <chapter>
         <title>How do I display a background?</title>
         <sect1>
+            <title>Some Background Information</title>
+            <para>
+                Since the beginning of time, humans have used raster displays
+                to draw electronic images. Raster images aren't used too much
+                anymore, in practice. However, most all displays still act like
+                raster displays from a programming perspective. Each physical
+                display on the Nintendo DS is actually an LCD screen which
+                works nothing like a raster display in actuality, but the
+                electronics that control it provide an interface to the
+                graphics engines on the Nintendo DS that is very much like a
+                raster display.
+            </para>
+            <para>
+                So what is a raster display? Put simply, it is just like a
+                television display. A beam of electrons blasts away at the back
+                of a phoshor coated screen in a deterministic way (known as a
+                raster scan). The beam, from the perspective of a person
+                watching the television, travels from left to right, one
+                scan line at a time. The beam never blast electrons from right
+                to left. After the beam reaches the right edge of the screen,
+                it turns off and moves to the right and down one line. When the
+                beam finally reaches the bottom line of the screen, it travels
+                back up to the upper left of the screen and begins this drawing
+                process all over again. <xref linkend="raster_display"/>
+                illustrates this process in an exaggerated fashion.
+            </para>
+            <para>
+                Two things are important to remember here. First, that the
+                period of time during which the beam goes from right to left
+                (not drawing anything) is called the horizontal blanking
+                period, or hblank. Second, that the period of time during which
+                the beam goes from bottom to top (again, not drawing anything)
+                is called the vertical blanking period, or vblank. Knowing
+                about vblank is useful for us as Nintendo DS programmers
+                because it is the period of time in which we will tell the
+                Nintendo DS to draw things. If we didn't, then the Nintendo DS
+                display might be in the middle of drawing the screen when we
+                tell it what to draw. This would give us strange artifacts and
+                is generally undesirable.
+            </para>
+            <figure id="raster_display">
+                <title>The Raster Display</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/raster_display.svg"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </sect1>
+        <sect1>
+            <title>The 2D Graphics Engines</title>
+            <para>
+                The Nintendo DS has two screens. As such, it has two graphics
+                engines, one for each screen. The first engine is referred to
+                as the "main" engine, while the second is called the "sub"
+                engine. Both of these engines can put in charge of either
+                screen. By default, libnds tells the main engine to operate the
+                top physical screen and the sub screen the bottom physical
+                screen.
+            </para>
+            <para>
+                Each engine supports up to four backgrounds and up to 128
+                sprites. They operate independently of each other, each with
+                their own control registers, graphics data, and palettes. To
+                use an engine, we must first turn them on. Then we place the
+                engine into a certain mode of operation. Next, we map memory
+                for use with the engines. Finally, we load their memory with
+                graphics data and palettes and they automatically just draw
+                what we've set them up to do.
+            </para>
+        </sect1>
+        <sect1>
+            <title>The Fifth Mode</title>
+            <para>
+                Each of these graphics engines can be placed into one of seven
+                different modes that support different features. In this
+                manual, we'll cover one of the more common graphic modes, Mode
+                5. It is commonly used because it is very flexible and allows
+                for some amazing special effects. We'll learn how to display
+                multiple 15-bit color 1-bit alpha <glossterm
+                linkend="affine">affine</glossterm> backgrounds in this
+                chapter. Mode 5 consists of four different backgrounds each
+                with their own capabilities. <xref
+                linkend="mode_5_information"/> shows how flexible Mode 5 can
+                be.
+            </para>
+            <table id="mode_5_information">
+                <title>Mode 5 Information</title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Background</entry><entry>Purpose</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>0</entry><entry>Tiled Mode, 2D with 3D support</entry>
+                        </row>
+                        <row>
+                            <entry>1</entry><entry>Tiled Mode, 2D</entry>
+                        </row>
+                        <row>
+                            <entry>2</entry><entry>Extended Rotation Background</entry>
+                        </row>
+                        <row>
+                            <entry>3</entry><entry>Extended Rotation Background</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
+        </sect1>
+        <sect1>
+            <title>A Fine Affine Background</title>
+            <para>
+                An affine background, also known as an external rotation
+                background or exrot background, is one that has the ability to
+                be transformed by an <glossaryterm
+                linkend="affine_transformation_matrix">affine transformation
+                matrix</glossaryterm>.  Since linear algebra is beyond the
+                scope of this manual, I will cover briefly how to set up a
+                basic affine background, but not get into rotating, scaling, or
+                sheering it. For this manual, we'll just apply an identity
+                transform, a transform that doesn't actually change the
+                background, to our backgrounds. With an affine transformation
+                matrix, you can rotate, scale, and sheer an affine background,
+                among other interesting effects. If you want to learn about the
+                cool effects you can do with an affine background and an affine
+                transformation matrix, I recommend you look at Cearn's tutorial
+                on affine transformations at <ulink
+                url="http://www.coronac.com/tonc/text/affine.htm"/>.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Coding with this Manual</title>
+            <para>
+                Since this is the first time in this manual where we'll start
+                to write code, we should be aware of the resources available to
+                assist us in following along with this manual. If you haven't
+                already done so, download the sources that accompany this
+                manual from the manual homepage at <ulink
+                url="http://patater.com/manual"/>. After extracting the
+                sources, you'll find a folder called <filename>code</filename>.
+                The manual provides a template for you to use with this manual
+                and any other Nintendo DS programming projects you might wish
+                to start developing. This template is located in the
+                <filename>code</filename> folder and is itself a folder called
+                <filename>chapter_0-starting_system</filename>. The
+                <filename>code</filename> folder also contains project folders
+                for each chapter. If at anytime you get stuck or if you want to
+                skip a chapter, feel free to refer the completed project for
+                the chapter you are stuck on or to grab the completed project
+                for the chapter prior to the one you wish to skip to. To follow
+                along with this manual, copy the
+                <filename>chapter_0-starting_system</filename> folder to a nice
+                place you wish to work from (I'd copy the folder to my
+                <filename>~/projects<filename> directory and name the copy
+                <filename>manual</filename>) and open
+                <filename>source/main.cpp</filename> with your favorite text
+                editor. Let's get going!
+            </para>
+        <sect1>
             <title>Initializing the Hardware</title>
             <para>
-                In order to get the hardware to do what we want, we have to ﬁrst initialize it. This means
-                turning on the 2D core and setting up a VBlank IRQ handler. This is where we fall in love
-                with libnds. Libnds makes it incredibly simple to do these two things. Add the following
-                code to your main function in a new main.cpp C++ code ﬁle.
+                In order to get the hardware to do what we want, we have to
+                first initialize it. This means turning on the 2D core and
+                setting up a VBlank <glossterm linkend="irq_handler">IRQ
+                handler</glossterm>. This is where we fall in love with libnds.
+                libnds makes it incredibly simple to do these two things. Add
+                the following code to your new <filename>main.cpp</filename> C++
+                code file.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 #include &lt;nds.h&gt;
-int main () {
-      //turn on the 2D core
-      powerON(POWER_ALL_2D);
-      //turn on the 2D core
-      irqInit();
-      irqSet(IRQ_VBLANK, 0);
-      return 0;
+
+int main() {
+    /*  Turn on the 2D graphics core. */
+    powerON(POWER_ALL_2D);
+
+    /*
+     *  Set up interrupts.
+     *
+     *  We don't really get into what these do exactly at this point in the
+     *  manual, but we still need to do them for now.
+     */
+    irqInit();
+    irqSet(IRQ_VBLANK, 0);
+
+    return 0;
 }
             </programlisting>
         </sect1>
         <sect1>
             <title>Configuring the VRAM Banks</title>
             <para>
-                After we get the basic setup done, we now have to set up the graphics hardware to display
-                data how we’d like it to be displayed. Leťs make a function called initVideo();
+                After we get the basic setup done, we now have to tell the
+                graphics hardware where to get its display data from. We'll use
+                these memory locations, when we load the graphics later. Let's
+                make a function called <code
+                language="C++"><function>initVideo</function></code>. <!--
+                I'm not sure if I want to wrap function in a code element or
+                not, yet. XXX decide later-->
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void initVideo() {
-    /*map vram to display a bg on the main and sub screen and give us lots
-        of sprites*/
-    vramSetMainBanks( //map A and B to main background memory
-                         //this gives us 256KB which is a healthy amount for
-                         // 16-bit gfx
-                         VRAM_A_MAIN_BG_0x06000000,
-                         VRAM_B_MAIN_BG_0x06020000,
-                         //map C to sub background memory
-                         VRAM_C_SUB_BG_0x06200000,
-                         //map D to LCD free space
-                         VRAM_D_LCD);
-     //map a bank for use with sprites
-     vramSetBankE(VRAM_E_MAIN_SPRITE);
-     //mapping E to main sprites gives us 64k for sprites
-     //(64k is the max space that 1024 tiles take up in 256 color mode)
-     //set the video mode on the main screen
-    videoSetMode( MODE_5_2D |              //set the graphics mode to Mode 5
-                    DISPLAY_SPR_ACTIVE |    //turn on sprites
-                    DISPLAY_BG3_ACTIVE |    //turn on background 3
-                    DISPLAY_SPR_1D);        //this is used when in tile mode
-    //set the video mode on the sub screen
-     videoSetModeSub(MODE_5_2D | DISPLAY_BG3_ACTIVE);
+    /*
+     *  Map VRAM to display a background on the main and sub screens.
+     * 
+     *  The vramSetMainBanks function takes four arguments, one for each of the
+     *  major VRAM banks. We can use it as shorthand for assigning values to
+     *  each of the VRAM bank's control registers.
+     *
+     *  We map banks A and B to main screen  background memory. This gives us
+     *  256KB, which is a healthy amount for 16-bit graphics.
+     *
+     *  We map bank C to sub screen background memory.
+     *
+     *  We map bank D to LCD. This setting is generally used for when we aren't
+     *  using a particular bank.
+     */
+    vramSetMainBanks(VRAM_A_MAIN_BG_0x06000000,
+                     VRAM_B_MAIN_BG_0x06020000,
+                     VRAM_C_SUB_BG_0x06200000,
+                     VRAM_D_LCD);
+
+    /*  Set the video mode on the main screen. */
+    videoSetMode(MODE_5_2D | // Set the graphics mode to Mode 5
+                 DISPLAY_BG2_ACTIVE | // Enable BG2 for display
+                 DISPLAY_BG3_ACTIVE); //Enable BG3 for display
+
+    /*  Set the video mode on the sub screen. */
+    videoSetModeSub(MODE_5_2D | // Set the graphics mode to Mode 5
+                    DISPLAY_BG3_ACTIVE); // Enable BG3 for display
 }
             </programlisting>
             <para>
-                There are nine VRAM banks in total on the Nintendo DS. See Figure 5.0 for details about
-                them. Our 16bit background images take up 128KB of memory each. Thus, each background
-                has to have one whole VRAM bank assigned to it. Not all VRAM banks can be used for all
-                purposes, however. Refer to Appendix A, for more detailed information.
+                There are nine VRAM banks in total on the Nintendo DS. See
+                <xref linkend="vram_bank_information"/> for details about them.
+                Our 16bit background images take up 128KB of memory each. Thus,
+                each background has to have one whole VRAM bank assigned to it.
+                Not all VRAM banks can be used for all purposes, however. Refer
+                to Appendix A, for more detailed information.
             </para>
-            <table>
+            <table id="vram_bank_information">
                 <title>VRAM Bank Information</title>
                 <tgroup cols="4">
                     <thead>
@@ -663,85 +851,126 @@ void initVideo() {
             </table>
         </sect1>
         <sect1>
-            <title>Mode 5 Information</title>
+            <title>Setting up the Affine Backgrounds</title>
             <para>
-                Mode 5 is a very common graphics mode on the Nintendo DS. It is very ﬂexible and allows
-                for amazing special eﬀects. Mode 5 consists of four diﬀerent backgrounds each with their
-                own capabilities. Figure 5.1 shows how ﬂexible Mode 5 can be.
+                libnds helps us once again by provide a nice <glossaryterm
+                linkend="api">API</glossaryterm> for accessing the affine
+                transformation matrix of a particular affine background. libnds
+                provides access to a background's affine transformation matrix
+                through four variables. <xref linkend="libnds_affine_bg_api"/>
+                shows the names of these variables and which part of the affine
+                transformation matrix they align with. 
             </para>
-            <table>
-                <title>Mode 5 Information</title>
-                <tgroup cols="2">
-                    <thead>
-                        <row>
-                            <entry>Background</entry><entry>Purpose</entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry>0</entry><entry>Tiled Mode, 2D with 3D support</entry>
-                        </row>
-                        <row>
-                            <entry>1</entry><entry>Tiled Mode, 2D</entry>
-                        </row>
-                        <row>
-                            <entry>2</entry><entry>Extended Rotation Background</entry>
-                        </row>
-                        <row>
-                            <entry>3</entry><entry>Extended Rotation Background</entry>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </table>
-        </sect1>
-        <sect1>
-            <title>Setting up the Extended Rotation Backgrounds</title>
+            <figure id="libnds_affine_bg_api">
+                <title>libnds Affine Background API</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/libnds_affine_bg_api.svg"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
             <para>
-                Extended rotation backgrounds, exrot bgs for short, extend beyond visible screen space and
-                can be rotated, scaled, sheered and translated. This transformation work is done by what is
-                called an Aﬃne Transformation Matrix. Since linear algebra is beyond the scope of this
-                manual, I will cover brieﬂy how to set up a basic exrot bg, but not get into rotating, scaling,
-                sheering, or translating it. Leťs proceed to make a function called initBackgrounds() which
-                will set up our exrot bgs.
+                What we'll do now is add three backgrounds. We'll put a splash
+                screen on the top physical screen, a starfield on the bottom
+                physical screen, and a planet placed atop the starfield
+                background. To do this, we'll use SUB_BG3 (although we could
+                use SUB_BG2) for the splash screen and both backgrounds 2 and 3
+                on the main screen for the planet and starfield respectively.
+                In order to make sure the planet shows up above the starfield
+                as opposed to below it, we give the planet a priority number
+                less than that of the starfield's priority number. Relatively
+                lower priority numbers place backgrounds relatively above other
+                backgrounds.
+            </para>
+            <para>
+                We'll now use that nice API libnds provides us for both the
+                background control registers and the affine translation matrix.
+                Let's proceed to make a function called <code
+                language="C++"><function>initBackgrounds</function></code>
+                which will set up our affine backgrounds.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void initBackgrounds() {
-    //setup exrot bg 3 on main as a 16bit color background
-    BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) | BG_PRIORITY(3);
-    //attributes of the affine translation matrix
-    BG3_XDX = 1 &lt;&lt; 8; //scale x
-    BG3_XDY = 0; //rotation x
-    BG3_YDX = 0; //rotation y
-    BG3_YDY = 1 &lt;&lt; 8; //scale y
-    BG3_CX = 0; //translation x
-    BG3_CY = 0; //translation y
-    //setup exrot bg 3 on sub
-    SUB_BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) | BG_PRIORITY(3);
-    //attributes of the affine translation matrix
-    SUB_BG3_XDX = 1 &lt;&lt; 8; //scale x
-    SUB_BG3_XDY = 0; //rotation x
-    SUB_BG3_YDX = 0; //rotation y
-    SUB_BG3_YDY = 1 &lt;&lt; 8; //scale y
-    SUB_BG3_CX = 0; //translation x
-    SUB_BG3_CY = 0; //translation y
+    /*  Set up affine background 3 on main as a 16-bit color background */
+    BG3_CR = BG_BMP16_256x256 |
+             BG_BMP_BASE(0) | // The starting place in memory
+             BG_PRIORITY(3); // A low priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    BG3_XDX = 1 << 8;
+    BG3_XDY = 0;
+    BG3_YDX = 0;
+    BG3_YDY = 1 << 8;
+
+    /*  Place main screen background 3 at the origin (upper left of the screen)
+     */
+    BG3_CX = 0;
+    BG3_CY = 0;
+
+
+    /*  Set up affine background 2 on main as a 16-bit color background */
+    BG2_CR = BG_BMP16_128x128 |
+             BG_BMP_BASE(8) | // The starting place in memory
+             BG_PRIORITY(2);  // A higher priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    BG2_XDX = 1 << 8;
+    BG2_XDY = 0;
+    BG2_YDX = 0;
+    BG2_YDY = 1 << 8;
+
+    /*  Place main screen background 2 an interesting place
+     */
+    BG2_CX = -(SCREEN_WIDTH / 2 - 32) << 8;
+    BG2_CY = -32 << 8;
+
+    /*  Set up affine background 3 on sub as a 16-bit color background */
+    SUB_BG3_CR = BG_BMP16_256x256 |
+                 BG_BMP_BASE(0) | // The starting place in memory
+                 BG_PRIORITY(3); // A low priority
+
+    /*  Set the affine transformation matrix for the sub screen background 3
+     *  to be the identity matrix.
+     */
+    SUB_BG3_XDX = 1 << 8;
+    SUB_BG3_XDY = 0;
+    SUB_BG3_YDX = 0;
+    SUB_BG3_YDY = 1 << 8;
+
+    /*
+     *  Place main screen background 3 at the origin (upper left of the screen)
+     */
+    SUB_BG3_CX = 0;
+    SUB_BG3_CY = 0;
 }
             </programlisting>
         </sect1>
         <sect1>
             <title>The Basics of DMA</title>
             <para>
-                DMA stands for Direct Memory Access. DMA allows the reading and writing of memory
-                independently of the CPU. The Nintendo DS has special, dedicated DMA hardware to do
-                quick and eﬃcient moving of memory. Libnds provides us with a few functions to make use
-                of the DMA hardware in the Nintendo DS.
+                DMA stands for Direct Memory Access. DMA allows the reading and
+                writing of memory independently of the CPU. The Nintendo DS has
+                special, dedicated DMA hardware to do quick and moderately
+                effcient moving of memory. DMA is not very efficient for memory
+                fill operations, however, as the data to fill with needs to be
+                read once for every write. Libnds provides us with a few
+                functions to make use of the DMA hardware in the Nintendo DS.
             </para>
             <para>
-                Whenever you have the opportunity to use DMA, you should. It is always better to use
-                DMA than to use a for loop to copy data. When using DMA to copy from main memory, do
-                not forget to ﬂush main memory before using DMA. Another issue would be that in the
-                middle of a DMA, the main CPUs are paused. This can cause awkward bugs with interrupt
-                handling. For this reason, and <function>swifastcopy</function> may be safer, and isn’t
-                too much slower. The safest bet is always <function>memcopy</function> and
+                Whenever you have the opportunity to use DMA, you should. It is
+                always better to use DMA than to use a for loop to copy data.
+                When using DMA to copy from main memory, do not forget to flush
+                main memory before using DMA. Another issue to consider would
+                be that in the middle of a DMA, the main CPUs are prevented
+                from using certain memory hardware<!--(XXX bus contention or
+                something?)-->. This can cause awkward bugs with interrupt
+                handling. For this reason, and <function>swifastcopy</function>
+                may be safer, and is not too much slower. The safest bet is
+                always <function>memcopy</function> and
                 <function>memset</function>, if you are running into some bugs.
             </para>
             <para>
@@ -759,29 +988,39 @@ void initBackgrounds() {
             </funcsynopsis>
             <para>
                 In our program, we will use <function>dmaCopy</function> to load some graphics into memory.
-                Leťs start out bywriting some functions to display our backgrounds. As we’ve already set up the
-                hardware to display the data in the desired manner, right after we copy we will get some nice images
-                displayed on our screens. If we didn’t set up our hardware ﬁrst, we’d most likely get garbage on
-                the screen.
+                Let's start out by writing some functions to display our backgrounds. Since we've already set up the
+                hardware to display the data in the desired manner, right after the copy we will get some nice images
+                displayed on our screens. If we didn't set up our backgrounds first, we'd most likely get garbage on
+                the screen until we eventually did set up the background control registers.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void displaySplash() {
-      dmaCopy(Splash_bin, (uint16 *)BG_BMP_RAM_SUB(0), Splash_bin_size);
-      //sub bg is BG_BMP_RAM_SUB(0)
-}
 void displayStarField() {
-      dmaCopy(StarField_bin, (uint16 *)BG_BMP_RAM(0), StarField_bin_size);
-      //main bg is BG_BMP_RAM(0)
+    dmaCopy(starFieldBitmap, // This variable is generated for us by grit
+            (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
+            starFieldBitmapLen);
+}
+
+void displayPlanet() {
+    dmaCopy(planetBitmap, // This variable is generated for us by grit
+            (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
+            planetBitmapLen);
+}
+
+void displaySplash() {
+    dmaCopy(splashBitmap, //This variable is generated for us by grit
+            (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
+            splashBitmapLen);
 }
             </programlisting>
         </sect1>
         <sect1>
             <title>Working with the Makefile</title>
             <para>
-                The default template makeﬁle will turn your graphic ﬁles into object ﬁles for linking into
-                your program. Never include data as a header ﬁle.
+                The default template makefile will turn your graphic files into object files for linking into
+                your program. Never include data as a header file.
             </para>
             <para>
+                <!-- XXX Rewrite this section to cover the basic use of grit -->
                 The graphics must be in raw binary (.bin) format. Considering the scope of this edition of
                 the manual, I will not be covering how to convert graphics into .bin format. On Linux, im-
                 age conversion is usually done by a program called <command>gfx2gba</command>.
@@ -816,22 +1055,37 @@ void displayStarField() {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 #include &lt;nds.h&gt;
-//gfx
-#include "StarField_bin.h"
-#include "Splash_bin.h"
-//other functions we made go here
-int main () {
-      //turn on the 2D core
-      powerON(POWER_ALL_2D);
-      //turn on the 2D core
-      irqInit();
-      irqSet(IRQ_VBLANK, 0);
-      initVideo();
-      initBackgrounds();
-      //display backgrounds
-      displayStarField();
-      displaySplash();
-      return 0;
+
+#include "starField.h"
+#include "planet.h"
+#include "splash.h"
+
+/* other functions we've made are here */
+
+int main() {
+    /*  Turn on the 2D graphics core. */
+    powerON(POWER_ALL_2D);
+
+    /*
+     *  Set up interrupts.
+     *
+     *  We don't really get into what these do exactly at this point in the
+     *  manual, but we still need to do them for now.
+     */
+    irqInit();
+    irqSet(IRQ_VBLANK, 0);
+
+    /*  Configure the VRAM and background control registers */
+    lcdMainOnBottom(); // Place the main screen on the bottom physical screen
+    initVideo(); 
+    initBackgrounds(); 
+
+    /*  Display the backgrounds */
+    displayStarField(); 
+    displayPlanet();
+    displaySplash();
+
+    return 0;
 }
             </programlisting>
         </sect1>
@@ -849,12 +1103,12 @@ int main () {
                 <title>The program should look like this when run.</title>
                 <mediaobject>
                     <imageobject>
-                        <imagedata fileref="../images/manual/splash.png"/>
+                        <imagedata fileref="images/splash.png"/>
                     </imageobject>
                 </mediaobject>
                 <mediaobject>
                     <imageobject>
-                        <imagedata fileref="../images/manual/starfield.png"/>
+                        <imagedata fileref="images/starfield_and_planet.png"/>
                     </imageobject>
                 </mediaobject>
             </figure>
@@ -1820,5 +2074,39 @@ int main() {
                 Finish Docbooking the postface
                 Add multiple sprite explanation (where to place the next one, etc)
                 Write section on interprocessor communication and FIFO
-                Build an index-->
+                Build an index and a glossary-->
+<glossary>
+    <title>Glossary</title>
+    <para>
+        Programming the Nintendo DS, and other embedded hardware systems in
+        general, requires knowledge of many different concepts the terms used
+        to describe them. Throughout this manual, we've introduced many terms
+        that you probably have never encountered, excepting that you might have
+        had other embedded hardware or video game programming practice.
+    </para>
+    <glossdiv>
+        <glossentry id="irq_handler">
+            <glossterm>Interrupt Request Handler</glossterm>
+            <acronym>IRQ Handler</acronym>
+            <glossdef>
+                <para>
+                     An interrupt handler is a function that is called after an
+                     interrupt is triggered. It is code designed to do
+                     something useful as a result of the interrupt. A common
+                     example of an interrupt handler is the VBlank interrupt
+                     handler. Upon entering VBlank, the Nintendo DS will cause
+                     the VBlank handler to run which will often update the
+                     graphics engines and/or VRAM to draw new images onto the
+                     display. The updating of the display is tied to the VBlank
+                     interrupt to avoid screen artifacts and to keep screen
+                     updating from the software side in sync with screen
+                     updatingon the hardware side.
+                  </para>
+                  <glossseealso otherterm="interrupt">
+                  <glossseealso otherterm="vblank">
+            </glossdef>
+        </glossentry>
+    </glossdiv>
+</glossary>
+
 </book>
