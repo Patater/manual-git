@@ -1,10 +1,10 @@
 #include <nds.h>
 
-#include "star_field.h"
+#include "starField.h"
 #include "planet.h"
 #include "splash.h"
 
-void init_video() {
+void initVideo() {
     /*
      *  Map VRAM to display a background on the main and sub screens.
      * 
@@ -35,7 +35,7 @@ void init_video() {
                     DISPLAY_BG3_ACTIVE); // Enable BG3 for display
 }
 
-void init_backgrounds() {
+void initBackgrounds() {
     /*  Set up affine background 3 on main as a 16-bit color background */
     BG3_CR = BG_BMP16_256x256 |
              BG_BMP_BASE(0) | // The starting place in memory
@@ -93,19 +93,19 @@ void init_backgrounds() {
     SUB_BG3_CY = 0;
 }
 
-void display_star_field() {
-    dmaCopy(star_fieldBitmap, // This variable is generated for us by grit
+void displayStarField() {
+    dmaCopy(starFieldBitmap, // This variable is generated for us by grit
             (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
-            star_fieldBitmapLen);
+            starFieldBitmapLen);
 }
 
-void display_planet() {
+void displayPlanet() {
     dmaCopy(planetBitmap, // This variable is generated for us by grit
             (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
             planetBitmapLen);
 }
 
-void display_splash() {
+void displaySplash() {
     dmaCopy(splashBitmap, //This variable is generated for us by grit
             (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
             splashBitmapLen);
@@ -126,13 +126,13 @@ int main() {
 
     /*  Configure the VRAM and background control registers */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen
-    init_video(); 
-    init_backgrounds(); 
+    initVideo(); 
+    initBackgrounds(); 
 
     /*  Display the backgrounds */
-    display_star_field(); 
-    display_planet();
-    display_splash();
+    displayStarField(); 
+    displayPlanet();
+    displaySplash();
 
     return 0;
 }
