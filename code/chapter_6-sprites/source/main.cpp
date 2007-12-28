@@ -126,9 +126,9 @@ void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) 
     static const int SHUTTLE_AFFINE_ID = 0;
     static const int SHUTTLE_WIDTH = 64;
     static const int SHUTTLE_HEIGHT = 64;
-    static const int SHUTTLE_X_POS = SCREEN_WIDTH / 2 - SHUTTLE_WIDTH;
+    static const int SHUTTLE_X_POS = SCREEN_WIDTH / 2 - SHUTTLE_WIDTH * 2 + SHUTTLE_WIDTH / 2;
     static const int SHUTTLE_Y_POS = SCREEN_HEIGHT / 2 - SHUTTLE_HEIGHT;
-    static const int SHUTTLE_ANGLE = 0;
+    static const int SHUTTLE_ANGLE = 462; //XXX MAN NOTE DS uses 512 degree system
     static const tObjPriority SHUTTLE_PRIORITY = OBJPRIORITY_0;
     static const int SHUTTLE_TILE_ID = nextAvailableTileIdx;
     nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE; //XXX MAN NOTE orangeShuttle tiles is length in bytes
