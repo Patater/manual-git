@@ -118,11 +118,10 @@ typedef struct {
 
 void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
     //XXX check the nds_examples to make sure this is a good way to do things (it isn't currently)
-    int nextAvailableTileIdx = 512;
-    static const int BYTES_PER_16_COLOR_TILE = 4;
+    int nextAvailableTileIdx = 0;
+    static const int BYTES_PER_16_COLOR_TILE = 32;
     static const int COLORS_PER_PALETTE = 16; //how many colors there are in a palette
-    //static const int BOUNDARY_VALUE = 32;
-    static const int BOUNDARY_VALUE = 2;
+    static const int BOUNDARY_VALUE = 16;
 
     static const int SHUTTLE_AFFINE_ID = 0;
     static const int SHUTTLE_WIDTH = 64;
@@ -132,24 +131,22 @@ void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) 
     static const int SHUTTLE_ANGLE = 0;
     static const tObjPriority SHUTTLE_PRIORITY = OBJPRIORITY_0;
     static const int SHUTTLE_TILE_ID = nextAvailableTileIdx;
-    static const int SHUTTLE_PAL_ID = SHUTTLE_AFFINE_ID * COLORS_PER_PALETTE;
     nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE; //XXX MAN NOTE orangeShuttle tiles is length in bytes
 
     static const int MOON_AFFINE_ID = 1;
     static const int MOON_WIDTH = 16;
     static const int MOON_HEIGHT = 16;
-    static const int MOON_X_POS = SCREEN_WIDTH / 2 - MOON_WIDTH;
-    static const int MOON_Y_POS = SCREEN_WIDTH / 2 - MOON_HEIGHT;
-    static const tObjPriority MOON_PRIORITY = OBJPRIORITY_3;
+    static const int MOON_X_POS = SCREEN_WIDTH / 2 + MOON_WIDTH * 3 + MOON_WIDTH / 2;
+    static const int MOON_Y_POS = SCREEN_WIDTH / 2 + MOON_HEIGHT;
+    static const tObjPriority MOON_PRIORITY = OBJPRIORITY_2;
     static const int MOON_TILE_ID = nextAvailableTileIdx;
-    static const int MOON_PAL_ID = MOON_AFFINE_ID * COLORS_PER_PALETTE;
     nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
 
     initOAM(spriteEntry, spriteRotation);
 
     //copy in the sprite palettes
-    dmaCopyHalfWords(3, orangeShuttlePal, &SPRITE_PALETTE[SHUTTLE_PAL_ID], orangeShuttlePalLen);
-    dmaCopyHalfWords(3, moonPal, &SPRITE_PALETTE[MOON_PAL_ID], moonPalLen);
+    dmaCopyHalfWords(3, orangeShuttlePal, &SPRITE_PALETTE[SHUTTLE_AFFINE_ID * COLORS_PER_PALETTE], orangeShuttlePalLen);
+    dmaCopyHalfWords(3, moonPal, &SPRITE_PALETTE[MOON_AFFINE_ID * COLORS_PER_PALETTE], moonPalLen);
 
     //copy the sprite graphics in obj graphics mem
     dmaCopyHalfWords(3, orangeShuttleTiles, &SPRITE_GFX[SHUTTLE_TILE_ID * BOUNDARY_VALUE], orangeShuttleTilesLen);
@@ -167,7 +164,7 @@ void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) 
     rotateSprite(&spriteRotation[SHUTTLE_AFFINE_ID], SHUTTLE_ANGLE);
     shuttle->tileIdx = SHUTTLE_TILE_ID;
     setSpritePriority(shuttle, SHUTTLE_PRIORITY);
-    shuttle->objPal = SHUTTLE_PAL_ID;
+    shuttle->objPal = SHUTTLE_AFFINE_ID;
     shuttle->isHidden = false;
 
     //create the moon sprite
@@ -177,7 +174,7 @@ void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) 
     moveSprite(moon, MOON_X_POS, MOON_Y_POS);
     moon->tileIdx = MOON_TILE_ID;
     setSpritePriority(moon, MOON_PRIORITY);
-    moon->objPal = MOON_PAL_ID;
+    moon->objPal = MOON_AFFINE_ID;
     moon->isHidden = false;
 }
 
