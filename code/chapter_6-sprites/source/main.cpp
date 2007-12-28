@@ -1,8 +1,13 @@
 #include <nds.h>
+#include "sprites.h"
 
+/* Backgrounds */
 #include "starField.h"
 #include "planet.h"
 #include "splash.h"
+/* Sprites */
+#include "orangeShuttle.h"
+#include "moon.h"
 
 void initVideo() {
     /*
@@ -19,16 +24,23 @@ void initVideo() {
      *
      *  We map bank D to LCD. This setting is generally used for when we aren't
      *  using a particular bank.
+     *
+     *  We map bank E to main screen sprite memory (aka object memory).
      */
     vramSetMainBanks(VRAM_A_MAIN_BG_0x06000000,
                      VRAM_B_MAIN_BG_0x06020000,
                      VRAM_C_SUB_BG_0x06200000,
                      VRAM_D_LCD);
 
+    vramSetBankE(VRAM_E_MAIN_SPRITE);
+
     /*  Set the video mode on the main screen. */
     videoSetMode(MODE_5_2D | // Set the graphics mode to Mode 5
                  DISPLAY_BG2_ACTIVE | // Enable BG2 for display
-                 DISPLAY_BG3_ACTIVE); //Enable BG3 for display
+                 DISPLAY_BG3_ACTIVE | // Enable BG3 for display
+                 DISPLAY_SPR_ACTIVE | // Enable sprites for display
+                 DISPLAY_SPR_1D       // Enable 1D tiled sprites
+                 );
 
     /*  Set the video mode on the sub screen. */
     videoSetModeSub(MODE_5_2D | // Set the graphics mode to Mode 5
@@ -53,7 +65,6 @@ void initBackgrounds() {
      */
     BG3_CX = 0;
     BG3_CY = 0;
-
 
     /*  Set up affine background 2 on main as a 16-bit color background */
     BG2_CR = BG_BMP16_128x128 |
@@ -93,28 +104,105 @@ void initBackgrounds() {
     SUB_BG3_CY = 0;
 }
 
+typedef struct {
+    int id;
+    int width;
+    int height;
+    int x;
+    int y;
+    int angle;
+    tObjPriority priority;
+    int tileId;
+    int palId;
+} SpriteInfo;
+
+void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
+    //XXX check the nds_examples to make sure this is a good way to do things (it isn't currently)
+    int nextAvailableTileIdx = 512;
+    static const int BYTES_PER_16_COLOR_TILE = 4;
+    static const int COLORS_PER_PALETTE = 16; //how many colors there are in a palette
+    //static const int BOUNDARY_VALUE = 32;
+    static const int BOUNDARY_VALUE = 2;
+
+    static const int SHUTTLE_AFFINE_ID = 0;
+    static const int SHUTTLE_WIDTH = 64;
+    static const int SHUTTLE_HEIGHT = 64;
+    static const int SHUTTLE_X_POS = SCREEN_WIDTH / 2 - SHUTTLE_WIDTH;
+    static const int SHUTTLE_Y_POS = SCREEN_HEIGHT / 2 - SHUTTLE_HEIGHT;
+    static const int SHUTTLE_ANGLE = 0;
+    static const tObjPriority SHUTTLE_PRIORITY = OBJPRIORITY_0;
+    static const int SHUTTLE_TILE_ID = nextAvailableTileIdx;
+    static const int SHUTTLE_PAL_ID = SHUTTLE_AFFINE_ID * COLORS_PER_PALETTE;
+    nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE; //XXX MAN NOTE orangeShuttle tiles is length in bytes
+
+    static const int MOON_AFFINE_ID = 1;
+    static const int MOON_WIDTH = 16;
+    static const int MOON_HEIGHT = 16;
+    static const int MOON_X_POS = SCREEN_WIDTH / 2 - MOON_WIDTH;
+    static const int MOON_Y_POS = SCREEN_WIDTH / 2 - MOON_HEIGHT;
+    static const tObjPriority MOON_PRIORITY = OBJPRIORITY_3;
+    static const int MOON_TILE_ID = nextAvailableTileIdx;
+    static const int MOON_PAL_ID = MOON_AFFINE_ID * COLORS_PER_PALETTE;
+    nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
+
+    initOAM(spriteEntry, spriteRotation);
+
+    //copy in the sprite palettes
+    dmaCopyHalfWords(3, orangeShuttlePal, &SPRITE_PALETTE[SHUTTLE_PAL_ID], orangeShuttlePalLen);
+    dmaCopyHalfWords(3, moonPal, &SPRITE_PALETTE[MOON_PAL_ID], moonPalLen);
+
+    //copy the sprite graphics in obj graphics mem
+    dmaCopyHalfWords(3, orangeShuttleTiles, &SPRITE_GFX[SHUTTLE_TILE_ID * BOUNDARY_VALUE], orangeShuttleTilesLen);
+    dmaCopyHalfWords(3, moonTiles, &SPRITE_GFX[MOON_TILE_ID * BOUNDARY_VALUE], moonTilesLen);
+
+    //////////////////////////////////////////////
+
+    //create the ship sprite
+    SpriteEntry * shuttle = &spriteEntry[SHUTTLE_AFFINE_ID];
+    shuttle->attribute[0] = ATTR0_COLOR_16 | //16 color sprite
+                            ATTR0_ROTSCALE_DOUBLE; //affine transformable
+    shuttle->attribute[1] = ATTR1_ROTDATA(SHUTTLE_AFFINE_ID) | //location of affine transformation matrix
+                            ATTR1_SIZE_64; //size 64x64
+    moveSprite(shuttle, SHUTTLE_X_POS, SHUTTLE_Y_POS);
+    rotateSprite(&spriteRotation[SHUTTLE_AFFINE_ID], SHUTTLE_ANGLE);
+    shuttle->tileIdx = SHUTTLE_TILE_ID;
+    setSpritePriority(shuttle, SHUTTLE_PRIORITY);
+    shuttle->objPal = SHUTTLE_PAL_ID;
+    shuttle->isHidden = false;
+
+    //create the moon sprite
+    SpriteEntry * moon = &spriteEntry[MOON_AFFINE_ID];
+    moon->attribute[0] = ATTR0_COLOR_16; //16 color sprite (not affine transformable)
+    moon->attribute[1] = ATTR1_SIZE_32; //size 32x32
+    moveSprite(moon, MOON_X_POS, MOON_Y_POS);
+    moon->tileIdx = MOON_TILE_ID;
+    setSpritePriority(moon, MOON_PRIORITY);
+    moon->objPal = MOON_PAL_ID;
+    moon->isHidden = false;
+}
+
 void displayStarField() {
-    dmaCopy(starFieldBitmap, // This variable is generated for us by grit
+    dmaCopyHalfWords(3, starFieldBitmap, // This variable is generated for us by grit
             (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
             starFieldBitmapLen);
 }
 
 void displayPlanet() {
-    dmaCopy(planetBitmap, // This variable is generated for us by grit
+    dmaCopyHalfWords(3, planetBitmap, // This variable is generated for us by grit
             (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
             planetBitmapLen);
 }
 
 void displaySplash() {
-    dmaCopy(splashBitmap, //This variable is generated for us by grit
+    dmaCopyHalfWords(3, splashBitmap, //This variable is generated for us by grit
             (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
             splashBitmapLen);
 }
 
 int main() {
+
     /*  Turn on the 2D graphics core. */
     powerON(POWER_ALL_2D);
-
     /*
      *  Set up interrupts.
      *
@@ -126,13 +214,23 @@ int main() {
 
     /*  Configure the VRAM and background control registers */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen
-    initVideo(); 
-    initBackgrounds(); 
+    initVideo();
+    initBackgrounds();
 
     /*  Display the backgrounds */
-    displayStarField(); 
+    displayStarField();
     displayPlanet();
     displaySplash();
+
+    /* Display a few sprites */
+	SpriteEntry *spritesMain = new SpriteEntry[128];
+	SpriteRotation *spriteRotationsMain = (SpriteRotation *)spritesMain;
+    displaySprites(spritesMain, spriteRotationsMain);
+
+    for (;;) {
+        swiWaitForVBlank();
+        updateOAM(spritesMain); /* We have to copy our copy of OAM data into the actual OAM during VBlank (writes to it are locked during other times) */
+    }
 
     return 0;
 }
