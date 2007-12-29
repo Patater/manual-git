@@ -27,7 +27,7 @@
  * Update the oAM
  *
  */
-void updateOAM(SpriteEntry * spriteEntry);
+void updateOAM(tOAM * oam);
 
 /*
  * initOAM
@@ -35,7 +35,7 @@ void updateOAM(SpriteEntry * spriteEntry);
  * Initialize the OAM
  *
  */
-void initOAM(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation);
+void initOAM(tOAM * oam);
 
 /*
  * moveSprite

@@ -9,6 +9,10 @@
 #include "orangeShuttle.h"
 #include "moon.h"
 
+/* Select a low priority DMA channel to perform our sprite and background
+ * copying */
+static const int DMA_CHANNEL = 3;
+
 void initVideo() {
     /*
      *  Map VRAM to display a background on the main and sub screens.
@@ -116,12 +120,15 @@ typedef struct {
     int palId;
 } SpriteInfo;
 
-void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
-    //XXX check the nds_examples to make sure this is a good way to do things (it isn't currently)
+void initSprites(tOAM * oam) {
+    /* Keep track of the available tiles */
     int nextAvailableTileIdx = 0;
+
+    /* Define some sprite configuration specific constants. We will use these
+     * to compute the proper index into memory for certain tiles or palettes */
     static const int BYTES_PER_16_COLOR_TILE = 32;
-    static const int COLORS_PER_PALETTE = 16; //how many colors there are in a palette
-    static const int BOUNDARY_VALUE = 16;
+    static const int COLORS_PER_PALETTE = 16;
+    static const int OFFSET_MULTIPLIER = 16;
 
     static const int SHUTTLE_AFFINE_ID = 0;
     static const int SHUTTLE_WIDTH = 64;
@@ -142,35 +149,47 @@ void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) 
     static const int MOON_TILE_ID = nextAvailableTileIdx;
     nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
 
-    initOAM(spriteEntry, spriteRotation);
+    initOAM(oam);
 
-    //copy in the sprite palettes
-    dmaCopyHalfWords(3, orangeShuttlePal, &SPRITE_PALETTE[SHUTTLE_AFFINE_ID * COLORS_PER_PALETTE], orangeShuttlePalLen);
-    dmaCopyHalfWords(3, moonPal, &SPRITE_PALETTE[MOON_AFFINE_ID * COLORS_PER_PALETTE], moonPalLen);
+    /* Copy over the sprite palettes */
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     orangeShuttlePal,
+                     &SPRITE_PALETTE[SHUTTLE_AFFINE_ID * COLORS_PER_PALETTE],
+                     orangeShuttlePalLen);
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     moonPal,
+                     &SPRITE_PALETTE[MOON_AFFINE_ID * COLORS_PER_PALETTE],
+                     moonPalLen);
 
-    //copy the sprite graphics in obj graphics mem
-    dmaCopyHalfWords(3, orangeShuttleTiles, &SPRITE_GFX[SHUTTLE_TILE_ID * BOUNDARY_VALUE], orangeShuttleTilesLen);
-    dmaCopyHalfWords(3, moonTiles, &SPRITE_GFX[MOON_TILE_ID * BOUNDARY_VALUE], moonTilesLen);
+    /* Copy the sprite graphics to sprite graphics memory */
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     orangeShuttleTiles,
+                     &SPRITE_GFX[SHUTTLE_TILE_ID * OFFSET_MULTIPLIER],
+                     orangeShuttleTilesLen);
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     moonTiles,
+                     &SPRITE_GFX[MOON_TILE_ID * OFFSET_MULTIPLIER],
+                     moonTilesLen);
 
     //////////////////////////////////////////////
 
-    //create the ship sprite
-    SpriteEntry * shuttle = &spriteEntry[SHUTTLE_AFFINE_ID];
-    shuttle->attribute[0] = ATTR0_COLOR_16 | //16 color sprite
-                            ATTR0_ROTSCALE_DOUBLE; //affine transformable
-    shuttle->attribute[1] = ATTR1_ROTDATA(SHUTTLE_AFFINE_ID) | //location of affine transformation matrix
-                            ATTR1_SIZE_64; //size 64x64
+    /* Create the ship sprite */
+    SpriteEntry * shuttle = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
+    shuttle->attribute[0] = ATTR0_COLOR_16 | // 16 color sprite
+                            ATTR0_ROTSCALE_DOUBLE; // Affine transformable
+    shuttle->attribute[1] = ATTR1_ROTDATA(SHUTTLE_AFFINE_ID) | // Location of affine transformation matrix
+                            ATTR1_SIZE_64; // Size 64x64
     moveSprite(shuttle, SHUTTLE_X_POS, SHUTTLE_Y_POS);
-    rotateSprite(&spriteRotation[SHUTTLE_AFFINE_ID], SHUTTLE_ANGLE);
+    rotateSprite(&oam->matrixBuffer[SHUTTLE_AFFINE_ID], SHUTTLE_ANGLE);
     shuttle->tileIdx = SHUTTLE_TILE_ID;
     setSpritePriority(shuttle, SHUTTLE_PRIORITY);
     shuttle->objPal = SHUTTLE_AFFINE_ID;
     shuttle->isHidden = false;
 
-    //create the moon sprite
-    SpriteEntry * moon = &spriteEntry[MOON_AFFINE_ID];
-    moon->attribute[0] = ATTR0_COLOR_16; //16 color sprite (not affine transformable)
-    moon->attribute[1] = ATTR1_SIZE_32; //size 32x32
+    /* Create the moon sprite */
+    SpriteEntry * moon = &oam->spriteBuffer[MOON_AFFINE_ID];
+    moon->attribute[0] = ATTR0_COLOR_16; // 16 color sprite (not affine transformable)
+    moon->attribute[1] = ATTR1_SIZE_32; // Size 32x32
     moveSprite(moon, MOON_X_POS, MOON_Y_POS);
     moon->tileIdx = MOON_TILE_ID;
     setSpritePriority(moon, MOON_PRIORITY);
@@ -179,21 +198,24 @@ void displaySprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) 
 }
 
 void displayStarField() {
-    dmaCopyHalfWords(3, starFieldBitmap, // This variable is generated for us by grit
-            (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
-            starFieldBitmapLen);
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     starFieldBitmap, // This variable is generated for us by grit
+                     (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
+                     starFieldBitmapLen);
 }
 
 void displayPlanet() {
-    dmaCopyHalfWords(3, planetBitmap, // This variable is generated for us by grit
-            (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
-            planetBitmapLen);
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     planetBitmap, // This variable is generated for us by grit
+                     (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
+                     planetBitmapLen);
 }
 
 void displaySplash() {
-    dmaCopyHalfWords(3, splashBitmap, //This variable is generated for us by grit
-            (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
-            splashBitmapLen);
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     splashBitmap, // This variable is generated for us by grit
+                     (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
+                     splashBitmapLen);
 }
 
 int main() {
@@ -214,19 +236,19 @@ int main() {
     initVideo();
     initBackgrounds();
 
+    /* Set up the a few sprites */
+    tOAM *oam = new tOAM();
+    initSprites(oam);
+
     /*  Display the backgrounds */
     displayStarField();
     displayPlanet();
     displaySplash();
 
-    /* Display a few sprites */
-	SpriteEntry *spritesMain = new SpriteEntry[128];
-	SpriteRotation *spriteRotationsMain = (SpriteRotation *)spritesMain;
-    displaySprites(spritesMain, spriteRotationsMain);
 
     for (;;) {
         swiWaitForVBlank();
-        updateOAM(spritesMain); /* We have to copy our copy of OAM data into the actual OAM during VBlank (writes to it are locked during other times) */
+        updateOAM(oam); /* We have to copy our copy of OAM data into the actual OAM during VBlank (writes to it are locked during other times) */
     }
 
     return 0;
