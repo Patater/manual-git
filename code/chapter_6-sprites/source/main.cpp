@@ -10,7 +10,7 @@
 #include "moon.h"
 
 /* Select a low priority DMA channel to perform our sprite and background
- * copying */
+ * copying. */
 static const int DMA_CHANNEL = 3;
 
 void initVideo() {
@@ -83,12 +83,13 @@ void initBackgrounds() {
     BG2_YDX = 0;
     BG2_YDY = 1 << 8;
 
-    /*  Place main screen background 2 an interesting place
-     */
+    /*  Place main screen background 2 an interesting place. */
     BG2_CX = -(SCREEN_WIDTH / 2 - 32) << 8;
     BG2_CY = -32 << 8;
 
-    /*  Set up affine background 3 on sub as a 16-bit color background */
+    /*  Set up affine background 3 on the sub screen as a 16-bit color
+     *  background
+     */
     SUB_BG3_CR = BG_BMP16_256x256 |
                  BG_BMP_BASE(0) | // The starting place in memory
                  BG_PRIORITY(3); // A low priority
@@ -108,18 +109,6 @@ void initBackgrounds() {
     SUB_BG3_CY = 0;
 }
 
-typedef struct {
-    int id;
-    int width;
-    int height;
-    int x;
-    int y;
-    int angle;
-    tObjPriority priority;
-    int tileId;
-    int palId;
-} SpriteInfo;
-
 void initSprites(tOAM * oam) {
     /* Keep track of the available tiles */
     int nextAvailableTileIdx = 0;
@@ -136,10 +125,10 @@ void initSprites(tOAM * oam) {
     static const int SHUTTLE_X_POS = SCREEN_WIDTH / 2 - SHUTTLE_WIDTH * 2 +
                                      SHUTTLE_WIDTH / 2;
     static const int SHUTTLE_Y_POS = SCREEN_HEIGHT / 2 - SHUTTLE_HEIGHT;
-    static const int SHUTTLE_ANGLE = 462; //XXX MAN NOTE DS uses 512 degree system
+    static const int SHUTTLE_ANGLE = 462;
     static const tObjPriority SHUTTLE_PRIORITY = OBJPRIORITY_0;
     static const int SHUTTLE_TILE_ID = nextAvailableTileIdx;
-    nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE; //XXX MAN NOTE orangeShuttle tiles is length in bytes
+    nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE;
 
     static const int MOON_AFFINE_ID = 1;
     static const int MOON_WIDTH = 16;
@@ -177,7 +166,7 @@ void initSprites(tOAM * oam) {
     SpriteEntry * shuttle = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
 
     /* Configure attribute 0. */
-    shuttle->attribute[0] = ATTR0_COLOR_16 | // 16 color sprite
+    shuttle->attribute[0] = ATTR0_COLOR_16 | // 16-color sprite
                             ATTR0_ROTSCALE_DOUBLE; // Affine transformable
 
     /*
@@ -208,7 +197,7 @@ void initSprites(tOAM * oam) {
     SpriteEntry * moon = &oam->spriteBuffer[MOON_AFFINE_ID];
 
     /* Configure attribute 0. */
-    moon->attribute[0] = ATTR0_COLOR_16; /* 16 color sprite (not affine
+    moon->attribute[0] = ATTR0_COLOR_16; /* 16-color sprite (not affine
                                           * transformable) */
     /*
      * Configure attribute 1.
@@ -216,7 +205,7 @@ void initSprites(tOAM * oam) {
      * ATTR1_SIZE_32 will create a sprite of size 32x32, since we are making a
      * square sprite.
      */
-    moon->attribute[1] = ATTR1_SIZE_32; // Size 32x32
+    moon->attribute[1] = ATTR1_SIZE_32;
 
     /* Configure which tiles the sprite will use, which priority layer it will
      * be placed onto, which palette the sprite should use,  and whether or not
@@ -234,7 +223,7 @@ void initSprites(tOAM * oam) {
 void displayStarField() {
     dmaCopyHalfWords(DMA_CHANNEL,
                      starFieldBitmap, /* This variable is generated for us by
-                                       * grit */
+                                       * grit. */
                      (uint16 *)BG_BMP_RAM(0), /* Our address for main
                                                * background 3 */
                      starFieldBitmapLen);
@@ -242,7 +231,8 @@ void displayStarField() {
 
 void displayPlanet() {
     dmaCopyHalfWords(DMA_CHANNEL,
-                     planetBitmap, // This variable is generated for us by grit
+                     planetBitmap, /* This variable is generated for us by
+                                    * grit. */
                      (uint16 *)BG_BMP_RAM(8), /* Our address for main
                                                * background 2 */
                      planetBitmapLen);
@@ -250,7 +240,8 @@ void displayPlanet() {
 
 void displaySplash() {
     dmaCopyHalfWords(DMA_CHANNEL,
-                     splashBitmap, // This variable is generated for us by grit
+                     splashBitmap, /* This variable is generated for us by
+                                    * grit. */
                      (uint16 *)BG_BMP_RAM_SUB(0), /* Our address for sub
                                                      background 3 */
                      splashBitmapLen);
@@ -289,7 +280,6 @@ int main() {
     displayStarField();
     displayPlanet();
     displaySplash();
-
 
     /*
      *  Update the OAM.

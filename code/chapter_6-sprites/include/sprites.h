@@ -15,12 +15,11 @@
 #define SPRITES_H
 
 #define SPRITE_ANGLE_MASK 0x01FF
-#define ATTR2_PRIORTY_MASK ATTR2_PRIORITY(3);
 
 /*
  *  updateOAM
  *
- *  Update the OAM
+ *  Update the OAM.
  *
  */
 void updateOAM(tOAM * oam);
@@ -28,7 +27,7 @@ void updateOAM(tOAM * oam);
 /*
  *  initOAM
  *
- *  Initialize the OAM
+ *  Initialize the OAM.
  *
  */
 void initOAM(tOAM * oam);
@@ -36,7 +35,7 @@ void initOAM(tOAM * oam);
 /*
  *  moveSprite
  *
- *  Move a sprite
+ *  Move a sprite.
  *
  */
 void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y);
@@ -52,7 +51,7 @@ void rotateSprite(SpriteRotation * spriteRotation, u16 angle);
 /*
  *  setSpriteVisibility
  *
- *  Hides or shows a sprite of a certain type: affine double bound, affine
+ *  Hide or show a sprite of a certain type: affine double bound, affine
  *  non-double bound, or ordinary.
  *
  */
