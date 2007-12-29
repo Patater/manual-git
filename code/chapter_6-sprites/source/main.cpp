@@ -213,7 +213,8 @@ void initSprites(tOAM * oam) {
     /*
      * Configure attribute 1.
      *
-     * ATTR1_SIZE_32 will create a sprite of size 32x32, since we are making a square sprite.
+     * ATTR1_SIZE_32 will create a sprite of size 32x32, since we are making a
+     * square sprite.
      */
     moon->attribute[1] = ATTR1_SIZE_32; // Size 32x32
 

@@ -1,7 +1,8 @@
 /*
  *  Sprites.h
  *  
- *	Adapted from Liran Nuna's sprite handling code. Special thanks to Liran Nuna.
+ *	Adapted from Liran Nuna's sprite handling code. Special thanks to Liran
+ *	Nuna.
  *
  *  Created by Jaeden Amero on 3/12/06.
  *  Copyright 2006. All rights reserved.
@@ -51,9 +52,11 @@ void rotateSprite(SpriteRotation * spriteRotation, u16 angle);
 /*
  *  setSpriteVisibility
  *
- *  Hides or shows a sprite of a certain type: affine double bound, affine non-double bound, or ordinary.
+ *  Hides or shows a sprite of a certain type: affine double bound, affine
+ *  non-double bound, or ordinary.
  *
  */
-void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine = false, bool doubleBound = false);
+void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden,
+                         bool affine = false, bool doubleBound = false);
 
 #endif
