@@ -165,18 +165,25 @@ void initSprites(tOAM * oam) {
     /* Create the ship sprite. */
     SpriteEntry * shuttle = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
 
-    /* Configure attribute 0. */
-    shuttle->attribute[0] = ATTR0_COLOR_16 | // 16-color sprite
-                            ATTR0_ROTSCALE_DOUBLE; // Affine transformable
+    /*
+     *  Configure attribute 0. 
+     *
+     *  OBJCOLOR_16 will make a 16-color sprite. We specify that we want an
+     *  affine sprite (via isRotoscale) here because we would like to rotate
+     *  the ship.
+     */
+    shuttle->colMode = OBJCOLOR_16;
+    shuttle->isRotoscale = true;
 
     /*
      *  Configure attribute 1.
      *
-     *  ATTR1_ROTDATA refers to the loation of affine transformation matrix.
-     *  ATTR1_SIZE_64, in our case since we are making a square sprite, creates
-     *  a 64x64 sprite.
+     *  rsMatrixId refers to the loation of affine transformation matrix. We
+     *  set it to a location computed with a macro.  OBJSIZE_64, in our case
+     *  since we are making a square sprite, creates a 64x64 sprite.
      */
-    shuttle->attribute[1] = ATTR1_ROTDATA(SHUTTLE_AFFINE_ID) | ATTR1_SIZE_64;
+    shuttle->rsMatrixIdx = ATTR1_ROTDATA(SHUTTLE_AFFINE_ID);
+    shuttle->objSize = OBJSIZE_64;
 
     /* Configure which tiles the sprite will use, which priority layer it will
      * be placed onto, which palette the sprite should use,  and whether or not
@@ -196,16 +203,21 @@ void initSprites(tOAM * oam) {
     /* Create the moon sprite. */
     SpriteEntry * moon = &oam->spriteBuffer[MOON_AFFINE_ID];
 
-    /* Configure attribute 0. */
-    moon->attribute[0] = ATTR0_COLOR_16; /* 16-color sprite (not affine
-                                          * transformable) */
     /*
-     * Configure attribute 1.
+     *  Configure sprite color mode.
      *
-     * ATTR1_SIZE_32 will create a sprite of size 32x32, since we are making a
+     *  OBJCOLOR_16 will make a 16-color sprite. We won't specify that we want
+     *  an affine sprite here because we don't want one.
+     */
+    moon->colMode = OBJCOLOR_16;
+
+    /*
+     * Configure sprite size.
+     *
+     * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
      * square sprite.
      */
-    moon->attribute[1] = ATTR1_SIZE_32;
+    moon->objSize = OBJSIZE_32;
 
     /* Configure which tiles the sprite will use, which priority layer it will
      * be placed onto, which palette the sprite should use,  and whether or not
