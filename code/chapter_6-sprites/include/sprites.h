@@ -13,60 +13,47 @@
 #ifndef SPRITES_H
 #define SPRITES_H
 
-#define NUM_SPRITES 128
-#define NUM_ROTATION_SPRITES 32
-
-#define SPRITE_X_COORD_MASK 0x01FF
-#define SPRITE_Y_COORD_MASK 0x00FF
 #define SPRITE_ANGLE_MASK 0x01FF
 #define ATTR2_PRIORTY_MASK ATTR2_PRIORITY(3);
 
 /*
- * updateOAM
+ *  updateOAM
  *
- * Update the oAM
+ *  Update the OAM
  *
  */
 void updateOAM(tOAM * oam);
 
 /*
- * initOAM
+ *  initOAM
  *
- * Initialize the OAM
+ *  Initialize the OAM
  *
  */
 void initOAM(tOAM * oam);
 
 /*
- * moveSprite
+ *  moveSprite
  *
- * Move a sprite
+ *  Move a sprite
  *
  */
 void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y);
 
 /*
- * rotateSprite
+ *  rotateSprite
  *
- * Rotate a sprite.
+ *  Rotate a sprite.
  *
  */
 void rotateSprite(SpriteRotation * spriteRotation, u16 angle);
 
 /*
- * hideSprite
+ *  setSpriteVisibility
  *
- * Hide a sprite.
- *
- */
-void hideSprite(SpriteEntry * spriteEntry, bool hide);
-
-/*
- * setSpritePriority
- *
- * Set the priority of a sprite.
+ *  Hides or shows a sprite of a certain type: affine double bound, affine non-double bound, or ordinary.
  *
  */
-void setSpritePriority(SpriteEntry * spriteEntry, tObjPriority priority);
+void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine = false, bool doubleBound = false);
 
 #endif
