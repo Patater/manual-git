@@ -292,6 +292,66 @@ void displaySplash() {
                      splashBitmapLen);
 }
 
+void updateInput(touchPosition * touch) {
+	//updates the key registers with current values
+	scanKeys();
+
+    //update the touch screen read values
+    *touch = touchReadXY();
+}
+
+void handleInput(Ship * ship, MathVector2D<int> * moonPos, SpriteInfo * moonInfo, touchPosition * touch) {
+
+    /* Handle up and down parts of D-Pad. */
+	if (keysHeld() & KEY_UP) {
+		//accelerate ship
+		ship->accelerate();
+	} else if (keysHeld() & KEY_DOWN) {
+		//reverse ship direction
+		ship->reverseTurn();
+    }
+	
+    /* Handle left and right parts of D-Pad. */
+	if (keysHeld() & KEY_LEFT) {
+		//rotate counter clockwise
+		ship->turnCounterClockwise();
+    } else if (keysHeld() & KEY_RIGHT) {
+		//rotate clockwise
+		ship->turnClockwise();
+	}
+
+    /* Handle the touch screen. */
+    static MathVector2D<int> moonGrip;
+    if (keysDown() & KEY_TOUCH) {
+        /* Record the grip */
+        moonGrip.x = touch->px;
+        moonGrip.y = touch->py;
+    } else if (keysHeld() & KEY_TOUCH) {
+        int newX = moonPos->x + touch->px - moonGrip.x;
+        int newY = moonPos->y + touch->py - moonGrip.y;
+
+        /* Prevent dragging off the screen */
+        if (newX < 0) {
+            moonPos->x = 0;
+        } else if (newX + moonInfo->width > SCREEN_WIDTH) {
+            moonPos->x = SCREEN_WIDTH - moonInfo->width;
+        } else {
+            moonPos->x = newX;
+        }
+        if (newY < 0) {
+            moonPos->y = 0;
+        } else if (newY + moonInfo->height > SCREEN_HEIGHT) {
+            moonPos->y = SCREEN_HEIGHT - moonInfo->height;
+        } else {
+            moonPos->y = newY;
+        }
+
+        /* Record the grip again. */
+        moonGrip.x = touch->px;
+        moonGrip.y = touch->py;
+    }
+}
+
 int main() {
 
     /*  Turn on the 2D graphics core. */
@@ -327,25 +387,38 @@ int main() {
     displayPlanet();
     displaySplash();
 
+    /*************************************************************************/
+
+    /* Keep track of the touch screen coordinates */
+    touchPosition touch;
+
+    /* Make the ship object */
     static const int SHUTTLE_AFFINE_ID = 0;
     SpriteEntry * shipEntry = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
     SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
     Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
 
-    /* Accelerate the ship for a little while to make it move. */
-    for (int i = 0; i < 10; i++) {
-        ship->accelerate();
-    }
+    /* Make the moon */
+    static const int MOON_AFFINE_ID = 1;
+    SpriteEntry * moonEntry = &oam->spriteBuffer[MOON_AFFINE_ID];
+    SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
+    MathVector2D<int> * moonPos = new MathVector2D<int>();
+    moonPos->x = moonEntry->posX;
+    moonPos->y = moonEntry->posY;
 
     for (;;) {
         /* Update the game state. */
+		updateInput(&touch);
+		handleInput(ship, moonPos, moonInfo, &touch);
         ship->moveShip();
 
         /* Update sprite attributes. */
-        MathVector2D position = ship->getPosition();
+        MathVector2D<float> position = ship->getPosition();
         shipEntry->posX = (int)position.x;
         shipEntry->posY = (int)position.y;
         rotateSprite(shipRotation, ship->getAngleDeg512());
+        moonEntry->posX = (int)moonPos->x;
+        moonEntry->posY = (int)moonPos->y;
 
         /*
          *  Update the OAM.
