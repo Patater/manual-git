@@ -328,7 +328,9 @@ int main() {
     displaySplash();
 
     static const int SHUTTLE_AFFINE_ID = 0;
-    Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+    SpriteEntry * shipEntry = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
+    Ship * ship = new Ship(&shipEntry);
 
     /* Accelerate the ship for a little while to make it move. */
     for (int i = 0; i < 10; i++) {
@@ -341,17 +343,15 @@ int main() {
 
         /* Update sprite attributes. */
         MathVector2D position = ship->getPosition();
-        SpriteEntry * shipEntry = spriteInfo[SHUTTLE_AFFINE_ID].entry;
         shipEntry->posX = (int)position.x;
         shipEntry->posY = (int)position.y;
-        rotateSprite(&oam->matrixBuffer[0], ship->getAngleDeg512());
+        rotateSprite(shipRotation, ship->getAngleDeg512());
 
         /*
          *  Update the OAM.
          *
-         *  We have to copy our copy of OAM data into the actual
-         *  OAM during VBlank (writes to it are locked during
-         *  other times).
+         *  We have to copy our copy of OAM data into the actual OAM during
+         *  VBlank (writes to it are locked during other times).
          */
         swiWaitForVBlank();
         updateOAM(oam);
