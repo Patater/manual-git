@@ -16,6 +16,14 @@
 
 #define SPRITE_ANGLE_MASK 0x01FF
 
+typedef struct {
+    int affineId;
+    int width;
+    int height;
+    int angle;
+    SpriteEntry * entry;
+} SpriteInfo;
+
 /*
  *  updateOAM
  *
@@ -31,14 +39,6 @@ void updateOAM(tOAM * oam);
  *
  */
 void initOAM(tOAM * oam);
-
-/*
- *  moveSprite
- *
- *  Move a sprite.
- *
- */
-void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y);
 
 /*
  *  rotateSprite

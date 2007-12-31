@@ -14,63 +14,35 @@ int Ship::radToDeg512(float rad) {
 	return (int)(rad * (256/PI));
 }
 
-void Ship::init(const Ship & other) {
-	shipWidth = other.shipWidth;
-	shipHeight = other.shipHeight;
+Ship::Ship(SpriteInfo * _spriteInfo) {
+    spriteInfo = _spriteInfo;
 	
-	position.x = other.position.x;
-	position.y = other.position.y;
+    /* Place the ship in the middle of the screen. */
+	position.x = SCREEN_WIDTH / 2 - spriteInfo->width;
+	position.y = SCREEN_HEIGHT / 2 - spriteInfo->height;
 	
-	velocity.x = other.position.x;
-	velocity.y = other.velocity.y;
-	
-	turnSpeed = other.turnSpeed;
-	thrust = other.thrust;
-	maxSpeed = other.maxSpeed;
-	
-	angle = other.angle;
-	
-	mass = other.mass;
-}
-
-Ship::Ship(int _shipWidth, int _shipHeight) {
-	shipWidth = _shipWidth;
-	shipHeight = _shipHeight;
-	
-	position.x = SCREEN_WIDTH / 2 - shipWidth;
-	position.y = SCREEN_HEIGHT / 2 - shipHeight;
-	
+    /* Stop the ship from moving */
 	velocity.x = 0;
 	velocity.y = 0;
+
+    /* Point the ship straight up. */
+	angle = 0;
 	
+    /* Set up some sane kinematic static properties. */
 	turnSpeed = .0368;
 	thrust = .05;
 	maxSpeed = 1.0;
-	
-	angle = 0;
-	
 	mass = 1.0;
 }
 
-Ship::Ship(const Ship & other) {
-	init(other);
-}
-
 Ship::~Ship() {
-	//nothing
-}
-
-Ship Ship::operator=(const Ship & other) {
-	init(other);
-	
-	return *this;
+	//nothing (since we aren't taking ownership of the SpriteInfo struct pointed to by spriteInfo)
 }
 
 void Ship::accelerate() {
 	
 	float incX = thrust * sin(angle);
 	float incY = -(thrust * cos(angle));
-	
 	
     //the following method of speed limitation is not accurate, traveling
     //diagonally is faster than straight, which is not the desired limitation
@@ -93,7 +65,6 @@ void Ship::accelerate() {
 	if (velocity.y < -maxSpeed) {
 		velocity.y = -maxSpeed;
 	}
-	
 }
 
 void Ship::moveShip() {
@@ -101,7 +72,8 @@ void Ship::moveShip() {
 	position.x += velocity.x;
 	position.y += velocity.y;
 	
-	//hw does wrap around for us
+    //hw does wrap around for us, so we don't have to have any of that sort of
+    //logic in here
 }
 
 void Ship::reverseTurn() {
@@ -116,7 +88,7 @@ void Ship::turnCounterClockwise() {
 	angle -= turnSpeed;
 }
 
-Coordinate Ship::getPosition() {
+MathVector Ship::getPosition() {
 	return position;
 }
 

@@ -1,4 +1,5 @@
 #include <nds.h>
+#include <assert.h>
 #include "sprites.h"
 
 /* Backgrounds */
@@ -109,61 +110,28 @@ void initBackgrounds() {
     SUB_BG3_CY = 0;
 }
 
-void initSprites(tOAM * oam) {
-    /* Keep track of the available tiles */
-    int nextAvailableTileIdx = 0;
-
+void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
     /* Define some sprite configuration specific constants. We will use these
      * to compute the proper index into memory for certain tiles or palettes */
     static const int BYTES_PER_16_COLOR_TILE = 32;
     static const int COLORS_PER_PALETTE = 16;
     static const int OFFSET_MULTIPLIER = 16;
 
-    static const int SHUTTLE_AFFINE_ID = 0;
-    static const int SHUTTLE_WIDTH = 64;
-    static const int SHUTTLE_HEIGHT = 64;
-    static const int SHUTTLE_X_POS = SCREEN_WIDTH / 2 - SHUTTLE_WIDTH * 2 +
-                                     SHUTTLE_WIDTH / 2;
-    static const int SHUTTLE_Y_POS = SCREEN_HEIGHT / 2 - SHUTTLE_HEIGHT;
-    static const int SHUTTLE_ANGLE = 462;
-    static const tObjPriority SHUTTLE_PRIORITY = OBJPRIORITY_0;
-    static const int SHUTTLE_TILE_ID = nextAvailableTileIdx;
-    nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE;
-
-    static const int MOON_AFFINE_ID = 1;
-    static const int MOON_WIDTH = 16;
-    static const int MOON_HEIGHT = 16;
-    static const int MOON_X_POS = SCREEN_WIDTH / 2 + MOON_WIDTH * 3 +
-                                  MOON_WIDTH / 2;
-    static const int MOON_Y_POS = SCREEN_WIDTH / 2 + MOON_HEIGHT;
-    static const tObjPriority MOON_PRIORITY = OBJPRIORITY_2;
-    static const int MOON_TILE_ID = nextAvailableTileIdx;
-    nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
-
-    /* Copy over the sprite palettes */
-    dmaCopyHalfWords(DMA_CHANNEL,
-                     orangeShuttlePal,
-                     &SPRITE_PALETTE[SHUTTLE_AFFINE_ID * COLORS_PER_PALETTE],
-                     orangeShuttlePalLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
-                     moonPal,
-                     &SPRITE_PALETTE[MOON_AFFINE_ID * COLORS_PER_PALETTE],
-                     moonPalLen);
-
-    /* Copy the sprite graphics to sprite graphics memory */
-    dmaCopyHalfWords(DMA_CHANNEL,
-                     orangeShuttleTiles,
-                     &SPRITE_GFX[SHUTTLE_TILE_ID * OFFSET_MULTIPLIER],
-                     orangeShuttleTilesLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
-                     moonTiles,
-                     &SPRITE_GFX[MOON_TILE_ID * OFFSET_MULTIPLIER],
-                     moonTilesLen);
-
-    /*************************************************************************/
+    /* Keep track of the available tiles */
+    int nextAvailableTileIdx = 0;
 
     /* Create the ship sprite. */
+    static const int SHUTTLE_AFFINE_ID = 0;
+    assert(SHUTTLE_AFFINE_ID < SPRITE_COUNT);
+    SpriteInfo * shuttleInfo = &spriteInfo[SHUTTLE_AFFINE_ID];
     SpriteEntry * shuttle = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
+
+    /* Initialize shuttleInfo */
+    shuttleInfo->affineId = SHUTTLE_AFFINE_ID;
+    shuttleInfo->width = 64;
+    shuttleInfo->height = 64;
+    shuttleInfo->angle = 462;
+    shuttleInfo->entry = shuttle;
 
     /*
      *  Configure attribute 0. 
@@ -172,64 +140,127 @@ void initSprites(tOAM * oam) {
      *  affine sprite (via isRotoscale) here because we would like to rotate
      *  the ship.
      */
-    shuttle->colMode = OBJCOLOR_16;
+    shuttle->posY = SCREEN_HEIGHT / 2 - shuttleInfo->height;
     shuttle->isRotoscale = true;
+    /* This assert is a check to see a matrix is available to store the affine
+     * transformation matrix for this sprite. Of course, you don't have to have
+     * the matrix id match the affine id, but if you do make them match, this
+     * assert can be helpful. */
+    assert(!shuttle->isRotoscale || (shuttleInfo->affineId < MATRIX_COUNT));
+    shuttle->rsDouble = false;
+    shuttle->objMode = OBJMODE_NORMAL;
+    shuttle->isMosaic = false;
+    shuttle->colMode = OBJCOLOR_16;
+    shuttle->objShape = OBJSHAPE_SQUARE;
 
     /*
      *  Configure attribute 1.
      *
      *  rsMatrixId refers to the loation of affine transformation matrix. We
-     *  set it to a location computed with a macro.  OBJSIZE_64, in our case
+     *  set it to a location computed with a macro. OBJSIZE_64, in our case
      *  since we are making a square sprite, creates a 64x64 sprite.
      */
-    shuttle->rsMatrixIdx = ATTR1_ROTDATA(SHUTTLE_AFFINE_ID);
+    shuttle->posX = SCREEN_WIDTH / 2 - shuttleInfo->width * 2 +
+                    shuttleInfo->width / 2;
+    shuttle->rsMatrixIdx = ATTR1_ROTDATA(shuttleInfo->affineId);
     shuttle->objSize = OBJSIZE_64;
 
-    /* Configure which tiles the sprite will use, which priority layer it will
-     * be placed onto, which palette the sprite should use,  and whether or not
-     * to show the sprite.
+    /* 
+     *  Configure attribute 2.
+     * 
+     *  Configure which tiles the sprite will use, which priority layer it will
+     *  be placed onto, which palette the sprite should use, and whether or not
+     *  to show the sprite.
      */
-    shuttle->tileIdx = SHUTTLE_TILE_ID;
-    shuttle->objPriority = SHUTTLE_PRIORITY;
-    shuttle->objPal = SHUTTLE_AFFINE_ID;
-    shuttle->isHidden = false;
+    shuttle->tileIdx = nextAvailableTileIdx;
+    nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE;
+    shuttle->objPriority = OBJPRIORITY_0;
+    shuttle->objPal = shuttleInfo->affineId;
 
-    /* Position the sprite. */
-    moveSprite(shuttle, SHUTTLE_X_POS, SHUTTLE_Y_POS);
-    rotateSprite(&oam->matrixBuffer[SHUTTLE_AFFINE_ID], SHUTTLE_ANGLE);
+    /* Rotate the sprite */
+    rotateSprite(&oam->matrixBuffer[shuttleInfo->affineId],
+                 shuttleInfo->angle);
 
     /*************************************************************************/
 
     /* Create the moon sprite. */
+    static const int MOON_AFFINE_ID = 1;
+    assert(MOON_AFFINE_ID < SPRITE_COUNT);
+    SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
     SpriteEntry * moon = &oam->spriteBuffer[MOON_AFFINE_ID];
 
+    /* Initialize moonInfo */
+    moonInfo->affineId = MOON_AFFINE_ID;
+    moonInfo->width = 16;
+    moonInfo->height = 16;
+    moonInfo->angle = 462;
+    moonInfo->entry = moon;
+
     /*
-     *  Configure sprite color mode.
+     *  Configure attribute 0.
      *
      *  OBJCOLOR_16 will make a 16-color sprite. We won't specify that we want
-     *  an affine sprite here because we don't want one.
+     *  an affine sprite here because we don't want one this time.
      */
+    moon->posY = SCREEN_HEIGHT / 2 + moonInfo->height;
+    moon->isRotoscale = false;
+    /* This assert is a check to see a matrix is available to store the affine
+     * transformation matrix for this sprite. Of course, you don't have to have
+     * the matrix id match the affine id, but if you do make them match, this
+     * assert can be helpful. */
+    assert(!moon->isRotoscale || (moonInfo->affineId < MATRIX_COUNT));
+    moon->isHidden = false;
+    moon->objMode = OBJMODE_NORMAL;
+    moon->isMosaic = false;
     moon->colMode = OBJCOLOR_16;
+    moon->objShape = OBJSHAPE_SQUARE;
 
     /*
-     * Configure sprite size.
+     * Configure attribute 1.
      *
      * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
-     * square sprite.
+     * square sprite. Since we are using a non-affine sprite, attribute 1
+     * doesn't have an rsMatrixIdx anymore. Instead, it has the ability to flip
+     * the sprite vertically or horizontally.
      */
+    moon->posX = SCREEN_WIDTH / 2 + moonInfo->width * 3 + moonInfo->width / 2;
+    moon->hFlip = false;
+    moon->vFlip = false;
     moon->objSize = OBJSIZE_32;
 
-    /* Configure which tiles the sprite will use, which priority layer it will
-     * be placed onto, which palette the sprite should use,  and whether or not
-     * to show the sprite.
+    /* 
+     *  Configure attribute 2.
+     * 
+     *  Configure which tiles the sprite will use, which priority layer it will
+     *  be placed onto, which palette the sprite should use, and whether or not
+     *  to show the sprite.
      */
-    moon->tileIdx = MOON_TILE_ID;
-    moon->objPriority = MOON_PRIORITY;
-    moon->objPal = MOON_AFFINE_ID;
-    moon->isHidden = false;
+    moon->tileIdx = nextAvailableTileIdx;
+    nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
+    moon->objPriority = OBJPRIORITY_2;
+    moon->objPal = moonInfo->affineId;
+    /*************************************************************************/
 
-    /* Position the sprite */
-    moveSprite(moon, MOON_X_POS, MOON_Y_POS);
+    /* Copy over the sprite palettes */
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     orangeShuttlePal,
+                     &SPRITE_PALETTE[shuttleInfo->affineId *
+                                     COLORS_PER_PALETTE],
+                     orangeShuttlePalLen);
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     moonPal,
+                     &SPRITE_PALETTE[moonInfo->affineId * COLORS_PER_PALETTE],
+                     moonPalLen);
+
+    /* Copy the sprite graphics to sprite graphics memory */
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     orangeShuttleTiles,
+                     &SPRITE_GFX[shuttle->tileIdx * OFFSET_MULTIPLIER],
+                     orangeShuttleTilesLen);
+    dmaCopyHalfWords(DMA_CHANNEL,
+                     moonTiles,
+                     &SPRITE_GFX[moon->tileIdx * OFFSET_MULTIPLIER],
+                     moonTilesLen);
 }
 
 void displayStarField() {
@@ -284,9 +315,10 @@ int main() {
     initBackgrounds();
 
     /* Set up a few sprites. */
+    SpriteInfo spriteInfo[SPRITE_COUNT];
     tOAM *oam = new tOAM();
     initOAM(oam);
-    initSprites(oam);
+    initSprites(oam, spriteInfo);
 
     /* Display the backgrounds. */
     displayStarField();

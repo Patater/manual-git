@@ -15,6 +15,10 @@
 
 static const int SPRITE_DMA_CHANNEL = 3;
 
+void updateSprite(SpriteInfo * spriteInfo, tOAM * oam) {
+    
+}
+
 void updateOAM(tOAM * oam) {
     DC_FlushAll();
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
@@ -46,11 +50,6 @@ void initOAM(tOAM * oam) {
     }
     updateOAM(oam);
 }
-
-void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
-    spriteEntry->posX = x;
-    spriteEntry->posY = y;
-} 
 
 void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
     s16 s = SIN[angle & SPRITE_ANGLE_MASK] >> 4;
