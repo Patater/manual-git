@@ -330,7 +330,7 @@ int main() {
     static const int SHUTTLE_AFFINE_ID = 0;
     SpriteEntry * shipEntry = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
     SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
-    Ship * ship = new Ship(&shipEntry);
+    Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
 
     /* Accelerate the ship for a little while to make it move. */
     for (int i = 0; i < 10; i++) {
