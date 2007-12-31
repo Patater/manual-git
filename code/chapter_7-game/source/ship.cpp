@@ -17,16 +17,17 @@ int Ship::radToDeg512(float rad) {
 Ship::Ship(SpriteInfo * _spriteInfo) {
     spriteInfo = _spriteInfo;
 	
-    /* Place the ship in the middle of the screen. */
-	position.x = SCREEN_WIDTH / 2 - spriteInfo->width;
+    /* Place the ship in an interesting part of the screen. */
+	position.x = SCREEN_WIDTH / 2 - spriteInfo->width * 2 +
+                 spriteInfo->width / 2;
 	position.y = SCREEN_HEIGHT / 2 - spriteInfo->height;
 	
     /* Stop the ship from moving */
 	velocity.x = 0;
 	velocity.y = 0;
 
-    /* Point the ship straight up. */
-	angle = 0;
+    /* Point the ship at a cool angle. */
+	angle = 5.67232007;
 	
     /* Set up some sane kinematic static properties. */
 	turnSpeed = .0368;
@@ -88,7 +89,7 @@ void Ship::turnCounterClockwise() {
 	angle -= turnSpeed;
 }
 
-MathVector Ship::getPosition() {
+MathVector2D Ship::getPosition() {
 	return position;
 }
 

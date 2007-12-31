@@ -21,7 +21,7 @@ using namespace std;
 typedef struct {
     float x;
     float y;
-} MathVector;
+} MathVector2D;
 
 class Ship {
 protected:
@@ -41,8 +41,8 @@ protected:
      *  vectors (in the mathematical context, not the STL context). The angle
      *  of the ship is stored in radians in a float.
      */
-    MathVector position;
-    MathVector velocity;
+    MathVector2D position;
+    MathVector2D velocity;
     float angle; //in radians
  
     /*
@@ -134,10 +134,10 @@ public:
     /*
      *  getPosition
      *
-     *  Returns the MathVector representing the ship's position.
+     *  Returns the MathVector2D representing the ship's position.
      *
      */
-    MathVector getPosition();
+    MathVector2D getPosition();
 
     /*
      *  getAngleRad

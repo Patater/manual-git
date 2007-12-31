@@ -1,6 +1,7 @@
 #include <nds.h>
 #include <assert.h>
 #include "sprites.h"
+#include "ship.h"
 
 /* Backgrounds */
 #include "starField.h"
@@ -202,7 +203,7 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
      *  OBJCOLOR_16 will make a 16-color sprite. We won't specify that we want
      *  an affine sprite here because we don't want one this time.
      */
-    moon->posY = SCREEN_HEIGHT / 2 + moonInfo->height;
+    moon->posY = SCREEN_WIDTH / 2 + moonInfo->height;
     moon->isRotoscale = false;
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
@@ -239,6 +240,7 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
     nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
     moon->objPriority = OBJPRIORITY_2;
     moon->objPal = moonInfo->affineId;
+
     /*************************************************************************/
 
     /* Copy over the sprite palettes */
@@ -325,15 +327,35 @@ int main() {
     displayPlanet();
     displaySplash();
 
-    /*
-     *  Update the OAM.
-     *
-     *  We have to copy our copy of OAM data into the actual
-     *  OAM during VBlank (writes to it are locked during
-     *  other times).
-     */
-    swiWaitForVBlank();
-    updateOAM(oam);
+    static const int SHUTTLE_AFFINE_ID = 0;
+    Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+
+    /* Accelerate the ship for a little while to make it move. */
+    for (int i = 0; i < 10; i++) {
+        ship->accelerate();
+    }
+
+    for (;;) {
+        /* Update the game state. */
+        ship->moveShip();
+
+        /* Update sprite attributes. */
+        MathVector2D position = ship->getPosition();
+        SpriteEntry * shipEntry = spriteInfo[SHUTTLE_AFFINE_ID].entry;
+        shipEntry->posX = (int)position.x;
+        shipEntry->posY = (int)position.y;
+        rotateSprite(&oam->matrixBuffer[0], ship->getAngleDeg512());
+
+        /*
+         *  Update the OAM.
+         *
+         *  We have to copy our copy of OAM data into the actual
+         *  OAM during VBlank (writes to it are locked during
+         *  other times).
+         */
+        swiWaitForVBlank();
+        updateOAM(oam);
+    }
 
     return 0;
 }
