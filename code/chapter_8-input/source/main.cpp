@@ -192,8 +192,8 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
 
     /* Initialize moonInfo */
     moonInfo->affineId = MOON_AFFINE_ID;
-    moonInfo->width = 16;
-    moonInfo->height = 16;
+    moonInfo->width = 32;
+    moonInfo->height = 32;
     moonInfo->angle = 462;
     moonInfo->entry = moon;
 
@@ -203,7 +203,7 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
      *  OBJCOLOR_16 will make a 16-color sprite. We won't specify that we want
      *  an affine sprite here because we don't want one this time.
      */
-    moon->posY = SCREEN_WIDTH / 2 + moonInfo->height;
+    moon->posY = SCREEN_WIDTH / 2 + moonInfo->height / 2;
     moon->isRotoscale = false;
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
@@ -224,7 +224,7 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
      * doesn't have an rsMatrixIdx anymore. Instead, it has the ability to flip
      * the sprite vertically or horizontally.
      */
-    moon->posX = SCREEN_WIDTH / 2 + moonInfo->width * 3 + moonInfo->width / 2;
+    moon->posX = SCREEN_WIDTH / 2 + moonInfo->width + moonInfo->width / 2;
     moon->hFlip = false;
     moon->vFlip = false;
     moon->objSize = OBJSIZE_32;
@@ -333,14 +333,14 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos, SpriteInfo * moonInfo
         /* Prevent dragging off the screen */
         if (newX < 0) {
             moonPos->x = 0;
-        } else if (newX + moonInfo->width > SCREEN_WIDTH) {
+        } else if (newX > (SCREEN_WIDTH - moonInfo->width)) {
             moonPos->x = SCREEN_WIDTH - moonInfo->width;
         } else {
             moonPos->x = newX;
         }
         if (newY < 0) {
             moonPos->y = 0;
-        } else if (newY + moonInfo->height > SCREEN_HEIGHT) {
+        } else if (newY > (SCREEN_HEIGHT - moonInfo->height)) {
             moonPos->y = SCREEN_HEIGHT - moonInfo->height;
         } else {
             moonPos->y = newY;
