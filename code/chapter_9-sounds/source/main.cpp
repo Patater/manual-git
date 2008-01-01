@@ -10,6 +10,8 @@
 /* Sprites */
 #include "orangeShuttle.h"
 #include "moon.h"
+/* Sounds */
+#include "thrust_1_22050_8_s_raw.h"
 
 /* Select a low priority DMA channel to perform our sprite and background
  * copying. */
@@ -301,9 +303,14 @@ void updateInput(touchPosition * touch) {
 }
 
 void handleInput(Ship * ship, MathVector2D<int> * moonPos,
-                 SpriteInfo * moonInfo, touchPosition * touch) {
+                 SpriteInfo * moonInfo, TransferSoundData * soundData,
+                 touchPosition * touch) {
 
     /* Handle up and down parts of D-Pad. */
+    if (keysDown() & KEY_UP) {
+        // Play our sound only when the button is initially pressed
+		playSound(soundData);
+    }
 	if (keysHeld() & KEY_UP) {
 		//accelerate ship
 		ship->accelerate();
@@ -407,10 +414,19 @@ int main() {
     moonPos->x = moonEntry->posX;
     moonPos->y = moonEntry->posY;
 
+    /*  Set up sound data.*/
+	TransferSoundData * thrust_sound = new TransferSoundData();
+	thrust_sound->data = thrust_1_22050_8_s_raw;
+	thrust_sound->len = thrust_1_22050_8_s_raw_size;
+	thrust_sound->rate = 22050; //22050Hz Sample Rate
+	thrust_sound->vol = 127; //Volume can be from 0 to 127
+	thrust_sound->pan = 64; //Sound comes equally from both speakers (0-127, left to right)
+	thrust_sound->format = 1; //1 - 8bit, 0 - 16bit
+
     for (;;) {
         /* Update the game state. */
 		updateInput(&touch);
-		handleInput(ship, moonPos, moonInfo, &touch);
+		handleInput(ship, moonPos, moonInfo, thrust_sound, &touch);
         ship->moveShip();
 
         /* Update ship sprite attributes. */
