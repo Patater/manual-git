@@ -300,7 +300,8 @@ void updateInput(touchPosition * touch) {
     *touch = touchReadXY();
 }
 
-void handleInput(Ship * ship, MathVector2D<int> * moonPos, SpriteInfo * moonInfo, touchPosition * touch) {
+void handleInput(Ship * ship, MathVector2D<int> * moonPos,
+                 SpriteInfo * moonInfo, touchPosition * touch) {
 
     /* Handle up and down parts of D-Pad. */
 	if (keysHeld() & KEY_UP) {
@@ -412,11 +413,12 @@ int main() {
 		handleInput(ship, moonPos, moonInfo, &touch);
         ship->moveShip();
 
-        /* Update sprite attributes. */
+        /* Update ship sprite attributes. */
         MathVector2D<float> position = ship->getPosition();
         shipEntry->posX = (int)position.x;
         shipEntry->posY = (int)position.y;
         rotateSprite(shipRotation, ship->getAngleDeg512());
+        /* Update moon sprite attributes. */
         moonEntry->posX = (int)moonPos->x;
         moonEntry->posY = (int)moonPos->y;
 
