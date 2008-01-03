@@ -15,10 +15,6 @@
 
 static const int SPRITE_DMA_CHANNEL = 3;
 
-void updateSprite(SpriteInfo * spriteInfo, tOAM * oam) {
-    
-}
-
 void updateOAM(tOAM * oam) {
     DC_FlushAll();
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
