@@ -47,11 +47,6 @@ void initOAM(tOAM * oam) {
     updateOAM(oam);
 }
 
-void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
-    spriteEntry->posX = x;
-    spriteEntry->posY = y;
-} 
-
 void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
     s16 s = SIN[angle & SPRITE_ANGLE_MASK] >> 4;
     s16 c = COS[angle & SPRITE_ANGLE_MASK] >> 4;
