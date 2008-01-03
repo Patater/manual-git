@@ -89,7 +89,7 @@ void Ship::turnCounterClockwise() {
 	angle -= turnSpeed;
 }
 
-MathVector2D Ship::getPosition() {
+MathVector2D<float> Ship::getPosition() {
 	return position;
 }
 

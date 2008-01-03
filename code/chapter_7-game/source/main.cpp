@@ -192,7 +192,7 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
 
     /* Initialize moonInfo */
     moonInfo->affineId = MOON_AFFINE_ID;
-    moonInfo->width = 16;
+    moonInfo->width = 32;
     moonInfo->height = 16;
     moonInfo->angle = 462;
     moonInfo->entry = moon;
@@ -224,7 +224,7 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
      * doesn't have an rsMatrixIdx anymore. Instead, it has the ability to flip
      * the sprite vertically or horizontally.
      */
-    moon->posX = SCREEN_WIDTH / 2 + moonInfo->width * 3 + moonInfo->width / 2;
+    moon->posX = SCREEN_WIDTH / 2 + moonInfo->width + moonInfo->width / 2;
     moon->hFlip = false;
     moon->vFlip = false;
     moon->objSize = OBJSIZE_32;
@@ -342,7 +342,7 @@ int main() {
         ship->moveShip();
 
         /* Update sprite attributes. */
-        MathVector2D position = ship->getPosition();
+        MathVector2D<float> position = ship->getPosition();
         shipEntry->posX = (int)position.x;
         shipEntry->posY = (int)position.y;
         rotateSprite(shipRotation, ship->getAngleDeg512());
