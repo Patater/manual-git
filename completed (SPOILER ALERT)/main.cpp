@@ -124,7 +124,7 @@ void initSprites(Ship * ship, SpriteEntry * spriteEntry, SpriteRotation * sprite
 	
 	spriteEntry[0].attribute[0] = ATTR0_COLOR_256 | ATTR0_ROTSCALE_DOUBLE | (int)position.y;
 	spriteEntry[0].attribute[1] = ATTR1_ROTDATA(0) | ATTR1_SIZE_64 | (int)position.x; //size 64x64
-	spriteEntry[0].attribute[2] = orangeShipGfxID;
+	spriteEntry[0].attribute[2] = orangeShipGfxID; /*64*/
 	
 	//set initial rotation attributes
 	rotateSprite(&spriteRotation[0], ship->getAngleDeg512());
@@ -133,7 +133,7 @@ void initSprites(Ship * ship, SpriteEntry * spriteEntry, SpriteRotation * sprite
 	dmaCopy(OrangeShuttlePalette_bin, SPRITE_PALETTE, OrangeShuttlePalette_bin_size);
 	
 	//copy the sprite graphics in obj graphics mem
-	dmaCopy(OrangeShuttle_bin, &SPRITE_GFX[orangeShipGfxID * 16], OrangeShuttle_bin_size);
+	dmaCopy(OrangeShuttle_bin, &SPRITE_GFX[orangeShipGfxID * 16 /*512*/], OrangeShuttle_bin_size);
 	
 }
 
