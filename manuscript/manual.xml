@@ -1150,10 +1150,8 @@ int main() {
                 VRAM A banks, one for the main screen and one for the sub
                 screen. We'll use these memory locations when we load the
                 graphics later. Let's make a function called <code
-                language="C++"><function>initVideo</function></code>. <!-- I'm
-                not sure if I want to wrap function in a code element or not,
-                yet. XXX decide later-->
-            </para>
+                language="C++"><function>initVideo</function></code>.
+                </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void initVideo() {
     /*
@@ -1362,17 +1360,22 @@ void initBackgrounds() {
                 be that in the middle of a DMA, the main CPUs are prevented
                 from using certain memory hardware<!--(XXX bus contention or
                 something?)-->. This can cause awkward bugs with interrupt
-                handling. For this reason, and <function>swifastcopy</function>
-                may be safer, and is not too much slower. The safest bet is
-                always <function>memcopy</function> and
-                <function>memset</function>, if you are running into some bugs.
+                handling. For this reason, and <code
+                language="C++"><function>swifastcopy</function></code> may be
+                safer, and is not too much slower. The safest bet is always
+                <code language="C++"><function>memcopy</function></code> and
+                <code language="C++"><function>memset</function></code>, if you
+                are running into some bugs.
             </para>
             <para>
-                The declaration of <function>dmaCopyHalfWords</function> from libnds is as follows.
+                The declaration of <code
+                language="C++"><function>dmaCopyHalfWords</function></code>
+                from libnds is as follows.
             </para>
             <funcsynopsis>
                 <funcprototype>
-                    <funcdef>static inline void <function>dmaCopyHalfWords</function></funcdef>
+                    <funcdef>static inline void
+                    <function>dmaCopyHalfWords</function></funcdef>
                     <paramdef>
                         <parameter>uint8 channel</parameter>
                         <parameter>const void * source</parameter>
@@ -1383,10 +1386,15 @@ void initBackgrounds() {
             </funcsynopsis>
             <para>
                 In our program, we will use
-                <function>dmaCopyHalfWords</function> to load some graphics
+                <code
+                language="C++"><function>dmaCopyHalfWords</function></code> to
+                load some graphics
                 into memory. We use the function
-                <function>dmaCopyHalfWords</function> instead of
-                <function>dmaCopy</function> because it is more explicit as to
+                <code
+                language="C++"><function>dmaCopyHalfWords</function></code>
+                instead of
+                <code language="C++"><function>dmaCopy</function></code>
+                because it is more explicit as to
                 how it is copying. It also let's us specify which DMA channel
                 to use when copyingLet's start out by writing some functions to
                 display our backgrounds. Since we've already set up the
@@ -1830,7 +1838,13 @@ const u16 data[] = {
                 1024 unique 16-color tiles.
             </para>
             <para>
-                In our <function>initVideo</function>, we need to map VRAM bank E for use with sprites on the main graphics engine. THen, we need to tell the main engine to enable sprites of the tiling style we want. We will use 1D tiled sprites. The resulting initVideo function, post-modifications, is presented below <!-- XXX do an xref link thingy to the code listing-->.
+                In our <code
+                language="C++"><function>initVideo</function></code>, we need
+                to map VRAM bank E for use with sprites on the main graphics
+                engine. Then, we need to tell the main engine to enable sprites
+                of the tiling style we want. We will use 1D tiled sprites. The
+                resulting initVideo function, post-modifications, is presented
+                below <!-- XXX do an xref link thingy to the code listing-->.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void initVideo() {
@@ -1876,14 +1890,14 @@ void initVideo() {
             <para>
                 Now, to see a sprite in action. Let's load in the orangeShuttle
                 graphic. Make a new function called
-                <function>initSprites<function>. Place it after the
-                initBackgrounds function. Make sure to include orangeShuttle.h.
-                The first step is to initialize the OAM. After that, we assign
-                a graphics ID to our ship. After that, we set the initial
-                sprite attributes for our sprite (which we will place in the
-                spriteEntry struct as index 0).  Then, the rotation attributes.
-                Lastly, we simply copy over the palette data and then the
-                graphics data.
+                <code language="C++"><function>initSprites<function></code>.
+                Place it after the initBackgrounds function. Make sure to
+                include orangeShuttle.h.  The first step is to initialize the
+                OAM. After that, we assign a graphics ID to our ship. After
+                that, we set the initial sprite attributes for our sprite
+                (which we will place in the spriteEntry struct as index 0).
+                Then, the rotation attributes.  Lastly, we simply copy over the
+                palette data and then the graphics data.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void initSprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
@@ -2410,14 +2424,15 @@ int main () {
                 Now that we know a bit about how input is laid out on the
                 Nintendo DS, leťs write a function in our
                 <filename>main.cpp</filename> to handle the input. We'll call
-                it <function>handleInput</function>. First, we want the ship
-                to accelerate when we press up. To do this, we detect when the
-                Nintendo DS has the Up Key on the D-pad held (which included
-                the initial down press) and accelerate the ship if so. The Up
-                key will constantly read as held, so long as it is held.
-                Reading the input does not aﬀect the keys register. We'll do
-                similar things for each of the other keys. See if you can tell
-                what each key does from the code listing below.
+                it <code
+                language="C++"><function>handleInput</function></code>. First,
+                we want the ship to accelerate when we press up. To do this, we
+                detect when the Nintendo DS has the Up Key on the D-pad held
+                (which included the initial down press) and accelerate the ship
+                if so. The Up key will constantly read as held, so long as it
+                is held.  Reading the input does not aﬀect the keys register.
+                We'll do similar things for each of the other keys. See if you
+                can tell what each key does from the code listing below.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void handleInput(Ship * ship) {
@@ -2659,9 +2674,11 @@ int main() {
             </programlisting>
             <para>
                 In summary, we simply set up our sound in the
-                <function>main</function> function, modiﬁed the
-                <function>handleInput</function> function to accept a sound
-                pointer, and had the <function>handleInput</function> function
+                <code language="C++"><function>main</function></code> function,
+                modiﬁed the <code
+                language="C++"><function>handleInput</function></code> function
+                to accept a sound pointer, and had the <code
+                language="C++"><function>handleInput</function></code> function
                 play our sound whenever the up key is held.
             </para>
         </sect1>
