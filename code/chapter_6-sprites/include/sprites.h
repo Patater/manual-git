@@ -15,9 +15,10 @@
 #define SPRITES_H
 
 #define SPRITE_ANGLE_MASK 0x01FF
+static const int SPRITE_DMA_CHANNEL = 3;
 
 typedef struct {
-    int affineId;
+    int oamId;
     int width;
     int height;
     int angle;

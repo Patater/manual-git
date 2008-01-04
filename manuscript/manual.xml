@@ -215,14 +215,14 @@
                 playindie games, emulate classic game systems, run the Linux
                 operating system, and so forth. Microsoft then included a lot
                 of these features (excepting Linux, of course) in their most
-                recent gaming console, the Xbox 360 via a system called Xbox
-                LIVE Arcade (XBLA). If a company wants to squash homebrew
-                developers for whatever reason, they'll be smashing an
-                essential fan base that loves that company's hardware design
-                and has the potential to improve it (all at no cost to the
-                company). Homebrew caused such a high demand for the Xbox that
-                it would not have been in Microsoft's best interests to ignore
-                or punish it.
+                recent gaming console, the Xbox 360 via a system called XNA
+                Game Sudio and Xbox LIVE Arcade (XBLA). If a company wants to
+                squash homebrew developers for whatever reason, they'll be
+                smashing an essential fan base that loves that company's
+                hardware design and has the potential to improve it (all at no
+                cost to the company). Homebrew caused such a high demand for
+                the Xbox that it would not have been in Microsoft's best
+                interests to ignore or punish it.
             </para>
             <para>
                 The downside of homebrew is that software pirates often steal
@@ -1447,8 +1447,12 @@ void initBackgrounds() {
                 eventually did set up the background control registers.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
+/* Select a low priority DMA channel to perform our background
+ * copying. */
+static const int DMA_CHANNEL = 3;
+
 void displayStarField() {
-    dmaCopyHalfWords(3, // This DMA channel is a good default.
+    dmaCopyHalfWords(DMA_CHANNEL,
                      starFieldBitmap, /* This variable is generated for us by
                                        * grit. */
                      (uint16 *)BG_BMP_RAM(0), /* Our address for main
@@ -1458,7 +1462,7 @@ void displayStarField() {
 }
 
 void displayPlanet() {
-    dmaCopyHalfWords(3, // This DMA channel is a good default.
+    dmaCopyHalfWords(DMA_CHANNEL,
                      planetBitmap, /* This variable is generated for us by
                                     * grit. */
                      (uint16 *)BG_BMP_RAM(8), /* Our address for main
@@ -1468,7 +1472,7 @@ void displayPlanet() {
 }
 
 void displaySplash() {
-    dmaCopyHalfWords(3, // This DMA channel is a good default.
+    dmaCopyHalfWords(DMA_CHANNEL,
                      splashBitmap, /* This variable is generated for us by
                                     * grit. */
                      (uint16 *)BG_BMP_RAM_SUB(0), /* Our address for sub
@@ -1728,15 +1732,27 @@ const u16 data[] = {
         <sect1>
             <title>Sprite Attributes</title>
             <para>
-                Sprites can spin and flip and mosaic and perform all sorts of
-                fun hardware effects. We will cover how to update, initialize,
-                and rotate using bit twiddling methods, as libnds doesn't yet
-                provide ways of doing this otherwise. libnds provides the means
-                to do other things that we'll be doing with sprites though,
-                like move them, we'll be doing. We'll use the libnds API
-                wherever possible. Let's write some functions to do each of
-                those, in that order. I provide you with a header file,
-                located with the acompanying source at
+                Sprites have three attribute variables associated with them.
+                With them, sprites can spin and flip and mosaic and perform all
+                sorts of fun hardware effects. Each attribute is multi-purpose
+                and requires some amount of bit twiddling and masking to
+                achieve the affects we want. That is, it would if it weren't
+                for this nice SpriteEntry union which libnds provides for us.
+                In most cases, we will use this union to do what we'd like to
+                with our sprites, but there are special cases where this is not
+                possible.
+            </para>
+            <para>
+                We will cover how to update, initialize, and rotate using bit
+                twiddling methods, as libnds doesn't yet provide ways of doing
+                this otherwise. libnds provides the means to do other things
+                that we'll be doing with sprites though, like move them, we'll
+                be doing. We'll use the libnds API wherever possible. Let's
+                write some functions to do each of those, in that order.
+            </para>
+            <para>
+                I provide you with a header file, located with the acompanying
+                source at
                 <filename>code/chapter_6-sprites/include/sprites.h</filename>
                 that contains a collection of sprite related function
                 declarations. We'll be working on the definitions for each of
@@ -1768,7 +1784,7 @@ const u16 data[] = {
 void updateOAM(tOAM * oam) {
     DC_FlushAll();
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-                     oam->spriteBuffer,
+                     oam-&gt;spriteBuffer,
                      OAM,
                      SPRITE_COUNT * sizeof(SpriteEntry));
 }
@@ -1790,23 +1806,23 @@ void initOAM(tOAM * oam) {
      * us a clean slate to work with.
      */
     for (int i = 0; i &lt; SPRITE_COUNT; i++) {
-        oam->spriteBuffer[i].attribute[0] = ATTR0_DISABLED;
-        oam->spriteBuffer[i].attribute[1] = 0;
-        oam->spriteBuffer[i].attribute[2] = 0;
+        oam-&gt;spriteBuffer[i].attribute[0] = ATTR0_DISABLED;
+        oam-&gt;spriteBuffer[i].attribute[1] = 0;
+        oam-&gt;spriteBuffer[i].attribute[2] = 0;
     }
     for (int i = 0; i &lt; MATRIX_COUNT; i++) {
         /* If you look carefully, you'll see this is that affine trasformation
          * matrix again. We initialize it to the identity matrix, as we did
          * with backgrounds
          */
-        oam->matrixBuffer[i].hdx = 1 &lt;&lt; 8;
-        oam->matrixBuffer[i].hdy = 0;
-        oam->matrixBuffer[i].vdx = 0;
-        oam->matrixBuffer[i].vdy = 1 &lt;&lt; 8;
+        oam-&gt;matrixBuffer[i].hdx = 1 &lt;&lt; 8;
+        oam-&gt;matrixBuffer[i].hdy = 0;
+        oam-&gt;matrixBuffer[i].vdx = 0;
+        oam-&gt;matrixBuffer[i].vdy = 1 &lt;&lt; 8;
     }
 
     /* Be sure to wait for vblank before trying to update the OAM. */
-    swiWaitForVblank();
+    swiWaitForVBlank();
     updateOAM(oam);
 }
             </programlisting>
@@ -1878,8 +1894,8 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
          * redundant, but it is faster than a branch to just set it regardless
          * of whether or not it is already set.
          */
-        spriteEntry->isRotoscale = false; // Bit 9 off
-        spriteEntry->isHidden = true; // Bit 8 on
+        spriteEntry-&gt;isRotoscale = false; // Bit 9 off
+        spriteEntry-&gt;isHidden = true; // Bit 8 on
     } else {
         /* Make the sprite visible.*/
         if (affine) {
@@ -1890,18 +1906,18 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
              * not be able to properly hide and restore double bound sprites.
              * We enable bit 9 here because we want an affine sprite.
              */
-            spriteEntry->isRotoscale = true;
+            spriteEntry-&gt;isRotoscale = true;
 
             /* The double bound flag only acts as the double bound flag when
              * the sprite is an affine sprite. At all other times, it acts as
              * the sprite invisibility flag. We only enable bit 8 here if we want
              * a double bound sprite. */
-            spriteEntry->rsDouble = doubleBound;
+            spriteEntry-&gt;rsDouble = doubleBound;
         } else {
             /* Bit 9 (the affine flag) will already be off here, so we don't
              * need to clear it. However, bit 8 (the sprite invisibility flag)
              * will need to be cleared. */
-            spriteEntry->isHidden = false;
+            spriteEntry-&gt;isHidden = false;
         }
     }
 }
@@ -1931,46 +1947,31 @@ spriteEntry-&gt;posY = 0;
             </programlisting>
         </sect1>
         <sect1>
-            <title>Sprite Tile Addressing</title>
+            <title>Setting Sprite Priorities</title>
             <para>
-                We'll be using the same memory alignment (boundary) as the GBA
-                uses for our sprites. Tile VRAM addresses must be aligned to 32
-                bytes. If you feel shorted by this, since you can't use all
-                1024 addressable tiles when using 256 color tiles, for
-                instance, then you can look up how to use other alignments at
-                <ulink url="http://nocash.emubase.de/gbatek.htm#dsvideoobjs"/>.
-                You'll have to set REG_DISPCNT (via videoSetMode) with a value
-                defined in <filename>libnds/include/nds/arm9/video.h</filename>
-                akin to DISPLAY_SPR_1D_SIZE_XXX (the default, and the method
-                the GBA and we'll use, is DISPLAY_SPR_1D_SIZE_32).
+                The ability to set a sprites priorty is essential when dealing
+                with multiple sprites, as we will be doing. As such, we'll now
+                discuss sprite priorities and how to set them.
             </para>
             <para>
-                To compute the address to copy tiles to, we basically need to
-                know two things: the memory alignment we are using and the tile
-                numbers we want to assign data to. Using the formula from
-                Martin Korth's GBATEK, "TileVramAddress = TileNumber *
-                BoundaryValue", and libnds's SPRITE_GFX define we can compute
-                the address of any tile as follows.
+                A sprite, like a background, has a priorty which determines how
+                the sprite will appear with respect to other sprites and to
+                backgrounds. A sprite with the same number priorty as a
+                background will appear above it. A sprite with a lower priorty
+                number than another sprite will appear above that other sprite.
+                There are four priorities per graphics engine available for
+                sprites, similar to background priorities.
             </para>
-            <programlisting linenumberng="unnumbered" language="C++">
-static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
-                                       * (can be set in REG_DISPCNT) */
-static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
-                                     sizeof(SPRITE_GFX[0]);
-uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle->tileIdx *
-                                           OFFSET_MULTIPLIER];
+            <para>  
+                To set the sprite priority, we'll simply set the SpriteEntry
+                property objPriority to one of four different values, depending
+                on which priority we wish to assign: OBJPRIORITY_0,
+                OBJPRIORITY_1, OBJPRIORITY_2, or OBJPRIORITY_3. The following
+                code listing shows an example of what this looks like.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+spriteEntry-&gt;objPriority = OBJPRIORITY_3;
             </programlisting>
-            <para>
-                We usually want to copy more than one tile into vram at a time,
-                however. Luckily, when converting images to sprites with grit,
-                it will tell us the length in bytes of our tile data for that
-                sprite. After we have the length in bytes, we can use
-                dmaCopyHalfwords (which uses byte lengths for copying) to copy
-                the tile data into VRAM. We can also calculate how many tiles
-                an image uses from its length in bytes by diving the length in
-                bytes by how many bytes a tile takes up. In our case, as we'll
-                be using 16-color tiles, a tile (8x8 pixels) takes up 16 bytes.
-            </para>
         </sect1>
         <sect1>
             <title>Using the Sprites</title>
@@ -2025,12 +2026,13 @@ void initVideo() {
                      VRAM_C_SUB_BG_0x06200000,
                      VRAM_D_LCD);
 
-	vramSetBankE(VRAM_E_MAIN_SPRITE);
+    vramSetBankE(VRAM_E_MAIN_SPRITE);
 
     /*  Set the video mode on the main screen. */
     videoSetMode(MODE_5_2D | // Set the graphics mode to Mode 5
                  DISPLAY_BG2_ACTIVE | // Enable BG2 for display
                  DISPLAY_BG3_ACTIVE | // Enable BG3 for display
+                 DISPLAY_SPR_ACTIVE | // Enable sprites for display
                  DISPLAY_SPR_1D       // Enable 1D tiled sprites
                  );
 
@@ -2041,90 +2043,401 @@ void initVideo() {
             </programlisting>
         </sect1>
         <sect1>
+            <title>Sprite Tile Addressing</title>
+            <para>
+                We'll be using the same memory alignment (boundary) as the GBA
+                uses for our sprites. Tile VRAM addresses must be aligned to 32
+                bytes. If you feel shorted by this, since you can't use all
+                1024 addressable tiles when using 256 color tiles, for
+                instance, then you can look up how to use other alignments at
+                <ulink url="http://nocash.emubase.de/gbatek.htm#dsvideoobjs"/>.
+                You'll have to set REG_DISPCNT (via videoSetMode) with a value
+                defined in <filename>libnds/include/nds/arm9/video.h</filename>
+                akin to DISPLAY_SPR_1D_SIZE_XXX (the default, and the method
+                the GBA and we use, is DISPLAY_SPR_1D_SIZE_32).
+            </para>
+            <para>
+                To compute the address to copy tiles to, we basically need to
+                know two things: the memory alignment we are using and the tile
+                numbers we want to assign data to. Using the formula from
+                Martin Korth's GBATEK, "TileVramAddress = TileNumber *
+                BoundaryValue", and libnds's SPRITE_GFX define we can compute
+                the address of any tile as follows.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
+                                       * (can be set in REG_DISPCNT) */
+static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
+                                     sizeof(SPRITE_GFX[0]);
+uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle-&gt;tileIdx *
+                                           OFFSET_MULTIPLIER];
+            </programlisting>
+            <para>
+                We usually want to copy more than one tile into vram at a time,
+                however. Luckily, when converting images to sprites with grit,
+                it will tell us the length in bytes of our tile data for that
+                sprite. After we have the length in bytes, we can use
+                dmaCopyHalfwords (which uses byte lengths for copying) to copy
+                the tile data into VRAM. We can also calculate how many tiles
+                an image uses from its length in bytes by diving the length in
+                bytes by how many bytes a tile takes up. In our case, as we'll
+                be using 16-color tiles, a tile (8x8 pixels) takes up 16 bytes.
+            </para>
+        </sect1>
+        <sect1>
             <title>Loading in a Sprite</title>
             <para>
                 Now, to see a sprite in action. Let's load in the orangeShuttle
-                graphic. Make a new function called
-                <code language="C++"><function>initSprites<function></code>.
-                Place it after the initBackgrounds function. Make sure to
-                include orangeShuttle.h.  The first step is to initialize the
-                OAM. After that, we assign a graphics ID to our ship. After
-                that, we set the initial sprite attributes for our sprite
-                (which we will place in the spriteEntry struct as index 0).
-                Then, the rotation attributes.  Lastly, we simply copy over the
-                palette data and then the graphics data.
+                graphic and the moon graphic. Make a new function called <code
+                language="C++"><function>initSprites<function></code>.  Place
+                it after the <code
+                language="C++"><function>initBackgrounds</function></code>
+                function. Make sure to include
+                <filename>orangeShuttle.h</filename> and
+                <filename>moon.h</filename> now. They contain information about
+                our sprites as generated by grit. 
+            </para>
+            <para>
+                I've also create a new struct type called "SpriteInfo". This
+                struct contains information about sprites that aren't
+                explicitly contained in the SpriteEntry struct. We'll be using
+                it to help us manage our information about sprites better.
+            </para>
+            <procedure>
+                <title>To Create a Sprite</title>
+                <step>
+                    <para>
+                        We'll begin by filling in our SpriteInfo struct for the
+                        sprite. Each sprite will have its own SpriteInfo
+                        struct. The first thing we need to do is assign an OAM
+                        ID to the sprite. This number will help us keep track
+                        of which OAM entry our sprite is associated with. We'll
+                        also use it to compute other offsets, although we don't
+                        have to use it for that purpose in many cases.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Assign the width, height, and angle of the sprite.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Select an OAM entry to associate with this sprite.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Configure attribute 0.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Configure attribute 1.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Configure attribute 2.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Copy tile data to VRAM.
+                    </para>
+                </step>
+                <step>
+                    <para>
+                        Copy the palette data to VRAM.
+                    </para>
+                </step>
+            </procedure>
+            <para>
+                We'll just follow these steps twice when writing the
+                initSprites function for our sprites. You can follow along with
+                the comments and the code below.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void initSprites(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
-      //init OAM
-      initOAM(spriteEntry, spriteRotation);
-      Coordinate position;
-      position.x = SCREEN_WIDTH/2 - 64;
-      position.y = SCREEN_HEIGHT/2 - 64;
-      //create the ship sprite
-      int orangeShipGfxID = 64;
-      spriteEntry[0].attribute[0] = ATTR0_COLOR_256 |
-                                    ATTR0_ROTSCALE_DOUBLE | //able to
-                                                               rotscale
-                                    (int)position.y;
-      spriteEntry[0].attribute[1] = ATTR1_ROTDATA(0) |
-                                    ATTR1_SIZE_64 | //size 64x64
-                                    (int)position.x;
-      spriteEntry[0].attribute[2] = orangeShipGfxID;
-      //set initial rotation attributes
-      rotateSprite(&amp;spriteRotation[0], 0);
-      //copy in the sprite palettes
-      dmaCopyHalfWords(3, OrangeShuttlePalette_bin, //from address
-              (uint16 *)SPRITE_PALETTE, //to address
-              OrangeShuttlePalette_bin_size); //size of data to copy
-      //copy the sprite graphics in obj graphics  mem
-      dmaCopyHalfWords(3, OrangeShuttle_bin,           //from address
-              &amp;SPRITE_GFX[orangeShipGfxID * 16],  //to address
-              OrangeShuttle_bin_size);     //size of data to copy
-      //update the OAM
-      updateOAM(spriteEntry);
+void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
+    /*  Define some sprite configuration specific constants.
+     * 
+     *  We will use these to compute the proper index into memory for certain
+     *  tiles or palettes.
+     *
+     *  OFFSET_MULTIPLIER is calculated based on the following formula from
+     *  GBATEK (http://nocash.emubase.de/gbatek.htm#dsvideoobjs):
+     *      TileVramAddress = TileNumber * BoundaryValue
+     *  Since SPRITE_GFX is a uint16*, the compiler will increment the address
+     *  it points to by 2 for each change in 1 of the array index into
+     *  SPRITE_GFX. (The compiler does pointer arithmetic.)
+     */
+    static const int BYTES_PER_16_COLOR_TILE = 32;
+    static const int COLORS_PER_PALETTE = 16;
+    static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
+                                           * (can be set in REG_DISPCNT) */
+    static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
+                                         sizeof(SPRITE_GFX[0]);
+
+    /* Keep track of the available tiles */
+    int nextAvailableTileIdx = 0;
+
+    /* Create the ship sprite. */
+    static const int SHUTTLE_OAM_ID = 0;
+    assert(SHUTTLE_OAM_ID &lt; SPRITE_COUNT);
+    SpriteInfo * shuttleInfo = &amp;spriteInfo[SHUTTLE_OAM_ID];
+    SpriteEntry * shuttle = &amp;oam-&gt;spriteBuffer[SHUTTLE_OAM_ID];
+
+    /* Initialize shuttleInfo */
+    shuttleInfo-&gt;oamId = SHUTTLE_OAM_ID;
+    shuttleInfo-&gt;width = 64;
+    shuttleInfo-&gt;height = 64;
+    shuttleInfo-&gt;angle = 462;
+    shuttleInfo-&gt;entry = shuttle;
+
+    /*
+     *  Configure attribute 0. 
+     *
+     *  OBJCOLOR_16 will make a 16-color sprite. We specify that we want an
+     *  affine sprite (via isRotoscale) here because we would like to rotate
+     *  the ship.
+     */
+    shuttle-&gt;posY = SCREEN_HEIGHT / 2 - shuttleInfo-&gt;height;
+    shuttle-&gt;isRotoscale = true;
+    /* This assert is a check to see a matrix is available to store the affine
+     * transformation matrix for this sprite. Of course, you don't have to have
+     * the matrix id match the affine id, but if you do make them match, this
+     * assert can be helpful. */
+    assert(!shuttle-&gt;isRotoscale || (shuttleInfo-&gt;oamId &lt; MATRIX_COUNT));
+    shuttle-&gt;rsDouble = false;
+    shuttle-&gt;objMode = OBJMODE_NORMAL;
+    shuttle-&gt;isMosaic = false;
+    shuttle-&gt;colMode = OBJCOLOR_16;
+    shuttle-&gt;objShape = OBJSHAPE_SQUARE;
+
+    /*
+     *  Configure attribute 1.
+     *
+     *  rsMatrixId refers to the loation of affine transformation matrix. We
+     *  set it to a location computed with a macro. OBJSIZE_64, in our case
+     *  since we are making a square sprite, creates a 64x64 sprite.
+     */
+    shuttle-&gt;posX = SCREEN_WIDTH / 2 - shuttleInfo-&gt;width * 2 +
+                    shuttleInfo-&gt;width / 2;
+    shuttle-&gt;rsMatrixIdx = ATTR1_ROTDATA(shuttleInfo-&gt;oamId);
+    shuttle-&gt;objSize = OBJSIZE_64;
+
+    /* 
+     *  Configure attribute 2.
+     * 
+     *  Configure which tiles the sprite will use, which priority layer it will
+     *  be placed onto, which palette the sprite should use, and whether or not
+     *  to show the sprite.
+     */
+    shuttle-&gt;tileIdx = nextAvailableTileIdx;
+    nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE;
+    shuttle-&gt;objPriority = OBJPRIORITY_0;
+    shuttle-&gt;objPal = shuttleInfo-&gt;oamId;
+
+    /* Rotate the sprite */
+    rotateSprite(&amp;oam-&gt;matrixBuffer[shuttleInfo-&gt;oamId],
+                 shuttleInfo-&gt;angle);
+
+    /*************************************************************************/
+
+    /* Create the moon sprite. */
+    static const int MOON_OAM_ID = 1;
+    assert(MOON_OAM_ID &lt; SPRITE_COUNT);
+    SpriteInfo * moonInfo = &spriteInfo[MOON_OAM_ID];
+    SpriteEntry * moon = &amp;oam-&gt;spriteBuffer[MOON_OAM_ID];
+
+    /* Initialize moonInfo */
+    moonInfo-&gt;oamId = MOON_OAM_ID;
+    moonInfo-&gt;width = 32;
+    moonInfo-&gt;height = 32;
+    moonInfo-&gt;angle = 462;
+    moonInfo-&gt;entry = moon;
+
+    /*
+     *  Configure attribute 0.
+     *
+     *  OBJCOLOR_16 will make a 16-color sprite. We won't specify that we want
+     *  an affine sprite here because we don't want one this time.
+     */
+    moon-&gt;posY = SCREEN_WIDTH / 2 + moonInfo-&gt;height / 2;
+    moon-&gt;isRotoscale = false;
+    /* This assert is a check to see a matrix is available to store the affine
+     * transformation matrix for this sprite. Of course, you don't have to have
+     * the matrix id match the affine id, but if you do make them match, this
+     * assert can be helpful. */
+    assert(!moon-&gt;isRotoscale || (moonInfo-&gt;oamId &lt; MATRIX_COUNT));
+    moon-&gt;isHidden = false;
+    moon-&gt;objMode = OBJMODE_NORMAL;
+    moon-&gt;isMosaic = false;
+    moon-&gt;colMode = OBJCOLOR_16;
+    moon-&gt;objShape = OBJSHAPE_SQUARE;
+
+    /*
+     * Configure attribute 1.
+     *
+     * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
+     * square sprite. Since we are using a non-affine sprite, attribute 1
+     * doesn't have an rsMatrixIdx anymore. Instead, it has the ability to flip
+     * the sprite vertically or horizontally.
+     */
+    moon-&gt;posX = SCREEN_WIDTH / 2 + moonInfo-&gt;width + moonInfo-&gt;width / 2;
+    moon-&gt;hFlip = false;
+    moon-&gt;vFlip = false;
+    moon-&gt;objSize = OBJSIZE_32;
+
+    /* 
+     *  Configure attribute 2.
+     * 
+     *  Configure which tiles the sprite will use, which priority layer it will
+     *  be placed onto, which palette the sprite should use, and whether or not
+     *  to show the sprite.
+     */
+    moon-&gt;tileIdx = nextAvailableTileIdx;
+    nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
+    moon-&gt;objPriority = OBJPRIORITY_2;
+    moon-&gt;objPal = moonInfo-&gt;oamId;
+
+    /*************************************************************************/
+
+    /* Copy over the sprite palettes */
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
+                     orangeShuttlePal,
+                     &SPRITE_PALETTE[shuttleInfo-&gt;oamId *
+                                     COLORS_PER_PALETTE],
+                     orangeShuttlePalLen);
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
+                     moonPal,
+                     &SPRITE_PALETTE[moonInfo-&gt;oamId * COLORS_PER_PALETTE],
+                     moonPalLen);
+
+    /* Copy the sprite graphics to sprite graphics memory */
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
+                     orangeShuttleTiles,
+                     &SPRITE_GFX[shuttle-&gt;tileIdx * OFFSET_MULTIPLIER],
+                     orangeShuttleTilesLen);
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
+                     moonTiles,
+                     &SPRITE_GFX[moon-&gt;tileIdx * OFFSET_MULTIPLIER],
+                     moonTilesLen);
 }
             </programlisting>
         </sect1>
         <sect1>
-            <title>Displaying the Sprite</title>
+            <title>What are assertions?</title>
             <para>
-                In our main function, we now need to create the structs which
-                hold our sprite data. Then, we'll make a call to the
-                initSprites function we just created.
+                In the above code, you'll find some things that look like
+                function calls to a function called <code
+                language="C++"><function>assert</function></code>. These aren't
+                actually function calls, but macro expansions. You'll have to
+                include <filename>assert.h</filename> in order to use them.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-#include &lt;nds.h&gt;
-//gfx
-#include "StarField_bin.h"
-#include "Splash_bin.h"
-#include “OrangeShuttle_bin.h”
-#include "OrangeShuttlePalette_bin.h"
-//other functions we made go here
-int main () {
-      //turn on the 2D core
-      powerON(POWER_ALL_2D);
-      //turn on the 2D core
-      irqInit();
-      irqSet(IRQ_VBLANK, 0);
-      initVideo();
-      initBackgrounds();
-      //display backgrounds
-      displayStarField();
-      displaySplash();
-      //create the sprite entry table
-      SpriteEntry * spritesMain = new SpriteEntry[128];
-      //create the sprite rotation table, assigning it to the same location
-      //as spritesMain because the attributes overlap in memory
-      SpriteRotation * spriteRotationsMain = (SpriteRotation *)spritesMain;
-      //load and init the sprites (just one sprite actually)
-      initSprites(spritesMain, spriteRotationsMain);
-      return 0;
+#include <assert.h>
+            </programlisting>
+            <para>
+                The assert macro allows the programmer to make assumptions
+                about what is going on in the code. To use them, you just place
+                some kind of "fact" in between the paranthesis. Whenever this
+                assumption fails, the program will quit. Assertions are
+                evaluated at runtime.
+            </para>
+            <para>
+                Assertions help you avoid bugs developing obscure later on
+                since they'll stop them right where something first goes wrong.
+                Assertions are a good thing and should be used often.
+            </para>
+            <para>
+                When you release a production version of your software, the
+                assertions can be removed from your code by the preprocessor.
+                To do this with a GNU compiler, like the ones we are using, you
+                simply set NDEBUG.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Displaying the Sprites</title>
+            <para>
+                In our main function, we now need to initialize our copy of the
+                OAM, create the structs which hold our sprite data, make a call
+                to the <code
+                language="C++"><function>initSprites</function></code> function
+                we just created, and then update the OAM by copying our OAM
+                copy to OAM.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+int main() {
+    /*  Turn on the 2D graphics core. */
+    powerON(POWER_ALL_2D);
+
+    /*
+     *  Set up interrupts.
+     *
+     *  We don't really get into what these do exactly at this point in the
+     *  manual, but we still need to do them for now.
+     */
+    irqInit();
+    irqSet(IRQ_VBLANK, 0);
+
+    /*
+     *  Configure the VRAM and background control registers.
+     *
+     *  Place the main screen on the bottom physical screen. Then arrange the
+     *  VRAM banks. Next, confiure the background control registers.
+     */
+    lcdMainOnBottom();
+    initVideo();
+    initBackgrounds();
+
+    /* Set up a few sprites. */
+    SpriteInfo spriteInfo[SPRITE_COUNT];
+    tOAM *oam = new tOAM();
+    initOAM(oam);
+    initSprites(oam, spriteInfo);
+
+    /* Display the backgrounds. */
+    displayStarField();
+    displayPlanet();
+    displaySplash();
+
+    /*
+     *  Update the OAM.
+     *
+     *  We have to copy our copy of OAM data into the actual
+     *  OAM during VBlank (writes to it are locked during
+     *  other times).
+     */
+    swiWaitForVBlank();
+    updateOAM(oam);
+
+    return 0;
 }
             </programlisting>
         </sect1>
         <sect1>
             <title>Compiling</title>
+            <para>
+                Before you get to compiling, you may want to look at the top of
+                your <filename>main.cpp</filename> file and verify that you are
+                including all the proper files. There are a lot of files to
+                include now, so it is easy to lose track of which ones we need.
+                (I probably even forgot to let you know about some of them.)
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+#include <nds.h>
+#include <assert.h>
+#include "sprites.h"
+
+/* Backgrounds */
+#include "starField.h"
+#include "planet.h"
+#include "splash.h"
+/* Sprites */
+#include "orangeShuttle.h"
+#include "moon.h"
+            </programlisting>
             <para>
                 If all goes well, you’ll compile with no problems and the
                 output will look as in <xref linkend="chapter_6_screen_shot"/>.
@@ -2388,7 +2701,7 @@ spriteRotation) {
        //init OAM
        initOAM(spriteEntry, spriteRotation);
        //get the ship’s initial position
-       Coordinate position = ship->getPosition();
+       Coordinate position = ship-&gt;getPosition();
        //create the ship sprite
        int orangeShipGfxID = 64;
        spriteEntry[0].attribute[0] = ATTR0_COLOR_256 |
@@ -2814,13 +3127,13 @@ int main() {
        //immediately following sprite setup
       /* Sound Data setup */
       TransferSoundData * thrust_sound = new TransferSoundData();
-      thrust_sound->data = thrust_1_22050_8_s_raw;
-      thrust_sound->len = thrust_1_22050_8_s_raw_size;
-      thrust_sound->rate = 22050; //22050Hz Sample Rate
-      thrust_sound->vol = 127; //Volume can be from 0 to 127
-      thrust_sound->pan = 64; //Sound comes equally from both speakers
+      thrust_sound-&gt;data = thrust_1_22050_8_s_raw;
+      thrust_sound-&gt;len = thrust_1_22050_8_s_raw_size;
+      thrust_sound-&gt;rate = 22050; //22050Hz Sample Rate
+      thrust_sound-&gt;vol = 127; //Volume can be from 0 to 127
+      thrust_sound-&gt;pan = 64; //Sound comes equally from both speakers
                               // (0-127, left to right)
-      thrust_sound->format = 1; //1 - 8bit, 0 - 16bit
+      thrust_sound-&gt;format = 1; //1 - 8bit, 0 - 16bit
       for (;;) {
             updateInput();
             handleInput(ship, thrust_sound);
@@ -2984,29 +3297,15 @@ int main() {
             <programlisting linenumbering="unnumbered" language="C++">
 //Move a Sprite
 void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
-      spriteEntry->attribute[1] &amp;= 0xFE00;
-      spriteEntry->attribute[1] |= (x &amp; 0x01FF);
-      spriteEntry->attribute[0] &amp;= 0xFF00;
-      spriteEntry->attribute[0] |= (y &amp; 0x00FF);
+      spriteEntry-&gt;attribute[1] &amp;= 0xFE00;
+      spriteEntry-&gt;attribute[1] |= (x &amp; 0x01FF);
+      spriteEntry-&gt;attribute[0] &amp;= 0xFF00;
+      spriteEntry-&gt;attribute[0] |= (y &amp; 0x00FF);
 }
             </programlisting>
         </sect1>
         <sect1>
             <title>Setting Sprite Priority</title>
-            <para>
-                The ability to set a sprites priorty is essential when dealing
-                with multiple sprites, as we will be doing. As such, we'll now
-                discuss sprite priorities and how to set them.
-            </para>
-            <para>
-                A sprite, like a background, has a priorty which determines how
-                the sprite will appear with respect to other sprites and to
-                backgrounds. A sprite with the same number priorty as a
-                background will appear above it. A sprite with a lower priorty
-                number than another sprite will appear above that other sprite.
-                There are four priorities per graphics engine available for
-                sprites, similar to background priorities.
-            </para>
             <para>
                 To the priorty of the sprite, we use attribute 2 of the sprite.
                 Bits XXX though XXX contain the priority. I have provided a bit
@@ -3016,8 +3315,8 @@ void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void setSpritePriority(SpriteEntry * spriteEntry, int priority) {
-    spriteEntry->attribute[2] &amp;= ~ATTR2_PRIORITY_MASK;
-    spriteEntry->attribute[2] |= ATTR2_PRIORITY(priority);
+    spriteEntry-&gt;attribute[2] &amp;= ~ATTR2_PRIORITY_MASK;
+    spriteEntry-&gt;attribute[2] |= ATTR2_PRIORITY(priority);
 }
             </programlisting>
         </sect1>

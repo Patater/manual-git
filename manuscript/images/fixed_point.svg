@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.44.1"
+   sodipodi:docbase="/home/user/projects/manual/manuscript/images"
+   sodipodi:docname="fixed_point.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="330.98803"
+     inkscape:cy="928.62397"
+     inkscape:document-units="px"
+     inkscape:current-layer="g1977"
+     showguides="false"
+     showgrid="true"
+     inkscape:window-width="800"
+     inkscape:window-height="480"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g2841">
+      <text
+         xml:space="preserve"
+         style="font-size:18px;font-style:normal;font-weight:normal;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monospace"
+         x="79.802048"
+         y="158.37718"
+         id="text1932"><tspan
+           sodipodi:role="line"
+           id="tspan1934"
+           x="79.802048"
+           y="158.37718"> </tspan></text>
+      <g
+         id="g1977">
+        <g
+           id="g1999">
+          <g
+             transform="translate(-9.551758,28)"
+             id="g1960">
+            <g
+               id="g1954">
+              <text
+                 id="text1912"
+                 y="102.36218"
+                 x="18.664062"
+                 style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Monospace"
+                 xml:space="preserve"
+                 sodipodi:linespacing="125%"><tspan
+                   y="102.36218"
+                   x="18.664062"
+                   id="tspan1914"
+                   sodipodi:role="line">2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2</tspan></text>
+              <text
+                 xml:space="preserve"
+                 style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monospace"
+                 x="27.232273"
+                 y="89.698029"
+                 id="text1916"
+                 sodipodi:linespacing="125%"><tspan
+                   sodipodi:role="line"
+                   id="tspan1918"
+                   x="27.232273"
+                   y="89.698029"
+                   style="font-size:18px">15 14 13 12 11 10  9  8  7  6  4  3  2  1  0</tspan></text>
+            </g>
+            <text
+               sodipodi:linespacing="125%"
+               id="text1936"
+               y="66.618042"
+               x="18.77832"
+               style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monospace"
+               xml:space="preserve"><tspan
+                 style="font-size:18px;font-weight:bold"
+                 y="66.618042"
+                 x="18.77832"
+                 id="tspan1938"
+                 sodipodi:role="line">Normal Interpretation:</tspan></text>
+          </g>
+          <g
+             transform="translate(-9.551758,28)"
+             id="g1969">
+            <text
+               sodipodi:linespacing="125%"
+               xml:space="preserve"
+               style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Monospace"
+               x="24.617332"
+               y="174.36218"
+               id="text1924"><tspan
+                 sodipodi:role="line"
+                 id="tspan1926"
+                 x="24.617332"
+                 y="174.36218">2  2  2  2  2  2  2  2  2  2  2  2  2  2  2  2</tspan></text>
+            <text
+               sodipodi:linespacing="125%"
+               id="text1928"
+               y="161.69803"
+               x="33.185547"
+               style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monospace"
+               xml:space="preserve"><tspan
+                 style="font-size:18px"
+                 y="161.69803"
+                 x="33.185547"
+                 id="tspan1930"
+                 sodipodi:role="line">7  6  5  4  3  2  1  0  -1 -2 -3 -4 -5 -6 -7 -8</tspan></text>
+            <text
+               sodipodi:linespacing="125%"
+               id="text1940"
+               y="140.01443"
+               x="17.952148"
+               style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monospace"
+               xml:space="preserve"><tspan
+                 style="font-size:18px;font-weight:bold"
+                 y="140.01443"
+                 x="17.952148"
+                 id="tspan1942"
+                 sodipodi:role="line">Fixed Point (8.8) Interpretation:</tspan></text>
+          </g>
+          <g
+             transform="translate(-9.551758,28)"
+             id="g1948">
+            <text
+               sodipodi:linespacing="125%"
+               xml:space="preserve"
+               style="font-size:18px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Monospace"
+               x="17.837891"
+               y="29.858276"
+               id="text2799"><tspan
+                 sodipodi:role="line"
+                 id="tspan2801"
+                 x="17.837891"
+                 y="29.858276">15 14 13 12 11 10  9  8  7  6  5  4  3  2  1  0</tspan></text>
+            <text
+               sodipodi:linespacing="125%"
+               id="text1944"
+               y="2.1072998"
+               x="18.541016"
+               style="font-size:16px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;fill:black;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Monospace"
+               xml:space="preserve"><tspan
+                 style="font-size:18px;font-weight:bold"
+                 y="2.1072998"
+                 x="18.541016"
+                 id="tspan1946"
+                 sodipodi:role="line">Bits Positions:</tspan></text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

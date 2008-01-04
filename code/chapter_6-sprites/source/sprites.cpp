@@ -13,8 +13,6 @@
 #include <nds/arm9/trig_lut.h>
 #include "sprites.h"
 
-static const int SPRITE_DMA_CHANNEL = 3;
-
 void updateOAM(tOAM * oam) {
     DC_FlushAll();
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
@@ -45,7 +43,7 @@ void initOAM(tOAM * oam) {
         oam->matrixBuffer[i].vdy = 1 << 8;
     }
     /* Be sure to wait for vblank before trying to update the OAM. */
-    swiWaitForVblank();
+    swiWaitForVBlank();
     updateOAM(oam);
 }
 

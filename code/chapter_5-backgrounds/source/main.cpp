@@ -4,6 +4,10 @@
 #include "planet.h"
 #include "splash.h"
 
+/* Select a low priority DMA channel to perform our background
+ * copying. */
+static const int DMA_CHANNEL = 3;
+
 void initVideo() {
     /*
      *  Map VRAM to display a background on the main and sub screens.
@@ -94,7 +98,7 @@ void initBackgrounds() {
 }
 
 void displayStarField() {
-    dmaCopyHalfWords(3, // This DMA channel is a good default.
+    dmaCopyHalfWords(DMA_CHANNEL,
                      starFieldBitmap, /* This variable is generated for us by
                                        * grit. */
                      (uint16 *)BG_BMP_RAM(0), /* Our address for main
@@ -104,7 +108,7 @@ void displayStarField() {
 }
 
 void displayPlanet() {
-    dmaCopyHalfWords(3, // This DMA channel is a good default.
+    dmaCopyHalfWords(DMA_CHANNEL,
                      planetBitmap, /* This variable is generated for us by
                                     * grit. */
                      (uint16 *)BG_BMP_RAM(8), /* Our address for main
@@ -114,7 +118,7 @@ void displayPlanet() {
 }
 
 void displaySplash() {
-    dmaCopyHalfWords(3, // This DMA channel is a good default.
+    dmaCopyHalfWords(DMA_CHANNEL,
                      splashBitmap, /* This variable is generated for us by
                                     * grit. */
                      (uint16 *)BG_BMP_RAM_SUB(0), /* Our address for sub

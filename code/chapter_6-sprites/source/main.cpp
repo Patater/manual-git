@@ -10,7 +10,7 @@
 #include "orangeShuttle.h"
 #include "moon.h"
 
-/* Select a low priority DMA channel to perform our sprite and background
+/* Select a low priority DMA channel to perform our background
  * copying. */
 static const int DMA_CHANNEL = 3;
 
@@ -134,13 +134,13 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     int nextAvailableTileIdx = 0;
 
     /* Create the ship sprite. */
-    static const int SHUTTLE_AFFINE_ID = 0;
-    assert(SHUTTLE_AFFINE_ID < SPRITE_COUNT);
-    SpriteInfo * shuttleInfo = &spriteInfo[SHUTTLE_AFFINE_ID];
-    SpriteEntry * shuttle = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
+    static const int SHUTTLE_OAM_ID = 0;
+    assert(SHUTTLE_OAM_ID < SPRITE_COUNT);
+    SpriteInfo * shuttleInfo = &spriteInfo[SHUTTLE_OAM_ID];
+    SpriteEntry * shuttle = &oam->spriteBuffer[SHUTTLE_OAM_ID];
 
     /* Initialize shuttleInfo */
-    shuttleInfo->affineId = SHUTTLE_AFFINE_ID;
+    shuttleInfo->oamId = SHUTTLE_OAM_ID;
     shuttleInfo->width = 64;
     shuttleInfo->height = 64;
     shuttleInfo->angle = 462;
@@ -159,7 +159,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
      * assert can be helpful. */
-    assert(!shuttle->isRotoscale || (shuttleInfo->affineId < MATRIX_COUNT));
+    assert(!shuttle->isRotoscale || (shuttleInfo->oamId < MATRIX_COUNT));
     shuttle->rsDouble = false;
     shuttle->objMode = OBJMODE_NORMAL;
     shuttle->isMosaic = false;
@@ -175,7 +175,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      */
     shuttle->posX = SCREEN_WIDTH / 2 - shuttleInfo->width * 2 +
                     shuttleInfo->width / 2;
-    shuttle->rsMatrixIdx = ATTR1_ROTDATA(shuttleInfo->affineId);
+    shuttle->rsMatrixIdx = ATTR1_ROTDATA(shuttleInfo->oamId);
     shuttle->objSize = OBJSIZE_64;
 
     /* 
@@ -188,22 +188,22 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     shuttle->tileIdx = nextAvailableTileIdx;
     nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE;
     shuttle->objPriority = OBJPRIORITY_0;
-    shuttle->objPal = shuttleInfo->affineId;
+    shuttle->objPal = shuttleInfo->oamId;
 
     /* Rotate the sprite */
-    rotateSprite(&oam->matrixBuffer[shuttleInfo->affineId],
+    rotateSprite(&oam->matrixBuffer[shuttleInfo->oamId],
                  shuttleInfo->angle);
 
     /*************************************************************************/
 
     /* Create the moon sprite. */
-    static const int MOON_AFFINE_ID = 1;
-    assert(MOON_AFFINE_ID < SPRITE_COUNT);
-    SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
-    SpriteEntry * moon = &oam->spriteBuffer[MOON_AFFINE_ID];
+    static const int MOON_OAM_ID = 1;
+    assert(MOON_OAM_ID < SPRITE_COUNT);
+    SpriteInfo * moonInfo = &spriteInfo[MOON_OAM_ID];
+    SpriteEntry * moon = &oam->spriteBuffer[MOON_OAM_ID];
 
     /* Initialize moonInfo */
-    moonInfo->affineId = MOON_AFFINE_ID;
+    moonInfo->oamId = MOON_OAM_ID;
     moonInfo->width = 32;
     moonInfo->height = 32;
     moonInfo->angle = 462;
@@ -221,7 +221,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
      * assert can be helpful. */
-    assert(!moon->isRotoscale || (moonInfo->affineId < MATRIX_COUNT));
+    assert(!moon->isRotoscale || (moonInfo->oamId < MATRIX_COUNT));
     moon->isHidden = false;
     moon->objMode = OBJMODE_NORMAL;
     moon->isMosaic = false;
@@ -251,34 +251,34 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     moon->tileIdx = nextAvailableTileIdx;
     nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
     moon->objPriority = OBJPRIORITY_2;
-    moon->objPal = moonInfo->affineId;
+    moon->objPal = moonInfo->oamId;
 
     /*************************************************************************/
 
     /* Copy over the sprite palettes */
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttlePal,
-                     &SPRITE_PALETTE[shuttleInfo->affineId *
+                     &SPRITE_PALETTE[shuttleInfo->oamId *
                                      COLORS_PER_PALETTE],
                      orangeShuttlePalLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonPal,
-                     &SPRITE_PALETTE[moonInfo->affineId * COLORS_PER_PALETTE],
+                     &SPRITE_PALETTE[moonInfo->oamId * COLORS_PER_PALETTE],
                      moonPalLen);
 
     /* Copy the sprite graphics to sprite graphics memory */
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttleTiles,
                      &SPRITE_GFX[shuttle->tileIdx * OFFSET_MULTIPLIER],
                      orangeShuttleTilesLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonTiles,
                      &SPRITE_GFX[moon->tileIdx * OFFSET_MULTIPLIER],
                      moonTilesLen);
 }
 
 void displayStarField() {
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      starFieldBitmap, /* This variable is generated for us by
                                        * grit. */
                      (uint16 *)BG_BMP_RAM(0), /* Our address for main
@@ -305,7 +305,6 @@ void displaySplash() {
 }
 
 int main() {
-
     /*  Turn on the 2D graphics core. */
     powerON(POWER_ALL_2D);
 
