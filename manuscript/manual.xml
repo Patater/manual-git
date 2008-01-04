@@ -1010,12 +1010,12 @@
             <para>
                 Each engine supports up to four backgrounds and up to 128
                 sprites. They operate independently of each other, each with
-                their own control registers, graphics data, and palettes. To
-                use an engine, we must first turn them on. Then we place the
-                engine into a certain mode of operation. Next, we map memory
-                for use with the engines. Finally, we load their memory with
-                graphics data and palettes and they automatically just draw
-                what we've set them up to do.
+                their own control registers, backgrounds, sprites, graphics
+                data, and palettes. To use an engine, we must first turn them
+                on. Then we place the engine into a certain mode of operation.
+                Next, we map memory for use with the engines. Finally, we load
+                their memory with graphics data and palettes and they
+                automatically just draw what we've set them up to do.
             </para>
         </sect1>
         <sect1>
@@ -1108,7 +1108,7 @@
                 <filename>~/projects<filename> directory and name the copy
                 <filename>manual</filename>) and open
                 <filename>source/main.cpp</filename> with your favorite text
-                editor. Let's get going!
+                editor. (My favorite text editor is gvim.) Let's get going!
             </para>
         <sect1>
             <title>Initializing the Hardware</title>
@@ -1272,7 +1272,8 @@ void initVideo() {
                 as opposed to below it, we give the planet a priority number
                 less than that of the starfield's priority number. Relatively
                 lower priority numbers place backgrounds relatively above other
-                backgrounds.
+                backgrounds. There are only four priority numbers per graphics
+                engine that we can assign to backgrounds (priority numbers 0-3).
             </para>
             <para>
                 We'll now use that nice API libnds provides us for both the
@@ -2513,7 +2514,8 @@ int main() {
             <title>Compiling</title>
             <para>
                 Now we can control our ship with the D-Pad. What fun! The game
-                should now appear as in <xref linkend="chapter_8_screen_shot"/>. Now if only we had some
+                should now appear as in <xref
+                linkend="chapter_8_screen_shot"/>. Now if only we had some
                 aliens to kill…
             </para>
             <figure id="chapter_8_screen_shot">
