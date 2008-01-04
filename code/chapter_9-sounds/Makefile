@@ -76,8 +76,10 @@ CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
 BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
-PNGFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
 BMPFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.bmp)))
+PNGFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
+TIFFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.tif)))
+GIFFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.gif)))
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -96,6 +98,8 @@ endif
 export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
 					$(BMPFILES:.bmp=.o) \
 					$(PNGFILES:.png=.o) \
+					$(TIFFILES:.tif=.o) \
+					$(GIFFILES:.gif=.o) \
 					$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
  
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
@@ -158,12 +162,22 @@ $(OUTPUT).elf	:	$(OFILES)
 # add additional rules like this for each image extension
 # you use in the graphics folders 
 #---------------------------------------------------------------------------------
+%.s %.h	: %.bmp %.grit
+#---------------------------------------------------------------------------------
+	grit $< -fts -o$*
+
+#---------------------------------------------------------------------------------
 %.s %.h	: %.png %.grit
 #---------------------------------------------------------------------------------
 	grit $< -fts -o$*
 
 #---------------------------------------------------------------------------------
-%.s %.h	: %.bmp %.grit
+%.s %.h	: %.tif %.grit
+#---------------------------------------------------------------------------------
+	grit $< -fts -o$*
+
+#---------------------------------------------------------------------------------
+%.s %.h	: %.gif %.grit
 #---------------------------------------------------------------------------------
 	grit $< -fts -o$*
  
