@@ -1639,175 +1639,23 @@ int main() {
             </para>
         </sect1>
         <sect1>
-            <title>Sprite Attributes</title>
+            <title>Information About the Sprite Hardware</title>
             <para>
-                Sprites can spin and flip and mosaic and all sorts of fun
-                hardware effects. We will cover how to update, initialize,
-                move, and rotate only. Let's write some functions to do each of
-                those, in that order. I provide you with a header file, located
-                with the acompanying source at
-                <filename>code/chapter_6-sprites/include/sprites.h</filename>
-                that contains a collection of sprite related function
-                declarations. We'll be working on the definitions for each of
-                these functions together in a new file called
-                <filename>sprites.cpp</filename>. Our first step will be to
-                create a that new source code file. Put a new file called
-                <filename>sprites.cpp</filename> into the source folder of your
-                project directory.
-            </para>
-        </sect1>
-        <sect1>
-            <title>Updating the OAM</title>
-            <para>
-                Updating the OAM is very straightforward. First, we ﬂush local
-                memory (a must whenever performing a DMA operation). Then, we
-                tell the OAM to look into the SpriteEntry struct we will create
-                later for information about each one of our sprites.
-            </para>
-            <programlisting linenumbering="unnumbered" language="C++">
-//Update the OAM
-void updateOAM(SpriteEntry * spriteEntry) {
-      DC_FlushAll();
-      dmaCopyHalfWords(3, spriteEntry, OAM, 128 * sizeof(SpriteEntry));
-}
-            </programlisting>
-        </sect1>
-        <sect1>
-            <title>Initializing the OAM</title>
-            <para>
-                The first thing we do when initializing the OAM is to clear all
-                the sprite data in the OAM. After that, we'll make a call to
-                our afore written updateOAM function.
-            </para>
-            <programlisting linenumbering="unnumbered" language="C++">
-//Initialize the OAM
-void initOAM(SpriteEntry * spriteEntry, SpriteRotation * spriteRotation) {
-      //For all 128 sprites on the DS, disable and clear any attributes they
-      //might have. This prevents any garbage from being displayed and gives
-      //us a clean slate to work with.
-      for(int i = 0; i &lt; 128; i++) {
-            spriteEntry[i].attribute[0] = ATTR0_DISABLED;
-            spriteEntry[i].attribute[1] = 0;
-            spriteEntry[i].attribute[2] = 0;
-      }
-      //For all 32 possible sprite rotations, set them to default values
-      for(int i = 0; i &lt; 32; i++) {
-            spriteRotation[i].hdx = 256;
-            spriteRotation[i].hdy = 0;
-            spriteRotation[i].vdx = 0;
-            spriteRotation[i].vdy = 256;
-      }
-      updateOAM(spriteEntry);
-}
-            </programlisting>
-        </sect1>
-        <sect1>
-            <title>Moving Sprites</title>
-            <para>
-                Now for some real fun. Moving sprites in hardware, and not
-                having to worry about clipping, buffers, or anything, is such a
-                wonderful feeling. To move a sprite, we simply change some
-                attributes in that sprite’s SpriteEntry. Attribute 1 in a
-                sprite always contains, in bits 0-8, the X position of the
-                sprite. Attribute 0, among other things, contains the Y
-                position of the sprite, in bits 0-7. I have provided some
-                bitmasks we can use in <filename>sprites.h</filename>. <!-- XXX
-                TODO see if these defines are contained someplace in libnds and
-                see what the sprite examples do-->
-            </para>
-            <programlisting linenumbering="unnumbered" language="C++">
-//Move a Sprite
-void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
-      spriteEntry->attribute[1] &amp;= 0xFE00;
-      spriteEntry->attribute[1] |= (x &amp; 0x01FF);
-      spriteEntry->attribute[0] &amp;= 0xFF00;
-      spriteEntry->attribute[0] |= (y &amp; 0x00FF);
-}
-            </programlisting>
-        </sect1>
-        <sect1>
-            <title>Rotating Sprites</title>
-            <para>
-                Let's get to spinning. This is a bit more difficult, but still
-                fun. It's nice to not have to make a separate sprite for each
-                rotation position the sprite will be presented in. However,
-                doing so may be necessary for some applications as the Nintendo
-                DS rotation won't always look as pretty as if the rotations had
-                been done elsewhere. We have to use a transformation derived
-                from our time spent playing with an affine transformation
-                matrix. The sprite's affine transformation matrix is used
-                slightly differently from the background affine transformation
-                matrix. If you have a background in linear algebra, I’d
-                recommend reading up on this portion of the hardware at <ulink
-                url="http://www.coranac.com/tonc/text/affine.htm"/>.
-            </para>
-            <programlisting linenumbering="unnumbered" language="C++">
-//Rotate a Sprite
-void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
-      s16 s = -SIN[angle &amp; 0x1FF] &gt;&gt; 4;
-      s16 c = COS[angle &amp; 0x1FF] &gt;&gt; 4;
-      spriteRotation-&gt;hdx = c;
-      spriteRotation-&gt;hdy = -s;
-      spriteRotation-&gt;vdx = s;
-      spriteRotation-&gt;vdy = c;
-}
-            </programlisting>
-        </sect1>
-        <sect1>
-            <title>Setting Sprite Priority</title>
-            <para>
-                The ability to set a sprites priorty is essential when dealing
-                with multiple sprites, as we will be doing. As such, we'll now
-                discuss sprite priorities and how to set them.
-            </para>
-            <para>
-                A sprite, like a background, has a priorty which determines how
-                the sprite will appear with respect to other sprites and to
-                backgrounds. A sprite with the same number priorty as a
-                background will appear above it. A sprite with a lower priorty
-                number than another sprite will appear above that other sprite.
-            </para>
-            <para>
-                To the priorty of the sprite, we use attribute 2 of the sprite.
-                Bits XXX though XXX contain the priority. I have provided a bit
-                mask in <filename>sprites.h</filename> that we can use. libnds
-                provides the means of setting the priorty bits through the
-                <code>ATTR2_PRIORITY</code> macro.
-            </para>
-            <programlisting linenumbering="unnumbered" language="C++">
-void setSpritePriority(SpriteEntry * spriteEntry, int priority) {
-    spriteEntry->attribute[2] &amp;= ~ATTR2_PRIORITY_MASK;
-    spriteEntry->attribute[2] |= ATTR2_PRIORITY(priority);
-}
-            </programlisting>
-        </sect1>
-        <sect1>
-ANGLE ROTATION AFFINE SPRITE: static const int SHUTTLE_ANGLE = 462; //XXX MAN NOTE DS uses 512 degree system
-                              sprites by default (as in after we init oam memory) are square and non-affine
-GRIT: nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE; //XXX MAN NOTE orangeShuttle tiles is length in bytes
-            <title>Sprite Tile Addressing</title>
-            <figure>
-OBJ Tile Mapping (DISPCNT.4,20-21):
-
-  Bit4  Bit20-21  Dimension Boundary Total ;Notes
-  0     x         2D        32       32K   ;Same as GBA 2D Mapping
-  1     0         1D        32       32K   ;Same as GBA 1D Mapping
-  1     1         1D        64       64K
-  1     2         1D        128      128K
-  1     3         1D        256      256K  ;Engine B: 128K max
-
-TileVramAddress = TileNumber * BoundaryValue
-Even if the boundary gets changed, OBJs are kept composed of 8x8 tiles.
-            </figure>
-        </sect1>
-        <sect1>
-            <title>Using the Sprites</title>
-            <para>
-                Now that our sprites.cpp file is finished, let's get on to how
-                sprites are stored in memory, how to load them, and so forth.
-                So put away your sprites.cpp file into the source directory of
-                your home folder and let's get back into our
-                <filename>main.cpp</filename> file.
+                On the Nintendo DS, we can have up to 128 sprites. Only 32 of
+                those sprites can be affine transformed (rotated, scaled,
+                skewed, etc.). We are also only allowed to address 1024
+                different tiles to comprise all of our sprites, per engine.
+                Sprites can be made of tiles that use 16 colors or of ones that
+                use 256 colors. Tiles that use 256 colors are twice as large as
+                tiles that use only 16 colors. Another advantage of using
+                16-color sprites is the ability to use 16 different palettes.
+                When using 256-color sprites, each sprite (and tile) must use
+                the same palette. When using 16-color sprites, we can have one
+                sprite use one 16-color palette and another sprite use a
+                different 16-color palette, even though both use the same tile
+                data. Games often use this trick to make different colored
+                enemies that look the same. The sprites still use the same tile
+                data, but they use different palettes.
             </para>
         </sect1>
         <sect1>
@@ -1816,16 +1664,19 @@ Even if the boundary gets changed, OBJs are kept composed of 8x8 tiles.
                 Sprites are broken into 8x8 pixel pieces. This is called
                 tiling. When drawn to screen, the hardware pieces these tiles
                 together, like a puzzle where the pieces have no distinguishing
-                edges. See <xref linkend="sprite_tile_layout"/> for information
-                about layout. The conversion process will not be covered in the
-                early editions of this manual, as it's a more involved process.
-                On Linux, programmers usually use <command>gfx2gba</command>.
-                On the Macintosh, programmers usually use Graphic Converter
-                from Lemke Software (<ulink
-                url="http://www.lemkesoft.de/en/graphcon.htm"/>) saving as a
-                “Byte-Array Header File” and a program from PataterSoft called
-                <command>hConvert</command> (<ulink
-                url="http://www.patatersoft.info/hconvert.html"/>).
+                edges. There are two ways to tile sprites, 1D and 2D. In a 2D
+                layout, the sprite memory is treated like a giant image from
+                which sprite tiles are obtained by making a box the size of the
+                sprite and placing it over the giant image. In a 1D layout, the
+                sprites are layed out in a linear fashion, as discussed in
+                <xref linkend="sprite_tile_layout"/>.
+            </para>
+            <para>
+                The conversion process is very similar to that for backgrounds.
+                We simple make grit rule files that tell grit how we want our
+                images converted, and it generates a .o and a header file for
+                us. The grit rule files and image files go into the same place
+                as background images, the <filename>gfx></filename> folder.
             </para>
             <!-- XXX TODO This code listing is pretty stupid unless colored in a custom
             fashion.
@@ -1875,29 +1726,262 @@ const u16 data[] = {
             </figure>
         </sect1>
         <sect1>
-            <title>Information About the Sprite Hardware</title>
+            <title>Sprite Attributes</title>
             <para>
-                On the Nintendo DS, we can have up to 128 sprites. Only 32 of
-                those sprites can be affine transformed (rotated, scaled,
-                skewed, etc.). We are also only allowed to have 1024 different
-                tiles to comprise all of our sprites, per engine. Sprites can
-                be made of tiles that use 16 colors or of ones that use 256
-                colors. Tiles that use 256 colors are twice as large as tiles
-                that use only 16 colors. Another advantage of using 16-color
-                sprites is the ability to use 16 different palettes. When using
-                256 color sprites, each sprite (and tile) must use the same
-                palette. When using 16-color sprites, we can have one sprite
-                use one 16-color palette and another sprite use a different
-                16-color palette, even though both use the same tile data.
-                Games often use this trick to make different colored enemies
-                that look the same. The sprites still use the same tile data,
-                but they use different palettes. There are wo ways to tile
-                sprites, 1D and 2D. In a 2D layout, the sprite memory is
-                treated like a giant image from which sprite tiles are obtained
-                by making a box the size of the sprite and placing it over the
-                giant image. In a 1D layout, the sprites are layed out in a
-                linear fashion, as was discussed in figure <!-- XXX refer to
-                figure with the colorful memory map-->
+                Sprites can spin and flip and mosaic and perform all sorts of
+                fun hardware effects. We will cover how to update, initialize,
+                and rotate using bit twiddling methods, as libnds doesn't yet
+                provide ways of doing this otherwise. libnds provides the means
+                to do other things that we'll be doing with sprites though,
+                like move them, we'll be doing. We'll use the libnds API
+                wherever possible. Let's write some functions to do each of
+                those, in that order. I provide you with a header file,
+                located with the acompanying source at
+                <filename>code/chapter_6-sprites/include/sprites.h</filename>
+                that contains a collection of sprite related function
+                declarations. We'll be working on the definitions for each of
+                these functions together in a new file called
+                <filename>sprites.cpp</filename>. Our first step will be to
+                create a that new source code file. Put a new file called
+                <filename>sprites.cpp</filename> into the
+                <filename>source</filename> folder of your project directory.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Updating the OAM</title>
+            <para>
+                Instead of keeping track of things directly in the OAM, we'll
+                manage a copy of the OAM in memory that we will copy over every
+                frame using <code
+                language="C++"><function>updateOAM</function></code>. The
+                reason we do this is because writes to OAM are locked during
+                all times but during vblank. We will wait for vblank to occur
+                before copying our copy of the OAM into the actualy OAM.
+            </para>
+            <para>
+                Updating the OAM is very straightforward. First, we flush local
+                memory (a must whenever performing a DMA operation). Then, we
+                tell the OAM to look into the tOAM instance we will create
+                later for information about each one of our sprites.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void updateOAM(tOAM * oam) {
+    DC_FlushAll();
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
+                     oam->spriteBuffer,
+                     OAM,
+                     SPRITE_COUNT * sizeof(SpriteEntry));
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Initializing the OAM</title>
+            <para>
+                The first thing we do when initializing the OAM is to clear all
+                the sprite data in the OAM. After that, we'll make a call to
+                our afore written <code
+                language="C++"><function>updateOAM</function></code> function.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void initOAM(tOAM * oam) {
+    /*
+     * For all 128 sprites on the DS, disable and clear any attributes they 
+     * might have. This prevents any garbage from being displayed and gives 
+     * us a clean slate to work with.
+     */
+    for (int i = 0; i &lt; SPRITE_COUNT; i++) {
+        oam->spriteBuffer[i].attribute[0] = ATTR0_DISABLED;
+        oam->spriteBuffer[i].attribute[1] = 0;
+        oam->spriteBuffer[i].attribute[2] = 0;
+    }
+    for (int i = 0; i &lt; MATRIX_COUNT; i++) {
+        /* If you look carefully, you'll see this is that affine trasformation
+         * matrix again. We initialize it to the identity matrix, as we did
+         * with backgrounds
+         */
+        oam->matrixBuffer[i].hdx = 1 &lt;&lt; 8;
+        oam->matrixBuffer[i].hdy = 0;
+        oam->matrixBuffer[i].vdx = 0;
+        oam->matrixBuffer[i].vdy = 1 &lt;&lt; 8;
+    }
+
+    /* Be sure to wait for vblank before trying to update the OAM. */
+    swiWaitForVblank();
+    updateOAM(oam);
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Rotating Sprites</title>
+            <para>
+                Let's get to spinning. This is a bit more difficult than what
+                we've done before, but still fun. It's nice to not have to make
+                a separate sprite for each rotation position the sprite will be
+                presented in. However, doing so may be necessary for some
+                applications as the Nintendo DS rotation won't always look as
+                pretty as if the rotations had been done elsewhere.
+            </para>
+            <para>
+                The Nintendo DS employs a 512 degree system. Humans usually use
+                a 360 degree system or radians. The angle we'll work with in
+                this function will be one that is part of the 512 degree
+                system. You'll have to convert your radians or weird 360 degree
+                value (Seriously, why 360? Silly Babylonians.) to the 512 degree
+                system before using this function in order to see the results
+                you are expecting.
+            </para>
+            <para>
+                We have to use a transformation derived from our time spent
+                playing with an affine transformation matrix. The sprite's
+                affine transformation matrix is used slightly differently from
+                the background affine transformation matrix. If you have a
+                background in linear algebra, I’d recommend reading up on this
+                portion of the hardware at <ulink
+                url="http://www.coranac.com/tonc/text/affine.htm"/>.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
+    s16 s = SIN[angle &amp; SPRITE_ANGLE_MASK] &gt;&gt; 4;
+    s16 c = COS[angle &amp; SPRITE_ANGLE_MASK] &gt;&gt; 4;
+    
+    spriteRotation-&gt;hdx = c;
+    spriteRotation-&gt;hdy = s;
+    spriteRotation-&gt;vdx = -s;
+    spriteRotation-&gt;vdy = c;
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Showing and Hiding Sprites</title>
+            <para>
+                Up until now, we haven't used the fancy SpriteEntry union
+                included in libnds. It allows us to avoid thinking about bit
+                twiddling and masking in most cases. In the case of showing and
+                hiding sprites, we still need to be thinking about these bits
+                due to an oddity in the Nintendo DS hardware: the hiding bit of
+                a sprite (bit 9 of sprite attribute 0) is also the double bound
+                bit of a sprite if the sprite is an affine sprite (bit 8 of
+                sprite attribute 0). Follow along with the comments and code as
+                we formulate a solution to writing a function which shows and
+                hides all kinds of sprites.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
+                         bool doubleBound) {
+    if (hidden) {
+        /*
+         * Make the sprite invisible.
+         * 
+         * An affine sprite cannot be hidden. We have to turn it into a
+         * non-affine sprite before we can hide it. To hide any sprite, we must
+         * set bit 8 and clear bit 9. For non-affine sprites, this is a bit
+         * redundant, but it is faster than a branch to just set it regardless
+         * of whether or not it is already set.
+         */
+        spriteEntry->isRotoscale = false; // Bit 9 off
+        spriteEntry->isHidden = true; // Bit 8 on
+    } else {
+        /* Make the sprite visible.*/
+        if (affine) {
+            /* Again, keep in mind that affine sprites cannot be hidden, so
+             * enabling affine is enough to show the sprite again. We also need
+             * to allow the user to get the double bound flag in the sprite
+             * attribute. If we did not, then our sprite hiding function would
+             * not be able to properly hide and restore double bound sprites.
+             * We enable bit 9 here because we want an affine sprite.
+             */
+            spriteEntry->isRotoscale = true;
+
+            /* The double bound flag only acts as the double bound flag when
+             * the sprite is an affine sprite. At all other times, it acts as
+             * the sprite invisibility flag. We only enable bit 8 here if we want
+             * a double bound sprite. */
+            spriteEntry->rsDouble = doubleBound;
+        } else {
+            /* Bit 9 (the affine flag) will already be off here, so we don't
+             * need to clear it. However, bit 8 (the sprite invisibility flag)
+             * will need to be cleared. */
+            spriteEntry->isHidden = false;
+        }
+    }
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Moving Sprites</title>
+            <para>
+                Now for some real fun. Moving sprites in hardware, and not
+                having to worry about clipping, buffers, or anything, is such a
+                wonderful feeling. To move a sprite, we simply change the
+                SpriteEntry properties posX and posY. This is a case where we
+                don't have to think much about the underlying arrangement of
+                this information. The libnds union SpriteEntry describes the
+                organization of data to the compiler for us and the compiler
+                then figures out the best way to operate on that data; the
+                compiler does the bit twiddling and masking for us. Since this
+                is so simple, we don't even need to write a function to do it
+                for us. So just take note of what we do here and remember it
+                for later; you don't have to write a function for it, but if
+                you want to I'd recommend making it an inline function.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+/* This is what we'd do if we wanted to move a sprite. */
+spriteEntry-&gt;posX = 0;
+spriteEntry-&gt;posY = 0;
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Sprite Tile Addressing</title>
+            <para>
+                We'll be using the same memory alignment (boundary) as the GBA
+                uses for our sprites. Tile VRAM addresses must be aligned to 32
+                bytes. If you feel shorted by this, since you can't use all
+                1024 addressable tiles when using 256 color tiles, for
+                instance, then you can look up how to use other alignments at
+                <ulink url="http://nocash.emubase.de/gbatek.htm#dsvideoobjs"/>.
+                You'll have to set REG_DISPCNT (via videoSetMode) with a value
+                defined in <filename>libnds/include/nds/arm9/video.h</filename>
+                akin to DISPLAY_SPR_1D_SIZE_XXX (the default, and the method
+                the GBA and we'll use, is DISPLAY_SPR_1D_SIZE_32).
+            </para>
+            <para>
+                To compute the address to copy tiles to, we basically need to
+                know two things: the memory alignment we are using and the tile
+                numbers we want to assign data to. Using the formula from
+                Martin Korth's GBATEK, "TileVramAddress = TileNumber *
+                BoundaryValue", and libnds's SPRITE_GFX define we can compute
+                the address of any tile as follows.
+            </para>
+            <programlisting linenumberng="unnumbered" language="C++">
+static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
+                                       * (can be set in REG_DISPCNT) */
+static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
+                                     sizeof(SPRITE_GFX[0]);
+uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle->tileIdx *
+                                           OFFSET_MULTIPLIER];
+            </programlisting>
+            <para>
+                We usually want to copy more than one tile into vram at a time,
+                however. Luckily, when converting images to sprites with grit,
+                it will tell us the length in bytes of our tile data for that
+                sprite. After we have the length in bytes, we can use
+                dmaCopyHalfwords (which uses byte lengths for copying) to copy
+                the tile data into VRAM. We can also calculate how many tiles
+                an image uses from its length in bytes by diving the length in
+                bytes by how many bytes a tile takes up. In our case, as we'll
+                be using 16-color tiles, a tile (8x8 pixels) takes up 16 bytes.
+            </para>
+        </sect1>
+        <sect1>
+            <title>Using the Sprites</title>
+            <para>
+                Now that our sprites.cpp file is finished, let's get on to how
+                sprites are stored in memory, how to load them, and so forth.
+                So put away your sprites.cpp file into the source directory of
+                your home folder and let's get back into our
+                <filename>main.cpp</filename> file.
+            </para>
+        </sect1>
         <sect1>
             <title>Setting up VRAM for Sprites</title>
             <para>
@@ -2881,3 +2965,60 @@ int main() {
 </glossary>
 
 </book>
+
+<!-- Appendix sprites with bit twiddling TODO
+        <sect1>
+            <title>Moving Sprites</title>
+            <para>
+                Now for some real fun. Moving sprites in hardware, and not
+                having to worry about clipping, buffers, or anything, is such a
+                wonderful feeling. To move a sprite, we simply change some
+                attributes in that sprite’s SpriteEntry. Attribute 1 in a
+                sprite always contains, in bits 0-8, the X position of the
+                sprite. Attribute 0, among other things, contains the Y
+                position of the sprite, in bits 0-7. I have provided some
+                bitmasks we can use in <filename>sprites.h</filename>. XXX
+                TODO see if these defines are contained someplace in libnds and
+                see what the sprite examples do
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+//Move a Sprite
+void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
+      spriteEntry->attribute[1] &amp;= 0xFE00;
+      spriteEntry->attribute[1] |= (x &amp; 0x01FF);
+      spriteEntry->attribute[0] &amp;= 0xFF00;
+      spriteEntry->attribute[0] |= (y &amp; 0x00FF);
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Setting Sprite Priority</title>
+            <para>
+                The ability to set a sprites priorty is essential when dealing
+                with multiple sprites, as we will be doing. As such, we'll now
+                discuss sprite priorities and how to set them.
+            </para>
+            <para>
+                A sprite, like a background, has a priorty which determines how
+                the sprite will appear with respect to other sprites and to
+                backgrounds. A sprite with the same number priorty as a
+                background will appear above it. A sprite with a lower priorty
+                number than another sprite will appear above that other sprite.
+                There are four priorities per graphics engine available for
+                sprites, similar to background priorities.
+            </para>
+            <para>
+                To the priorty of the sprite, we use attribute 2 of the sprite.
+                Bits XXX though XXX contain the priority. I have provided a bit
+                mask in <filename>sprites.h</filename> that we can use. libnds
+                provides the means of setting the priorty bits through the
+                <code>ATTR2_PRIORITY</code> macro.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+void setSpritePriority(SpriteEntry * spriteEntry, int priority) {
+    spriteEntry->attribute[2] &amp;= ~ATTR2_PRIORITY_MASK;
+    spriteEntry->attribute[2] |= ATTR2_PRIORITY(priority);
+}
+            </programlisting>
+        </sect1>
+-->

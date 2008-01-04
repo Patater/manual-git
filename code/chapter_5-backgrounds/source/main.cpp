@@ -136,7 +136,7 @@ int main() {
     irqInit();
     irqSet(IRQ_VBLANK, 0);
 
-    /*  Configure the VRAM and background control registers */
+    /*  Configure the VRAM and background control registers. */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen
     initVideo(); 
     initBackgrounds(); 

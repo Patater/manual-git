@@ -44,6 +44,8 @@ void initOAM(tOAM * oam) {
         oam->matrixBuffer[i].vdx = 0;
         oam->matrixBuffer[i].vdy = 1 << 8;
     }
+    /* Be sure to wait for vblank before trying to update the OAM. */
+    swiWaitForVblank();
     updateOAM(oam);
 }
 
