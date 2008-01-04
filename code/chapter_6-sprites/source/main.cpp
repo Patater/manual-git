@@ -10,8 +10,7 @@
 #include "orangeShuttle.h"
 #include "moon.h"
 
-/* Select a low priority DMA channel to perform our background
- * copying. */
+/* Select a low priority DMA channel to perform our background copying. */
 static const int DMA_CHANNEL = 3;
 
 void initVideo() {
@@ -278,7 +277,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
 }
 
 void displayStarField() {
-    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
+    dmaCopyHalfWords(DMA_CHANNEL,
                      starFieldBitmap, /* This variable is generated for us by
                                        * grit. */
                      (uint16 *)BG_BMP_RAM(0), /* Our address for main

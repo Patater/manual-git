@@ -41,7 +41,6 @@ Ship::~Ship() {
 }
 
 void Ship::accelerate() {
-	
 	float incX = thrust * sin(angle);
 	float incY = -(thrust * cos(angle));
 	
