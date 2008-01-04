@@ -1116,10 +1116,11 @@
                 In order to get the hardware to do what we want, we have to
                 first initialize it. This means turning on the 2D core and
                 setting up a VBlank <glossterm linkend="irq_handler">IRQ
-                handler</glossterm>. This is where we fall in love with libnds.
-                libnds makes it incredibly simple to do these two things. Add
-                the following code to your new <filename>main.cpp</filename> C++
-                code file.
+                handler</glossterm>. This is where we first fall in love with
+                libnds. (We'll fall in love with it repeatedly over the course
+                of this manual.) libnds makes it incredibly simple to do these
+                two things. Add the following code to your new
+                <filename>main.cpp</filename> C++ code file.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 #include &lt;nds.h&gt;
@@ -1197,8 +1198,10 @@ void initVideo() {
                 <tgroup cols="4">
                     <thead>
                         <row>
-                            <entry>VRAM Bank</entry><entry>Control Register Address</entry>
-                            <entry>Control Register</entry><entry>VRAM Bank Size</entry>
+                            <entry>VRAM Bank</entry><entry>Control Register
+                            Address</entry>
+                            <entry>Control Register</entry><entry>VRAM Bank
+                            Size</entry>
                         </row>
                     </thead>
                     <tbody>
@@ -1277,10 +1280,11 @@ void initVideo() {
             </para>
             <para>
                 We'll now use that nice API libnds provides us for both the
-                background control registers and the affine translation matrix.
-                Let's proceed to make a function called <code
+                background control registers and the affine transformation
+                matrix.  Let's proceed to make a function called <code
                 language="C++"><function>initBackgrounds</function></code>
-                which will set up our affine backgrounds.
+                which will set up our affine backgrounds. Explanations of what
+                is going on is the comments.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void initBackgrounds() {
@@ -1292,10 +1296,10 @@ void initBackgrounds() {
     /*  Set the affine transformation matrix for the main screen background 3
      *  to be the identity matrix.
      */
-    BG3_XDX = 1 << 8;
+    BG3_XDX = 1 &lt;&lt; 8;
     BG3_XDY = 0;
     BG3_YDX = 0;
-    BG3_YDY = 1 << 8;
+    BG3_YDY = 1 &lt;&lt; 8;
 
     /*  Place main screen background 3 at the origin (upper left of the screen)
      */
@@ -1311,15 +1315,15 @@ void initBackgrounds() {
     /*  Set the affine transformation matrix for the main screen background 3
      *  to be the identity matrix.
      */
-    BG2_XDX = 1 << 8;
+    BG2_XDX = 1 &lt;&lt; 8;
     BG2_XDY = 0;
     BG2_YDX = 0;
-    BG2_YDY = 1 << 8;
+    BG2_YDY = 1 &lt;&lt; 8;
 
     /*  Place main screen background 2 an interesting place
      */
-    BG2_CX = -(SCREEN_WIDTH / 2 - 32) << 8;
-    BG2_CY = -32 << 8;
+    BG2_CX = -(SCREEN_WIDTH / 2 - 32) &lt;&lt; 8;
+    BG2_CY = -32 &lt;&lt; 8;
 
     /*  Set up affine background 3 on sub as a 16-bit color background */
     SUB_BG3_CR = BG_BMP16_256x256 |
@@ -1329,10 +1333,10 @@ void initBackgrounds() {
     /*  Set the affine transformation matrix for the sub screen background 3
      *  to be the identity matrix.
      */
-    SUB_BG3_XDX = 1 << 8;
+    SUB_BG3_XDX = 1 &lt;&lt; 8;
     SUB_BG3_XDY = 0;
     SUB_BG3_YDX = 0;
-    SUB_BG3_YDY = 1 << 8;
+    SUB_BG3_YDY = 1 &lt;&lt; 8;
 
     /*
      *  Place main screen background 3 at the origin (upper left of the screen)
@@ -1341,6 +1345,42 @@ void initBackgrounds() {
     SUB_BG3_CY = 0;
 }
             </programlisting>
+        </sect1>
+        <sect1>
+            <title>Fixed Point Number Primer</title>
+            <para>
+                What's up with all those "&lt;&lt; 8" thingies? Those are fixed
+                point numbers. The Nintendo DS expects many values to be in
+                varying fixed point formats. A fixed point number is simply a
+                way of specifying multiples of fractions to represent
+                non-integer values. For example, if we use an integer variable
+                to store a US Dollar amount, we might initially think we can
+                only represent whole dollar values. However, if we decide to
+                store US pennies in the integer as opposed to whole dollar
+                values, we can all of a sudden represent fractions of US
+                Dollars with our integer. We can have 1.21 US Dollars by saying
+                we have 121 pennies.
+            </para>
+            <para>
+                Common notation for fixed point types looks like 1.31, 1.7.24,
+                8.8, and etc. To interpret this notation, we read from right to
+                left. First, we find the number of bits used to specify
+                fractional parts. The next number will be the number of bits
+                for whole number parts. And, if there is another number, it
+                will usually indicate the sign of the number as being either
+                positive or negative with one bit. <xref
+                linkend="fixed_point"/> illustrates the concept of fixed point
+                numbers.
+            </para>
+            <figure id="fixed_point">
+                <title>Integer variables can be used to represent
+                fractions.</title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/fixed_point.svg"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
         </sect1>
         <sect1>
             <title>The Basics of DMA</title>
@@ -1381,7 +1421,7 @@ void initBackgrounds() {
                         <parameter>uint8 channel</parameter>
                         <parameter>const void * source</parameter>
                         <parameter>void * dest</parameter>
-                        <parameter>uint32 size</parameter><!-- XXX Specify that this is size in bytes -->
+                        <parameter>uint32 size</parameter>
                     </paramdef>
                 </funcprototype>
             </funcsynopsis>
@@ -1396,32 +1436,45 @@ void initBackgrounds() {
                 instead of
                 <code language="C++"><function>dmaCopy</function></code>
                 because it is more explicit as to
-                how it is copying. It also let's us specify which DMA channel
-                to use when copyingLet's start out by writing some functions to
-                display our backgrounds. Since we've already set up the
-                hardware to display the data in the desired manner, right after
-                the copy we will get some nice images displayed on our screens.
-                If we didn't set up our backgrounds first, we'd most likely get
-                garbage on the screen until we eventually did set up the
-                background control registers.
+                how it is copying. We'll use the same channel (channel 3) that
+                the ordinary dmaCopy uses, though. It also let's us specify
+                which DMA channel to use when copying. Let's start out by
+                writing some functions to display our backgrounds. Since we've
+                already set up the hardware to display the data in the desired
+                manner, right after the copy we will get some nice images
+                displayed on our screens. If we didn't set up our backgrounds
+                first, we'd most likely get garbage on the screen until we
+                eventually did set up the background control registers.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void displayStarField() {
-    dmaCopyHalfWords(3, starFieldBitmap, // This variable is generated for us by grit
-                     (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
-                     starFieldBitmapLen);
+    dmaCopyHalfWords(3, // This DMA channel is a good default.
+                     starFieldBitmap, /* This variable is generated for us by
+                                       * grit. */
+                     (uint16 *)BG_BMP_RAM(0), /* Our address for main
+                                               * background 3 */
+                     starFieldBitmapLen); /* This length (in bytes) is generated
+                                           * from grit. */
 }
 
 void displayPlanet() {
-    dmaCopyHalfWords(3, planetBitmap, // This variable is generated for us by grit
-                     (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
-                     planetBitmapLen);
+    dmaCopyHalfWords(3, // This DMA channel is a good default.
+                     planetBitmap, /* This variable is generated for us by
+                                    * grit. */
+                     (uint16 *)BG_BMP_RAM(8), /* Our address for main
+                                               * background 2 */
+                     planetBitmapLen); /* This length (in bytes) is generated
+                                        * from grit. */
 }
 
 void displaySplash() {
-    dmaCopyHalfWords(3, splashBitmap, //This variable is generated for us by grit
-            (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
-            splashBitmapLen);
+    dmaCopyHalfWords(3, // This DMA channel is a good default.
+                     splashBitmap, /* This variable is generated for us by
+                                    * grit. */
+                     (uint16 *)BG_BMP_RAM_SUB(0), /* Our address for sub
+                                                   * background 3 */
+                     splashBitmapLen); /* This length (in bytes) is generated
+                                        * from grit. */
 }
             </programlisting>
         </sect1>
@@ -1433,49 +1486,65 @@ void displaySplash() {
                 as a header file.
             </para>
             <para>
-                <!-- XXX Rewrite this section to cover the basic use of grit
-                --> The graphics must be in raw binary (.bin) format.
-                Considering the scope of this edition of the manual, I will not
-                be covering how to convert graphics into .bin format. On Linux,
-                im- age conversion is usually done by a program called
-                <command>gfx2gba</command>. Be warned however that
-                <command>gfx2gba</command> does not properly convert to a 16bit
-                graphics format compatible with the Nintendo DS. Some
-                modiﬁcation (setting the alpha bit) is still necessary. You can
-                use <command>gfx2gba</command> and a program from PataterSoft
-                called <command>hConvert</command> (<ulink
-                url="http://www.patatersoft.info/hconvert.html"/>) to make the
-                graphics you need. <command>hConvert</command> can convert the
-                output from <command>gfx2gba</command> to a compatible format
-                for use with the Nintendo DS, although it does not set the
-                alpha bit for you. On the Macintosh, programmers usually use
-                Graphic Converter from Lemke Software (<ulink
-                url="http://www.lemkesoft.de/en/graphcon.htm"/>) saving as a
-                “Byte-Array Header File” and converting that .h ﬁle to a .bin
-                with <command>hConvert</command>.
+                The graphics must be in a lossless image format, such as gif,
+                tif, bmp, or png in order to work with the provided template
+                makefile. I prefer the png graphic format. Image conversion is
+                usually done by a program called <command>grit</command>. The
+                provided template makefile will ask <command>grit</command> to
+                convert images in the <filename>gfx</filename> folder of your
+                project root to a format ready for the Nintendo DS.
             </para>
             <para>
-                The default libnds template makefile is a good base for most all
-                projects. It will look in a folder called
-                <filename>data</filename> (in the same directory as the
-                makefile) for your graphics. If any are found, it uses a
-                special bin2o rule to convert your images into .o ﬁles which
-                can be linked into your program. The bin2o rule will create a
-                header ﬁle (.h) for your data. The name format for them works
-                like so: if a ﬁle is called <filename>OrangeShip.bin</filename>
-                the header ﬁle will be called
-                <filename>OrangeShip_bin.h</filename>.
+                The provided template makefile, adapted from the default libnds
+                template makefile, is a good base for most all projects. It
+                will look in a folder called <filename>gfx</filename> (in the
+                same directory as the makefile) for your graphics. If any are
+                found, it uses a special bin2o rule to tell grit to turn your
+                images into .o files, according to grit rule files (with the
+                .grit files extension), which can be linked into your program.
+                <command>grit</command> will create a header file (.h) for your
+                data. The name format for them works like so: if a file is
+                called <filename>orangeShuttle.png</filename> the header file
+                will be called <filename>orangeShuttle.h</filename>. Inside
+                this header file will be a reference to the data in the .o,
+                named orangeShuttleTiles and orangeShuttlePal or
+                orangeShuttleBitmap, depending on how the grit file specifies
+                which format to convert your image into. It will also include
+                the length in bytes of the data references as
+                orangeShuttleTilesLen and orangeShuttlePalLen or
+                orangeShuttleBitmapLen. <!-- TODO figure out a good way to refer
+                to these variables -->
             </para>
             <para>
-                For our project, we'll be putting the .bin graphic ﬁles into
-                the <filename>data</filename> directory and having the makefile
-                use the bin2o rule on them.
+                For our project, we'll be putting the our graphic files and
+                grit rule files into the <filename>gfx</filename> directory and
+                having the makefile use <command>grit</command> on them.
             </para>
+        </sect1>
+        <sect1>
+            <title>Gritty Crash Course</title>
+            <para>
+                With the emergence of the awesome and multi-platform tool,
+                <command>grit</command> there is no reason to not learn how to
+                use it. It is now a standard tool in Nintendo DS and GBA
+                development where aforeto there was no universal method of
+                image conversion.
+            </para>
+            <para>
+                To use grit, we make a grit rule file. This file has the .grit
+                file extension an contains important information telling grit
+                how we want our image converted. You can learn about how grit
+                works by reading its built-in help by running the command
+                <command>grit</command> with no parameters. I've also provided
+                commented grit rule files for all images we will use in this
+                manual. These make good examples and can help you get the hang
+                of using grit.
+            </para><!-- TODO This grit section is just a cop out right now. We'll have to improve it later (as in actually teach how to use grit). -->
         </sect1>
         <sect1>
             <title>Putting in the Star Fields</title>
             <para>
-                Leťs now put these functions into our main() function to get
+                Let's now put these functions into our main() function to get
                 everything working together.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
@@ -1485,7 +1554,7 @@ void displaySplash() {
 #include "planet.h"
 #include "splash.h"
 
-/* other functions we've made are here */
+/* Other functions we've made are here. */
 
 int main() {
     /*  Turn on the 2D graphics core. */
@@ -1500,12 +1569,12 @@ int main() {
     irqInit();
     irqSet(IRQ_VBLANK, 0);
 
-    /*  Configure the VRAM and background control registers */
+    /*  Configure the VRAM and background control registers. */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen
     initVideo(); 
     initBackgrounds(); 
 
-    /*  Display the backgrounds */
+    /*  Display the backgrounds. */
     displayStarField(); 
     displayPlanet();
     displaySplash();
@@ -1518,13 +1587,14 @@ int main() {
             <title>Compiling</title>
             <para>
                 Check over your code, referring to the included examples if
-                needed. Make sure you have the graphic ﬁles in the
-                <filename>data</filename> directory in your project directory.
-                Bring up the command line and et your current working directory
-                to the directory which contains the makefile for your project.
-                Type <command>make</command> and if all goes well, you'll have
-                good success. See <xref linkend="chapter_5_screen_shot"/>. Copy
-                your program to your DS using the method you have chosen.
+                needed. Make sure you have the graphics files and the grit rule
+                files in the <filename>gfx</filename> directory in your project
+                directory. Bring up the command line and set your current
+                working directory to the directory which contains the makefile
+                for your project. Type <command>make</command> and if all goes
+                well, you'll have good success. See <xref
+                linkend="chapter_5_screen_shot"/>. Copy your program to your DS
+                using the method you have chosen.
             </para>
             <figure id="chapter_5_screen_shot">
                 <title>The program should look like this when run.</title>
@@ -2069,9 +2139,9 @@ int main () {
         <sect1>
             <title>Making the Ship Class</title>
             <para>
-                I have provided a skeleton framework ﬁle for you to write your
+                I have provided a skeleton framework file for you to write your
                 class in. It is all set and ready for you to implement in the
-                Ship.cpp ﬁle. The header ﬁle, Ship.h is also included. On your
+                Ship.cpp file. The header file, Ship.h is also included. On your
                 own, with your own classes in the future, you should always
                 make a skeleton framework class to work from. It makes
                 implementation straightforward and you do not have to worry
@@ -2469,7 +2539,7 @@ void handleInput(Ship * ship) {
         <sect1>
             <title>Creating the Main Game Loop</title>
             <para>
-                Leťs check back in on our main function now. It's time for use
+                Let's check back in on our main function now. It's time for use
                 to create an inﬁnite loop to run our program. The first thing we
                 want to happen in our game loop is for the key registers to get
                 updated. We make a call to scanKeys and it all happens for us.
@@ -2591,11 +2661,11 @@ int main() {
                 included SoX source.
             </para>
             <para>
-                To use SoX, simple convert your ﬁle as shown below. You can
-                practice with my included audio ﬁle “thrust.aif ”. The relevant
+                To use SoX, simple convert your file as shown below. You can
+                practice with my included audio file “thrust.aif ”. The relevant
                 command line options work as follows: -b 8-bit, -s signed, -r
                 22050 22050Hz sample rate. SoX knows to turn your sound into a
-                .raw by reading the ﬁle extension on the output ﬁlename. Keep
+                .raw by reading the file extension on the output ﬁlename. Keep
                 in mind since raw sounds have no headers, to somehow label them
                 with their formatting information. I use the ﬁlename to do
                 this, as you can see.
@@ -2610,13 +2680,13 @@ int main() {
             <title>Using the Sounds</title>
             <para>
                 The makefile I’ve included with my manual has a custom bin20
-                rule for creating .o ﬁles from .raw ﬁles. There is really
+                rule for creating .o files from .raw files. There is really
                 nothing special about it. It does the same thing that the .bin
                 bin2o rule does. The libnds default makeﬁles require you to
-                explicitly specify the ﬁle types you want to be processed.
+                explicitly specify the file types you want to be processed.
             </para>
             <para>
-                After the makefile processes the raw sound ﬁle, the header for
+                After the makefile processes the raw sound file, the header for
                 it will look like so
                 <filename>thrust_1_22050_8_s_raw.h</filename> and will be
                 located in the build directory.

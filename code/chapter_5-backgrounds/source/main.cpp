@@ -94,21 +94,33 @@ void initBackgrounds() {
 }
 
 void displayStarField() {
-    dmaCopy(starFieldBitmap, // This variable is generated for us by grit
-            (uint16 *)BG_BMP_RAM(0), // Our address for main background 3
-            starFieldBitmapLen);
+    dmaCopyHalfWords(3, // This DMA channel is a good default.
+                     starFieldBitmap, /* This variable is generated for us by
+                                       * grit. */
+                     (uint16 *)BG_BMP_RAM(0), /* Our address for main
+                                               * background 3 */
+                     starFieldBitmapLen); /* This length (in bytes) is generated
+                                           * from grit. */
 }
 
 void displayPlanet() {
-    dmaCopy(planetBitmap, // This variable is generated for us by grit
-            (uint16 *)BG_BMP_RAM(8), // Our address for main background 2
-            planetBitmapLen);
+    dmaCopyHalfWords(3, // This DMA channel is a good default.
+                     planetBitmap, /* This variable is generated for us by
+                                    * grit. */
+                     (uint16 *)BG_BMP_RAM(8), /* Our address for main
+                                               * background 2 */
+                     planetBitmapLen); /* This length (in bytes) is generated
+                                        * from grit. */
 }
 
 void displaySplash() {
-    dmaCopy(splashBitmap, //This variable is generated for us by grit
-            (uint16 *)BG_BMP_RAM_SUB(0), // Our address for sub background 3
-            splashBitmapLen);
+    dmaCopyHalfWords(3, // This DMA channel is a good default.
+                     splashBitmap, /* This variable is generated for us by
+                                    * grit. */
+                     (uint16 *)BG_BMP_RAM_SUB(0), /* Our address for sub
+                                                   * background 3 */
+                     splashBitmapLen); /* This length (in bytes) is generated
+                                        * from grit. */
 }
 
 int main() {
