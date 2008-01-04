@@ -221,7 +221,7 @@
                 essential fan base that loves that company's hardware design
                 and has the potential to improve it (all at no cost to the
                 company). Homebrew caused such a high demand for the Xbox that
-                it would not have been in Microsofts best interests to ignore
+                it would not have been in Microsoft's best interests to ignore
                 or punish it.
             </para>
             <para>
@@ -301,13 +301,13 @@
                 (right)</title>
                 <mediaobject>
                     <imageobject>
-                        <imagedata fileref="../images/manual/passme.png"/>
+                        <imagedata fileref="images/passme.png"/>
                     </imageobject>
                 </mediaobject>
                 <mediaobject>
                     <imageobject>
                         <imagedata
-                        fileref="../images/manual/ufb-x_profil.jpg"/>
+                        fileref="images/ufb-x_profil.jpg"/>
                     </imageobject>
                 </mediaobject>
             </figure>
@@ -543,7 +543,7 @@
                 <mediaobject>
                     <imageobject>
                         <imagedata
-                        fileref="../images/manual/passme_insert_ds.png"/>
+                        fileref="images/passme_insert_ds.png"/>
                     </imageobject>
                 </mediaobject>
             </figure>
@@ -774,7 +774,7 @@
                 <mediaobject>
                     <imageobject>
                         <imagedata
-                        fileref="../images/manual/comparison_insertion.png"/>
+                        fileref="images/comparison_insertion.png"/>
                     </imageobject>
                 </mediaobject>
             </figure>
@@ -938,7 +938,7 @@
             </para>
             <mediaobject>
                 <imageobject>
-                    <imagedata fileref="../images/manual/devkitlogo.png"/>
+                    <imagedata fileref="images/devkitlogo.png"/>
                 </imageobject>
             </mediaobject>
         </sect1>
@@ -1978,13 +1978,13 @@ int main () {
                 <title>Output with both backgrounds and a sprite.</title>
                 <mediaobject>
                     <imageobject>
-                        <imagedata fileref="../images/manual/splash.png"/>
+                        <imagedata fileref="images/splash.png"/>
                     </imageobject>
                 </mediaobject>
                 <mediaobject>
                     <imageobject>
                         <imagedata
-                        fileref="../images/manual/starfield_and_orange_shuttle"/>
+                        fileref="images/starfield_and_orange_shuttle"/>
                     </imageobject>
                 </mediaobject>
             </figure>
@@ -2307,7 +2307,7 @@ int main () {
             </para>
             <mediaobject>
                 <imageobject>
-                    <imagedata fileref="../images/manual/orange_shuttle.png"/>
+                    <imagedata fileref="images/orange_shuttle.png"/>
                 </imageobject>
             </mediaobject>
         </sect1>
@@ -2520,13 +2520,13 @@ int main() {
                 <title>Flying around in the Orange Shuttle.</title>
                 <mediaobject>
                     <imageobject>
-                        <imagedata fileref="../images/manual/splash.png"/>
+                        <imagedata fileref="images/splash.png"/>
                     </imageobject>
                 </mediaobject>
                 <mediaobject>
                     <imageobject>
                         <imagedata
-                        fileref="../images/manual/starfield_with_moving_orange_shuttle.png"/>
+                        fileref="images/starfield_with_moving_orange_shuttle.png"/>
                     </imageobject>
                 </mediaobject>
             </figure>
@@ -2734,13 +2734,13 @@ int main() {
                 <title>Flying around in the Orange Shuttle, with sound!</title>
                 <mediaobject>
                     <imageobject>
-                        <imagedata fileref="../images/manual/splash.png"/>
+                        <imagedata fileref="images/splash.png"/>
                     </imageobject>
                 </mediaobject>
                 <mediaobject>
                     <imageobject>
                         <imagedata
-                        fileref="../images/manual/starfield_with_moving_orange_shuttle.png"/>
+                        fileref="images/starfield_with_moving_orange_shuttle.png"/>
                     </imageobject>
                 </mediaobject>
             </figure>
