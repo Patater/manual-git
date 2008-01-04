@@ -16,9 +16,9 @@
                 <revremark>This manual now covers additional aspects of
                 Nintendo DS Programming including multiple sprites, multiple
                 backgrounds, multiple palettes, the touch screen, Slot-1
-                devices, and more. It also includes new, higher quality
-                photos. The manual's case study has undergone a significant
-                rewrite and covers more ground than ever before.</revremark>
+                devices, and more. The manual's case study has undergone a
+                significant rewrite and covers more ground than ever
+                before.</revremark>
             <revision>
                 <revnumber>5.0</revnumber>
                 <date>31 Mar 2007</date>
@@ -768,9 +768,10 @@
                 CF cards around, unfortunately, the only way to run NDS
                 software from an SD card at this time is with the SD versions
                 of the SuperCard or M3 Adapter. The GBAMP also sticks out from
-                the bottom of the Nintendo DS a little, as shown in Figure 3.0.
+                the bottom of the Nintendo DS a little, as shown in <xref
+                linkend="gbamp_vs_gba_flash_cart"/>
             </para>
-            <figure>
+            <figure id="gbamp_vs_gba_flash_cart">
                 <title>Comparison of GBAMP (left) and a GBA flash cart (right)
                 inserted into a DS</title>
                 <mediaobject>
@@ -804,14 +805,14 @@
                 DragonMinded's DSOrganize. It supports booting multiple
                 programs, text editing, address books, calendars, and more. It's
                 a great application for the DS. You can get it from <ulink
-                url="http://www.dragonminded.com/%3Floc%3Dndsdev/DSOrganize"/>.
+                url="http://www.dragonminded.com/?loc=ndsdev/DSOrganize"/>.
                 However, you cannot use a stock GBAMP to run NDS programs. You
                 have to flash it with some custom ﬁrmware. Instructions and
                 firmware are available from <ulink
                 url="http://chishm.drunkencoders.com/NDSMP/index.html"/>.
             </para>
             <para>
-                As for Slot-1 devices, these usually all come with their own
+                As for Slot-1 devices, these all usually come with their own
                 menu systems (often incorrectly referred to as operating
                 systems). You won't have to do anything special to run multiple
                 software titles.
@@ -1662,7 +1663,7 @@ void moveSprite(SpriteEntry * spriteEntry, u16 x, u16 y) {
                 slightly differently from the background affine transformation
                 matrix. If you have a background in linear algebra, I’d
                 recommend reading up on this portion of the hardware at <ulink
-                url="http://user.chem.tue.nl/jakvijn/tonc/aﬃne.htm"/>.
+                url="http://www.coranac.com/tonc/text/affine.htm"/>.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 //Rotate a Sprite
