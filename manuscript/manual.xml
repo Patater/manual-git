@@ -466,48 +466,45 @@
                     </para>
                 </step>
             </procedure>
-            <figure id="game_eject_firmware_table">
-                <title>Table of Firmware Version Ejections</title>
-                <table>
-                    <title>When ejecting the game, you'll discover your
-                    firmware version as shown.</title>
-                    <tgroup cols="2">
-                        <thead>
-                            <row>
-                                <entry>Observed Results</entry><entry>Firmware
-                                Version</entry>
-                            </row>
-                        </thead>
-                        <tbody>
-                            <row>
-                                <entry>Pictochat froze</entry><entry>Version
-                                1</entry>
-                            </row>
-                            <row>
-                                <entry>Both screens turned
-                                periwinkle</entry><entry>Version 2</entry>
-                            </row>
-                            <row>
-                                <entry>Both screens turned dark
-                                green</entry><entry>Version 3, iQue, or
-                                Flashme</entry>
-                            </row>
-                            <row>
-                                <entry>Both screens turned
-                                marigold</entry><entry>Version 4</entry>
-                            </row>
-                            <row>
-                                <entry>Both screens turned
-                                magenta</entry><entry>Version 5</entry>
-                            </row>
-                            <row>
-                                <entry>Both screens turned dark
-                                blue</entry><entry>Version 6</entry>
-                            </row>
-                        </tbody>
-                    </tgroup>
-                </table>
-            </figure>
+            <table id="game_eject_firmware_table">
+                <title>When ejecting the game, you'll discover your
+                firmware version as shown.</title>
+                <tgroup cols="2">
+                    <thead>
+                        <row>
+                            <entry>Observed Results</entry><entry>Firmware
+                            Version</entry>
+                        </row>
+                    </thead>
+                    <tbody>
+                        <row>
+                            <entry>Pictochat froze</entry><entry>Version
+                            1</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned
+                            periwinkle</entry><entry>Version 2</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned dark
+                            green</entry><entry>Version 3, iQue, or
+                            Flashme</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned
+                            marigold</entry><entry>Version 4</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned
+                            magenta</entry><entry>Version 5</entry>
+                        </row>
+                        <row>
+                            <entry>Both screens turned dark
+                            blue</entry><entry>Version 6</entry>
+                        </row>
+                    </tbody>
+                </tgroup>
+            </table>
             <para>
                 It is recommended that you purchase a NoPass instead of a
                 PassMe or PassMe 2 passthrough device if you are unsure which
@@ -788,7 +785,7 @@
                 This means that most flash carts will be incompatible with Linux
                 or Macintosh computers. In actuality, the only good thing about
                 a GBA flash cart is that it does not stick out from the Nintendo
-                DS, as can be seen in Figure 3.0.
+                DS, as can be seen in <xref linkend="gbamp_vs_gba_flash_cart"/>.
             </para>
         </sect1>
         <sect1>
@@ -1449,10 +1446,10 @@ void displaySplash() {
                 with <command>hConvert</command>.
             </para>
             <para>
-                The default libnds template makeﬁle is a good base for most all
+                The default libnds template makefile is a good base for most all
                 projects. It will look in a folder called
                 <filename>data</filename> (in the same directory as the
-                makeﬁle) for your graphics. If any are found, it uses a
+                makefile) for your graphics. If any are found, it uses a
                 special bin2o rule to convert your images into .o ﬁles which
                 can be linked into your program. The bin2o rule will create a
                 header ﬁle (.h) for your data. The name format for them works
@@ -1462,7 +1459,7 @@ void displaySplash() {
             </para>
             <para>
                 For our project, we'll be putting the .bin graphic ﬁles into
-                the <filename>data</filename> directory and having the makeﬁle
+                the <filename>data</filename> directory and having the makefile
                 use the bin2o rule on them.
             </para>
         </sect1>
@@ -1515,12 +1512,12 @@ int main() {
                 needed. Make sure you have the graphic ﬁles in the
                 <filename>data</filename> directory in your project directory.
                 Bring up the command line and et your current working directory
-                to the directory which contains the makeﬁle for your project.
+                to the directory which contains the makefile for your project.
                 Type <command>make</command> and if all goes well, you'll have
-                good success. See Figure 5.2. Copy your program to your DS
-                using the method you have chosen.
+                good success. See <xref linkend="chapter_5_screen_shot"/>. Copy
+                your program to your DS using the method you have chosen.
             </para>
-            <figure>
+            <figure id="chapter_5_screen_shot">
                 <title>The program should look like this when run.</title>
                 <mediaobject>
                     <imageobject>
@@ -1574,7 +1571,7 @@ int main() {
                 that contains a collection of sprite related function
                 declarations. We'll be working on the definitions for each of
                 these functions together in a new file called
-                <filename>sprites.cpp</filename>. Our ﬁrst step will be to
+                <filename>sprites.cpp</filename>. Our first step will be to
                 create a that new source code file. Put a new file called
                 <filename>sprites.cpp</filename> into the source folder of your
                 project directory.
@@ -1599,7 +1596,7 @@ void updateOAM(SpriteEntry * spriteEntry) {
         <sect1>
             <title>Initializing the OAM</title>
             <para>
-                The ﬁrst thing we do when initializing the OAM is to clear all
+                The first thing we do when initializing the OAM is to clear all
                 the sprite data in the OAM. After that, we'll make a call to
                 our afore written updateOAM function.
             </para>
@@ -1740,12 +1737,12 @@ Even if the boundary gets changed, OBJs are kept composed of 8x8 tiles.
                 Sprites are broken into 8x8 pixel pieces. This is called
                 tiling. When drawn to screen, the hardware pieces these tiles
                 together, like a puzzle where the pieces have no distinguishing
-                edges. See ﬁgure 6.0 for information about layout. The
-                conversion process will not be covered in the early editions of
-                this manual, as it's a more involved process. On Linux,
-                programmers usually use <command>gfx2gba</command>. On the
-                Macintosh, programmers usually use Graphic Converter from Lemke
-                Software (<ulink
+                edges. See <xref linkend="sprite_tile_layout"/> for information
+                about layout. The conversion process will not be covered in the
+                early editions of this manual, as it's a more involved process.
+                On Linux, programmers usually use <command>gfx2gba</command>.
+                On the Macintosh, programmers usually use Graphic Converter
+                from Lemke Software (<ulink
                 url="http://www.lemkesoft.de/en/graphcon.htm"/>) saving as a
                 “Byte-Array Header File” and a program from PataterSoft called
                 <command>hConvert</command> (<ulink
@@ -1754,7 +1751,7 @@ Even if the boundary gets changed, OBJs are kept composed of 8x8 tiles.
             <!-- XXX TODO This code listing is pretty stupid unless colored in a custom
             fashion.
             http://www.mail-archive.com/docbook-apps@lists.oasis-open.org/msg08588.html-->
-            <figure>
+            <figure id="sprite_tile_layout">
                 <title>
                     The upper text shows information as it would be on a
                     non-tiled background. The lower text shows the same data,
@@ -1961,9 +1958,9 @@ int main () {
             <title>Compiling</title>
             <para>
                 If all goes well, you’ll compile with no problems and the
-                output will look as in Figure 6.1.
+                output will look as in <xref linkend="chapter_6_screen_shot"/>.
             </para>
-            <figure>
+            <figure id="chapter_6_screen_shot">
                 <title>Output with both backgrounds and a sprite.</title>
                 <mediaobject>
                     <imageobject>
@@ -1998,7 +1995,7 @@ int main () {
         <sect1>
             <title>The Ship Class</title>
             <para>
-                The ﬁrst thing we'll make is a Ship class. This class will
+                The first thing we'll make is a Ship class. This class will
                 encapsulate all the properties and functionality of any ship in
                 an easy to use and understand format. Think of things a ship
                 can do, on a high level. What should come to mind is the
@@ -2009,11 +2006,12 @@ int main () {
                 velocity, position, shields? Well, after you are done brain-
                 storming, the next step is to write out the functionality and
                 properties we need to put into our Ship class. You could make a
-                table, as in Figure 7.0, or draw some diagrams on a piece of
-                paper. Either way, you want to make sure your ideas all get
-                onto some physical paper.
+                table, as in <xref linkend="ship_properties_and_functions"/>,
+                or draw some diagrams on a piece of paper. Either way, you want
+                to make sure your ideas all get onto some physical paper before
+                you begin coding.
             </para>
-            <table>
+            <table id="ship_properties_and_functions">
                 <title>Table of Ship properties and functionality.</title>
                 <tgroup cols="2">
                     <thead>
@@ -2132,7 +2130,7 @@ void Ship::moveShip() {
         <sect1>
             <title>Reversing the Ship's Direction</title>
             <para>
-                This one took me a while to ﬁgure out, even though it's just one
+                This one took me a while to figure out, even though it's just one
                 line, but it's very useful. We can turn the ship around, not a
                 180 per se, but simply pointing into the opposite direction of
                 our current velocity. This will get the angle of our velocity
@@ -2187,7 +2185,7 @@ Coordinate Ship::getPosition() {
                 degree system. This is an easy conversion.
             </para>
             <para>
-                The ﬁrst step is to convert to a 360 degree system, as you must
+                The first step is to convert to a 360 degree system, as you must
                 have learned in junior high school. This is done by multiplying
                 the radian value by 180/π. The 180 part is half the number of
                 degrees in a circle. So, in a 512 degree system we can convert
@@ -2311,7 +2309,7 @@ int main () {
                 systems only have buttons and an analog stick or two. While
                 the Nintendo DS does not have an analog stick, it does have an
                 amazing touch screen which has millions of diﬀerent creative
-                uses. In the ﬁrst edition of this manual, I will only cover
+                uses. In the first edition of this manual, I will only cover
                 buttons though. If you wish to learn more about the touch
                 screen and the microphone, I’d recommend reading <ulink
                 url="http://www.bottledlight.com/ds/index.php/Misc/TouchScreen"/>
@@ -2332,10 +2330,10 @@ int main () {
                 currently held, use keysHeld(). To see which keys have just
                 been released, use keysUp(). libnds provides us with defines
                 for some key masks as well. How they are set up is explained in
-                Figure 8.0.
+                <xref linkend="libnds_key_defines"/>.
             </para>
-            <table>
-                <title> Libnds key defines.</title>
+            <table id="libnds_key_defines">
+                <title>libnds Key Defines</title>
                 <tgroup cols="3">
                     <thead>
                         <row>
@@ -2456,7 +2454,7 @@ void handleInput(Ship * ship) {
             <title>Creating the Main Game Loop</title>
             <para>
                 Leťs check back in on our main function now. It's time for use
-                to create an inﬁnite loop to run our program. The ﬁrst thing we
+                to create an inﬁnite loop to run our program. The first thing we
                 want to happen in our game loop is for the key registers to get
                 updated. We make a call to scanKeys and it all happens for us.
                 Next, we handle the input we just received by calling our
@@ -2500,10 +2498,10 @@ int main() {
             <title>Compiling</title>
             <para>
                 Now we can control our ship with the D-Pad. What fun! The game
-                should now appear as in Figure 8.1. Now if only we had some
+                should now appear as in <xref linkend="chapter_8_screen_shot"/>. Now if only we had some
                 aliens to kill…
             </para>
-            <figure>
+            <figure id="chapter_8_screen_shot">
                 <title>Flying around in the Orange Shuttle.</title>
                 <mediaobject>
                     <imageobject>
@@ -2594,14 +2592,14 @@ int main() {
         <sect1>
             <title>Using the Sounds</title>
             <para>
-                The makeﬁle I’ve included with my manual has a custom bin20
+                The makefile I’ve included with my manual has a custom bin20
                 rule for creating .o ﬁles from .raw ﬁles. There is really
                 nothing special about it. It does the same thing that the .bin
                 bin2o rule does. The libnds default makeﬁles require you to
                 explicitly specify the ﬁle types you want to be processed.
             </para>
             <para>
-                After the makeﬁle processes the raw sound ﬁle, the header for
+                After the makefile processes the raw sound ﬁle, the header for
                 it will look like so
                 <filename>thrust_1_22050_8_s_raw.h</filename> and will be
                 located in the build directory.
@@ -2713,9 +2711,9 @@ int main() {
                 will cover in this edition of the manual. Compile it and enjoy
                 the fruits of your labors. Mmm, tasty. You should hear a nice
                 sound when you press the thrust button. The game output should
-                now look like the screen shots in Figure 9.1.
+                now look like the screen shots in <xref linkend="chapter_9_screen_shot"/>.
             </para>
-            <figure>
+            <figure id="chapter_9_screen_shot">
                 <title>Flying around in the Orange Shuttle, with sound!</title>
                 <mediaobject>
                     <imageobject>
