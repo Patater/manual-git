@@ -1984,7 +1984,7 @@ int main () {
                 <mediaobject>
                     <imageobject>
                         <imagedata
-                        fileref="images/starfield_and_orange_shuttle"/>
+                        fileref="images/starfield_and_orange_shuttle.png"/>
                     </imageobject>
                 </mediaobject>
             </figure>
