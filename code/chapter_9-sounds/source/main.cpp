@@ -120,12 +120,25 @@ void initBackgrounds() {
     SUB_BG3_CY = 0;
 }
 
-void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
-    /* Define some sprite configuration specific constants. We will use these
-     * to compute the proper index into memory for certain tiles or palettes */
+void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
+    /*  Define some sprite configuration specific constants.
+     * 
+     *  We will use these to compute the proper index into memory for certain
+     *  tiles or palettes.
+     *
+     *  OFFSET_MULTIPLIER is calculated based on the following formula from
+     *  GBATEK (http://nocash.emubase.de/gbatek.htm#dsvideoobjs):
+     *      TileVramAddress = TileNumber * BoundaryValue
+     *  Since SPRITE_GFX is a uint16*, the compiler will increment the address
+     *  it points to by 2 for each change in 1 of the array index into
+     *  SPRITE_GFX. (The compiler does pointer arithmetic.)
+     */
     static const int BYTES_PER_16_COLOR_TILE = 32;
     static const int COLORS_PER_PALETTE = 16;
-    static const int OFFSET_MULTIPLIER = 16;
+    static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
+                                           * (can be set in REG_DISPCNT) */
+    static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
+                                         sizeof(SPRITE_GFX[0]);
 
     /* Keep track of the available tiles */
     int nextAvailableTileIdx = 0;
@@ -253,22 +266,22 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
     /*************************************************************************/
 
     /* Copy over the sprite palettes */
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttlePal,
                      &SPRITE_PALETTE[shuttleInfo->oamId *
                                      COLORS_PER_PALETTE],
                      orangeShuttlePalLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonPal,
                      &SPRITE_PALETTE[moonInfo->oamId * COLORS_PER_PALETTE],
                      moonPalLen);
 
     /* Copy the sprite graphics to sprite graphics memory */
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttleTiles,
                      &SPRITE_GFX[shuttle->tileIdx * OFFSET_MULTIPLIER],
                      orangeShuttleTilesLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonTiles,
                      &SPRITE_GFX[moon->tileIdx * OFFSET_MULTIPLIER],
                      moonTilesLen);
