@@ -673,10 +673,11 @@
                 pack. This configuration will also run GBA homebrew. The flash
                 cart size is kept secret by M3, for some reason. Natrium42 was
                 kind enough to inform me that, after doing a few tests on the
-                pack, that it is 32MB in size, but lacks SRAM. The third and
-                most expensive configuration, dubbed the "GBA Expansion
-                Package", provides a Slot-2 pack with rumble, SRAM, and 32MB of
-                RAM. <!-- XXX verify this information with Natrium42 -->
+                pack, that it is at least 8MB in size, but lacks SRAM. The
+                third and most expensive configuration, dubbed the "GBA
+                Expansion Package", provides a Slot-2 pack with rumble, SRAM,
+                and 32MB of RAM. <!-- XXX verify this information with
+                Natrium42 -->
             </para>
             <para>
                 The M3 Real supports DLDI as well. I'm not sure if it can
@@ -1162,7 +1163,7 @@ void initVideo() {
      *  major VRAM banks. We can use it as shorthand for assigning values to
      *  each of the VRAM bank's control registers.
      *
-     *  We map banks A and B to main screen  background memory. This gives us
+     *  We map banks A and B to main screen background memory. This gives us
      *  256KB, which is a healthy amount for 16-bit graphics.
      *
      *  We map bank C to sub screen background memory.
@@ -1281,7 +1282,7 @@ void initVideo() {
             <para>
                 We'll now use that nice API libnds provides us for both the
                 background control registers and the affine transformation
-                matrix.  Let's proceed to make a function called <code
+                matrix. Let's proceed to make a function called <code
                 language="C++"><function>initBackgrounds</function></code>
                 which will set up our affine backgrounds. Explanations of what
                 is going on is the comments.
@@ -1516,8 +1517,7 @@ void displaySplash() {
                 which format to convert your image into. It will also include
                 the length in bytes of the data references as
                 orangeShuttleTilesLen and orangeShuttlePalLen or
-                orangeShuttleBitmapLen. <!-- TODO figure out a good way to refer
-                to these variables -->
+                orangeShuttleBitmapLen.
             </para>
             <para>
                 For our project, we'll be putting the our graphic files and
@@ -2089,7 +2089,7 @@ uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle-&gt;tileIdx *
             <para>
                 Now, to see a sprite in action. Let's load in the orangeShuttle
                 graphic and the moon graphic. Make a new function called <code
-                language="C++"><function>initSprites<function></code>.  Place
+                language="C++"><function>initSprites<function></code>. Place
                 it after the <code
                 language="C++"><function>initBackgrounds</function></code>
                 function. Make sure to include
@@ -2577,30 +2577,30 @@ int main() {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void Ship::accelerate() {
-	float incX = thrust * sin(angle);
-	float incY = -(thrust * cos(angle));
-	
+    float incX = thrust * sin(angle);
+    float incY = -(thrust * cos(angle));
+
     //the following method of speed limitation is not accurate, traveling
     //diagonally is faster than straight, which is not the desired limitation
-	//a more accurate method is needed at a later time
-	
-	velocity.x += incX;
-	//make sure can't go too fast in x direction
-	if (velocity.x &gt; maxSpeed) {
-		velocity.x = maxSpeed;
-	}
-	if (velocity.x &lt; -maxSpeed) {
-		velocity.x = -maxSpeed;
-	}
-	
-	velocity.y += incY;
-	//make sure can't go too fast in y direction
-	if (velocity.y &gt; maxSpeed) {
-		velocity.y = maxSpeed;
-	}
-	if (velocity.y &lt; -maxSpeed) {
-		velocity.y = -maxSpeed;
-	}
+    //a more accurate method is needed at a later time
+
+    velocity.x += incX;
+    //make sure can't go too fast in x direction
+    if (velocity.x &gt; maxSpeed) {
+        velocity.x = maxSpeed;
+    }
+    if (velocity.x &lt; -maxSpeed) {
+        velocity.x = -maxSpeed;
+    }
+
+    velocity.y += incY;
+    //make sure can't go too fast in y direction
+    if (velocity.y &gt; maxSpeed) {
+        velocity.y = maxSpeed;
+    }
+    if (velocity.y &lt; -maxSpeed) {
+        velocity.y = -maxSpeed;
+    }
 }
             </programlisting>
         </sect1>
@@ -2613,10 +2613,10 @@ void Ship::accelerate() {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void Ship::moveShip() {
-	//move the ship
-	position.x += velocity.x;
-	position.y += velocity.y;
-	
+    //move the ship
+    position.x += velocity.x;
+    position.y += velocity.y;
+
     //hw does wrap around for us, so we don't have to have any of that sort of
     //logic in here
 }
@@ -2634,7 +2634,7 @@ void Ship::moveShip() {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void Ship::reverseTurn() {
-	angle = (2 * PI) - atan2(velocity.x, velocity.y);
+    angle = (2 * PI) - atan2(velocity.x, velocity.y);
 }
             </programlisting>
         </sect1>
@@ -2754,13 +2754,13 @@ int main() {
     displaySplash();
 
     static const int SHUTTLE_OAM_ID = 0;
-    SpriteEntry * shipEntry = &oam->spriteBuffer[SHUTTLE_OAM_ID];
-    SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];
+    SpriteEntry * shipEntry = &oam-&gt;spriteBuffer[SHUTTLE_OAM_ID];
+    SpriteRotation * shipRotation = &oam-&gt;matrixBuffer[SHUTTLE_OAM_ID];
     Ship * ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
 
     /* Accelerate the ship for a little while to make it move. */
-    for (int i = 0; i < 10; i++) {
-        ship->accelerate();
+    for (int i = 0; i &lt; 10; i++) {
+        ship-&gt;accelerate();
     }
 
     /*
@@ -2804,7 +2804,7 @@ int main() {
                 creating one to run our program. The first thing we want to
                 happen in our game loop is for the game state to be updated.
                 This is because we don't have any input to collect yet. We tell
-                our ship to move at it's current velocity.  This will change
+                our ship to move at it's current velocity. This will change
                 the ship’s position. Then we update the sprite attributes with
                 new information about our ship, as some properties of the ship
                 have now changed (i.e. its position). Finally, we call a
@@ -2817,13 +2817,13 @@ int main() {
             <programlisting linenumbering="unnumbered" language="C++">
     for (;;) {
         /* Update the game state. */
-        ship->moveShip();
+        ship-&gt;moveShip();
 
         /* Update sprite attributes. */
-        MathVector2D<float> position = ship->getPosition();
-        shipEntry->posX = (int)position.x;
-        shipEntry->posY = (int)position.y;
-        rotateSprite(shipRotation, ship->getAngleDeg512());
+        MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
+        shipEntry-&gt;posX = (int)position.x;
+        shipEntry-&gt;posY = (int)position.y;
+        rotateSprite(shipRotation, ship-&gt;getAngleDeg512());
 
         /*
          *  Update the OAM.
@@ -3007,8 +3007,8 @@ int main() {
             <programlisting linenumbering="unnumbered" language="C++">
 /* To read from the touch screen, we can do this stuff. */
 touchPosition touch = touchReadXY();
-touch->px; // This contains the x pixel location.
-touch->py; // This contains the y pixel location.
+touch-&gt;px; // This contains the x pixel location.
+touch-&gt;py; // This contains the y pixel location.
             </programlisting>
             <note>
                 <title>What is the IPC?</title>
@@ -3034,8 +3034,8 @@ touch->py; // This contains the y pixel location.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void updateInput(touchPosition * touch) {
-	// Update the key registers with current values.
-	scanKeys();
+    // Update the key registers with current values.
+    scanKeys();
 
     // Update the touch screen values.
     *touch = touchReadXY();
@@ -3065,26 +3065,26 @@ void updateInput(touchPosition * touch) {
             <para>
                 
             <programlisting linenumbering="unnumbered" language="C++">
-void handleInput(Ship * ship, MathVector2D<int> * moonPos,
+void handleInput(Ship * ship, MathVector2D&lt;int&gt; * moonPos,
                  SpriteInfo * moonInfo, touchPosition * touch) {
 
     /* Handle up and down parts of D-Pad. */
-	if (keysHeld() &amp; KEY_UP) {
-		//accelerate ship
-		ship->accelerate();
-	} else if (keysHeld() &amp; KEY_DOWN) {
-		//reverse ship direction
-		ship->reverseTurn();
+    if (keysHeld() &amp; KEY_UP) {
+        //accelerate ship
+        ship-&gt;accelerate();
+    } else if (keysHeld() &amp; KEY_DOWN) {
+        //reverse ship direction
+        ship-&gt;reverseTurn();
     }
-	
+    
     /* Handle left and right parts of D-Pad. */
-	if (keysHeld() &amp; KEY_LEFT) {
-		//rotate counter clockwise
-		ship->turnCounterClockwise();
+    if (keysHeld() &amp; KEY_LEFT) {
+        //rotate counter clockwise
+        ship-&gt;turnCounterClockwise();
     } else if (keysHeld() &amp; KEY_RIGHT) {
-		//rotate clockwise
-		ship->turnClockwise();
-	}
+        //rotate clockwise
+        ship-&gt;turnClockwise();
+    }
 
     /*
      *  Handle the touch screen.
@@ -3094,34 +3094,34 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos,
      *  understand how to reach values from the touch screen, but it was cool
      *  enough that I wanted to put it in the case study.
     */
-    static MathVector2D<int> moonGrip;
+    static MathVector2D&lt;int&gt; moonGrip;
     if (keysDown() &amp; KEY_TOUCH) {
         /* Record the grip */
-        moonGrip.x = touch->px;
-        moonGrip.y = touch->py;
+        moonGrip.x = touch-&gt;px;
+        moonGrip.y = touch-&gt;py;
     } else if (keysHeld() &amp; KEY_TOUCH) {
-        int newX = moonPos->x + touch->px - moonGrip.x;
-        int newY = moonPos->y + touch->py - moonGrip.y;
+        int newX = moonPos-&gt;x + touch-&gt;px - moonGrip.x;
+        int newY = moonPos-&gt;y + touch-&gt;py - moonGrip.y;
 
         /* Prevent dragging off the screen */
         if (newX &lt; 0) {
-            moonPos->x = 0;
-        } else if (newX > (SCREEN_WIDTH - moonInfo->width)) {
-            moonPos->x = SCREEN_WIDTH - moonInfo->width;
+            moonPos-&gt;x = 0;
+        } else if (newX &gt; (SCREEN_WIDTH - moonInfo-&gt;width)) {
+            moonPos-&gt;x = SCREEN_WIDTH - moonInfo-&gt;width;
         } else {
-            moonPos->x = newX;
+            moonPos-&gt;x = newX;
         }
         if (newY &lt; 0) {
-            moonPos->y = 0;
-        } else if (newY > (SCREEN_HEIGHT - moonInfo->height)) {
-            moonPos->y = SCREEN_HEIGHT - moonInfo->height;
+            moonPos-&gt;y = 0;
+        } else if (newY &gt; (SCREEN_HEIGHT - moonInfo-&gt;height)) {
+            moonPos-&gt;y = SCREEN_HEIGHT - moonInfo-&gt;height;
         } else {
-            moonPos->y = newY;
+            moonPos-&gt;y = newY;
         }
 
         /* Record the grip again. */
-        moonGrip.x = touch->px;
-        moonGrip.y = touch->py;
+        moonGrip.x = touch-&gt;px;
+        moonGrip.y = touch-&gt;py;
     }
 }
             </programlisting>
@@ -3200,32 +3200,32 @@ int main() {
 
     /* Make the ship object */
     static const int SHUTTLE_AFFINE_ID = 0;
-    SpriteEntry * shipEntry = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
-    SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
+    SpriteEntry * shipEntry = &oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteRotation * shipRotation = &oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
     Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
 
     /* Make the moon */
     static const int MOON_AFFINE_ID = 1;
-    SpriteEntry * moonEntry = &oam->spriteBuffer[MOON_AFFINE_ID];
+    SpriteEntry * moonEntry = &oam-&gt;spriteBuffer[MOON_AFFINE_ID];
     SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
-    MathVector2D<int> * moonPos = new MathVector2D<int>();
-    moonPos->x = moonEntry->posX;
-    moonPos->y = moonEntry->posY;
+    MathVector2D&lt;int&gt; * moonPos = new MathVector2D&lt;int&gt();
+    moonPos-&gt;x = moonEntry-&gt;posX;
+    moonPos-&gt;y = moonEntry-&gt;posY;
 
     for (;;) {
         /* Update the game state. */
-		updateInput(&touch);
-		handleInput(ship, moonPos, moonInfo, &touch);
-        ship->moveShip();
+        updateInput(&touch);
+        handleInput(ship, moonPos, moonInfo, &touch);
+        ship-&gt;moveShip();
 
         /* Update ship sprite attributes. */
-        MathVector2D<float> position = ship->getPosition();
-        shipEntry->posX = (int)position.x;
-        shipEntry->posY = (int)position.y;
-        rotateSprite(shipRotation, ship->getAngleDeg512());
+        MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
+        shipEntry-&gt;posX = (int)position.x;
+        shipEntry-&gt;posY = (int)position.y;
+        rotateSprite(shipRotation, ship-&gt;getAngleDeg512());
         /* Update moon sprite attributes. */
-        moonEntry->posX = (int)moonPos->x;
-        moonEntry->posY = (int)moonPos->y;
+        moonEntry-&gt;posX = (int)moonPos-&gt;x;
+        moonEntry-&gt;posY = (int)moonPos-&gt;y;
 
         /*
          *  Update the OAM.
@@ -3358,10 +3358,10 @@ int main() {
         <sect1>
             <title>Using the Sounds</title>
             <para>
-                The makefile I’ve included with my manual has a custom bin20
+                The makefile I've included with my manual has a custom bin2o
                 rule for creating .o files from .raw files. There is really
                 nothing special about it. It does the same thing that the .bin
-                bin2o rule does. The libnds default makeﬁles require you to
+                bin2o rule does. The libnds default makefiles require you to
                 explicitly specify the file types you want to be processed.
             </para>
             <para>
@@ -3376,57 +3376,169 @@ int main() {
             <para>
                 Now it's ﬁnally time for some code. Libnds simpliﬁes sound
                 playing quite a bit. It provides a struct called
-                “TransferSoundData” that we can use to encapsulate our sound.
+                "TransferSoundData" that we can use to encapsulate our sound.
                 In a way, it acts as a header to let the DS know how to handle
-                it. Libnds will handle the transfer of the sound to the ARM7
+                it. libnds will handle the transfer of the sound to the ARM7
                 (the only processor that can control the sound hardware),
-                although it is a bit ineﬃcient, frumpy (and yes, for those of
+                although it is a bit inefficient, frumpy (and yes, for those of
                 you who don’t know, libnds is a girl), and limited. It will
                 serve our purposes for now, as a springboard into more advanced
-                forms of sound. Enough with the chatter, here’s some code for
+                forms of sound. Enough with the chatter, here's some code for
                 our <filename>main.cpp</filename>.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-//... previous code here
-//snd
-#include "thrust_1_22050_8_s_raw.h"
-//... previous code here
-void handleInput(Ship * ship, TransferSoundData * soundData) {
-       //up
-       if (keysDown() &amp; KEY_UP) {
-                //play our sound only when the button is initially pressed
-                playSound(soundData);
-       }
-       if (keysHeld() &amp; KEY_UP) {
-                //accelerate ship
-                ship-&gt;accelerate();
-       }
-       //... previous code here
+void handleInput(Ship * ship, MathVector2D&lt;int&gt; * moonPos,
+                 SpriteInfo * moonInfo, TransferSoundData * soundData,
+                 touchPosition * touch) {
+
+    /* Handle up and down parts of D-Pad. */
+    if (keysDown() &amp; KEY_UP) {
+        // Play our sound only when the button is initially pressed
+        playSound(soundData);
+    }
+    if (keysHeld() &amp; KEY_UP) {
+        //accelerate ship
+        ship-&gt;accelerate();
+    } else if (keysHeld() &amp; KEY_DOWN) {
+        //reverse ship direction
+        ship-&gt;reverseTurn();
+    }
+    
+    /* Handle left and right parts of D-Pad. */
+    if (keysHeld() &amp; KEY_LEFT) {
+        //rotate counter clockwise
+        ship-&gt;turnCounterClockwise();
+    } else if (keysHeld() &amp; KEY_RIGHT) {
+        //rotate clockwise
+        ship-&gt;turnClockwise();
+    }
+
+    /* Handle the touch screen. */
+    static MathVector2D&lt;int&gt; moonGrip;
+    if (keysDown() &amp; KEY_TOUCH) {
+        /* Record the grip */
+        moonGrip.x = touch-&gt;px;
+        moonGrip.y = touch-&gt;py;
+    } else if (keysHeld() &amp; KEY_TOUCH) {
+        int newX = moonPos-&gt;x + touch-&gt;px - moonGrip.x;
+        int newY = moonPos-&gt;y + touch-&gt;py - moonGrip.y;
+
+        /* Prevent dragging off the screen */
+        if (newX &lt; 0) {
+            moonPos-&gt;x = 0;
+        } else if (newX &gt; (SCREEN_WIDTH - moonInfo-&gt;width)) {
+            moonPos-&gt;x = SCREEN_WIDTH - moonInfo-&gt;width;
+        } else {
+            moonPos-&gt;x = newX;
+        }
+        if (newY &lt; 0) {
+            moonPos-&gt;y = 0;
+        } else if (newY &gt; (SCREEN_HEIGHT - moonInfo-&gt;height)) {
+            moonPos-&gt;y = SCREEN_HEIGHT - moonInfo-&gt;height;
+        } else {
+            moonPos-&gt;y = newY;
+        }
+
+        /* Record the grip again. */
+        moonGrip.x = touch-&gt;px;
+        moonGrip.y = touch-&gt;py;
+    }
 }
-//... previous code here
+
 int main() {
-       //... previous code here
-       //immediately following sprite setup
-      /* Sound Data setup */
-      TransferSoundData * thrust_sound = new TransferSoundData();
-      thrust_sound-&gt;data = thrust_1_22050_8_s_raw;
-      thrust_sound-&gt;len = thrust_1_22050_8_s_raw_size;
-      thrust_sound-&gt;rate = 22050; //22050Hz Sample Rate
-      thrust_sound-&gt;vol = 127; //Volume can be from 0 to 127
-      thrust_sound-&gt;pan = 64; //Sound comes equally from both speakers
-                              // (0-127, left to right)
-      thrust_sound-&gt;format = 1; //1 - 8bit, 0 - 16bit
-      for (;;) {
-            updateInput();
-            handleInput(ship, thrust_sound);
-            //... previous code here
-      }
+    /*  Turn on the 2D graphics core. */
+    powerON(POWER_ALL_2D);
+
+    /*
+     *  Set up interrupts.
+     *
+     *  We don't really get into what these do exactly at this point in the
+     *  manual, but we still need to do them for now.
+     */
+    irqInit();
+    irqSet(IRQ_VBLANK, 0);
+
+    /*
+     *  Configure the VRAM and background control registers.
+     *
+     *  Place the main screen on the bottom physical screen. Then arrange the
+     *  VRAM banks. Next, confiure the background control registers.
+     */
+    lcdMainOnBottom();
+    initVideo();
+    initBackgrounds();
+
+    /* Set up a few sprites. */
+    SpriteInfo spriteInfo[SPRITE_COUNT];
+    tOAM *oam = new tOAM();
+    initOAM(oam);
+    initSprites(oam, spriteInfo);
+
+    /* Display the backgrounds. */
+    displayStarField();
+    displayPlanet();
+    displaySplash();
+
+    /*************************************************************************/
+
+    /* Keep track of the touch screen coordinates */
+    touchPosition touch;
+
+    /* Make the ship object */
+    static const int SHUTTLE_AFFINE_ID = 0;
+    SpriteEntry * shipEntry = &oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteRotation * shipRotation = &oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
+    Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+
+    /* Make the moon */
+    static const int MOON_AFFINE_ID = 1;
+    SpriteEntry * moonEntry = &oam-&gt;spriteBuffer[MOON_AFFINE_ID];
+    SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
+    MathVector2D&lt;int&gt; * moonPos = new MathVector2D&lt;int&gt;();
+    moonPos-&gt;x = moonEntry-&gt;posX;
+    moonPos-&gt;y = moonEntry-&gt;posY;
+
+    /*  Set up sound data.*/
+    TransferSoundData * thrust_sound = new TransferSoundData();
+    thrust_sound-&gt;data = thrust_1_22050_8_s_raw;
+    thrust_sound-&gt;len = thrust_1_22050_8_s_raw_size;
+    thrust_sound-&gt;rate = 22050; //22050Hz Sample Rate
+    thrust_sound-&gt;vol = 127; //Volume can be from 0 to 127
+    thrust_sound-&gt;pan = 64; //Sound comes equally from both speakers (0-127, left to right)
+    thrust_sound-&gt;format = 1; //1 - 8bit, 0 - 16bit
+
+    for (;;) {
+        /* Update the game state. */
+        updateInput(&touch);
+        handleInput(ship, moonPos, moonInfo, thrust_sound, &touch);
+        ship-&gt;moveShip();
+
+        /* Update ship sprite attributes. */
+        MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
+        shipEntry-&gt;posX = (int)position.x;
+        shipEntry-&gt;posY = (int)position.y;
+        rotateSprite(shipRotation, ship-&gt;getAngleDeg512());
+        /* Update moon sprite attributes. */
+        moonEntry-&gt;posX = (int)moonPos-&gt;x;
+        moonEntry-&gt;posY = (int)moonPos-&gt;y;
+
+        /*
+         *  Update the OAM.
+         *
+         *  We have to copy our copy of OAM data into the actual OAM during
+         *  VBlank (writes to it are locked during other times).
+         */
+        swiWaitForVBlank();
+        updateOAM(oam);
+    }
+
+    return 0;
 }
             </programlisting>
             <para>
                 In summary, we simply set up our sound in the
                 <code language="C++"><function>main</function></code> function,
-                modiﬁed the <code
+                modified the <code
                 language="C++"><function>handleInput</function></code> function
                 to accept a sound pointer, and had the <code
                 language="C++"><function>handleInput</function></code> function
@@ -3525,7 +3637,7 @@ int main() {
                 Write section on interprocessor communication and FIFO
                 Build an index and a glossary-->
                 <!-- XXX DISPLAY_SPR_1D_SIZE???-->
-<glossary>
+<!--<glossary>
     <title>Glossary</title>
     <para>
         Programming the Nintendo DS, and other embedded hardware systems in
@@ -3559,7 +3671,7 @@ int main() {
     </glossdiv>
 </glossary>
 
-</book>
+</book>-->
 
 <!-- Appendix sprites with bit twiddling TODO
         <sect1>

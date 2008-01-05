@@ -360,7 +360,6 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos,
 }
 
 int main() {
-
     /*  Turn on the 2D graphics core. */
     powerON(POWER_ALL_2D);
 

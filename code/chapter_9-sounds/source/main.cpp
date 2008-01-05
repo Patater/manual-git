@@ -13,8 +13,7 @@
 /* Sounds */
 #include "thrust_1_22050_8_s_raw.h"
 
-/* Select a low priority DMA channel to perform our sprite and background
- * copying. */
+/* Select a low priority DMA channel to perform our background copying. */
 static const int DMA_CHANNEL = 3;
 
 void initVideo() {
@@ -361,7 +360,6 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos,
 }
 
 int main() {
-
     /*  Turn on the 2D graphics core. */
     powerON(POWER_ALL_2D);
 
