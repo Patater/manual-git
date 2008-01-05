@@ -41,51 +41,23 @@ Ship::~Ship() {
 }
 
 void Ship::accelerate() {
-	float incX = thrust * sin(angle);
-	float incY = -(thrust * cos(angle));
-	
-    //the following method of speed limitation is not accurate, traveling
-    //diagonally is faster than straight, which is not the desired limitation
-	//a more accurate method is needed at a later time
-	
-	velocity.x += incX;
-	//make sure can't go too fast in x direction
-	if (velocity.x > maxSpeed) {
-		velocity.x = maxSpeed;
-	}
-	if (velocity.x < -maxSpeed) {
-		velocity.x = -maxSpeed;
-	}
-	
-	velocity.y += incY;
-	//make sure can't go too fast in y direction
-	if (velocity.y > maxSpeed) {
-		velocity.y = maxSpeed;
-	}
-	if (velocity.y < -maxSpeed) {
-		velocity.y = -maxSpeed;
-	}
+
 }
 
 void Ship::moveShip() {
-	//move the ship
-	position.x += velocity.x;
-	position.y += velocity.y;
-	
-    //hw does wrap around for us, so we don't have to have any of that sort of
-    //logic in here
+
 }
 
 void Ship::reverseTurn() {
-	angle = (2 * PI) - atan2(velocity.x, velocity.y);
+
 }
 
 void Ship::turnClockwise() {
-	angle += turnSpeed;
+
 }
 
 void Ship::turnCounterClockwise() {
-	angle -= turnSpeed;
+
 }
 
 MathVector2D<float> Ship::getPosition() {
