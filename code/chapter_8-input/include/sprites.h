@@ -17,7 +17,7 @@
 #define SPRITE_ANGLE_MASK 0x01FF
 
 typedef struct {
-    int affineId;
+    int oamId;
     int width;
     int height;
     int angle;

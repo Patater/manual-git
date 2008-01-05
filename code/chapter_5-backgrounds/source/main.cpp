@@ -1,11 +1,18 @@
+/*
+ *  main.cpp
+ *  
+ *  Created by Jaeden Amero on 11/12/07.
+ *  Copyright 2007. All rights reserved.
+ *
+ */
+
 #include <nds.h>
 
 #include "starField.h"
 #include "planet.h"
 #include "splash.h"
 
-/* Select a low priority DMA channel to perform our background
- * copying. */
+/* Select a low priority DMA channel to perform our background copying. */
 static const int DMA_CHANNEL = 3;
 
 void initVideo() {

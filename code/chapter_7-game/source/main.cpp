@@ -1,3 +1,11 @@
+/*
+ *  main.cpp
+ *  
+ *  Created by Jaeden Amero on 11/12/07.
+ *  Copyright 2007. All rights reserved.
+ *
+ */
+
 #include <nds.h>
 #include <assert.h>
 #include "sprites.h"

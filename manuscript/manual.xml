@@ -3587,6 +3587,25 @@ int main() {
         <sect1>
             <title>Compiling</title>
             <para>
+                Check your includes.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+#include <nds.h>
+#include <assert.h>
+#include "sprites.h"
+#include "ship.h"
+
+/* Backgrounds */
+#include "starField.h"
+#include "planet.h"
+#include "splash.h"
+/* Sprites */
+#include "orangeShuttle.h"
+#include "moon.h"
+/* Sounds */
+#include "thrust_1_22050_8_s_raw.h"
+            </programlisting>
+            <para>
                 This is the ﬁnal iteration of the Orange Spaceship demo that we
                 will cover in this edition of the manual. Compile it and enjoy
                 the fruits of your labors. Mmm, tasty. You should hear a nice
