@@ -5,7 +5,10 @@
 <book>
     <bookinfo>
         <title>Introduction to Nintendo DS Programming</title>
-        <author><firstname>Jaeden</firstname><surname>Amero</surname></author>
+        <author>
+            <firstname>Jaeden</firstname>
+            <surname>Amero</surname>
+        </author>
         <copyright><year>2006-2008</year><holder>Jaeden
         Amero</holder></copyright>
         <revhistory>
@@ -19,6 +22,7 @@
                 devices, and more. The manual's case study has undergone a
                 significant rewrite and covers more ground than ever
                 before.</revremark>
+            </revision>
             <revision>
                 <revnumber>5.0</revnumber>
                 <date>31 Mar 2007</date>
@@ -425,7 +429,7 @@
                 version. It involves pictochat and pulling a cartridge out of
                 your Nintendo DS. The screen will change a certain color.
                 Based on this color you can determine if you need a PassMe 2 or
-                not. <xref linkend="game_eject_firmware_table"> will help you
+                not. <xref linkend="game_eject_firmware_table"/> will help you
                 discover which firmware version you have.
             </para>
             <procedure>
@@ -1106,11 +1110,12 @@
                 along with this manual, copy the
                 <filename>chapter_0-starting_system</filename> folder to a nice
                 place you wish to work from (I'd copy the folder to my
-                <filename>~/projects<filename> directory and name the copy
+                <filename>~/projects</filename> directory and name the copy
                 <filename>manual</filename>) and open
                 <filename>source/main.cpp</filename> with your favorite text
                 editor. (My favorite text editor is gvim.) Let's get going!
             </para>
+        </sect1>
         <sect1>
             <title>Initializing the Hardware</title>
             <para>
@@ -1438,7 +1443,9 @@ void initBackgrounds() {
                 <code language="C++"><function>dmaCopy</function></code>
                 because it is more explicit as to
                 how it is copying. We'll use the same channel (channel 3) that
-                the ordinary dmaCopy uses, though. It also let's us specify
+                the ordinary <code
+                language="C++"><function>dmaCopy</function></code> uses,
+                though. It also let's us specify
                 which DMA channel to use when copying. Let's start out by
                 writing some functions to display our backgrounds. Since we've
                 already set up the hardware to display the data in the desired
@@ -2089,7 +2096,7 @@ uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle-&gt;tileIdx *
             <para>
                 Now, to see a sprite in action. Let's load in the orangeShuttle
                 graphic and the moon graphic. Make a new function called <code
-                language="C++"><function>initSprites<function></code>. Place
+                language="C++"><function>initSprites</function></code>. Place
                 it after the <code
                 language="C++"><function>initBackgrounds</function></code>
                 function. Make sure to include
@@ -2247,7 +2254,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     /* Create the moon sprite. */
     static const int MOON_OAM_ID = 1;
     assert(MOON_OAM_ID &lt; SPRITE_COUNT);
-    SpriteInfo * moonInfo = &spriteInfo[MOON_OAM_ID];
+    SpriteInfo * moonInfo = &amp;spriteInfo[MOON_OAM_ID];
     SpriteEntry * moon = &amp;oam-&gt;spriteBuffer[MOON_OAM_ID];
 
     /* Initialize moonInfo */
@@ -2306,22 +2313,22 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     /* Copy over the sprite palettes */
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttlePal,
-                     &SPRITE_PALETTE[shuttleInfo-&gt;oamId *
+                     &amp;SPRITE_PALETTE[shuttleInfo-&gt;oamId *
                                      COLORS_PER_PALETTE],
                      orangeShuttlePalLen);
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonPal,
-                     &SPRITE_PALETTE[moonInfo-&gt;oamId * COLORS_PER_PALETTE],
+                     &amp;SPRITE_PALETTE[moonInfo-&gt;oamId * COLORS_PER_PALETTE],
                      moonPalLen);
 
     /* Copy the sprite graphics to sprite graphics memory */
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttleTiles,
-                     &SPRITE_GFX[shuttle-&gt;tileIdx * OFFSET_MULTIPLIER],
+                     &amp;SPRITE_GFX[shuttle-&gt;tileIdx * OFFSET_MULTIPLIER],
                      orangeShuttleTilesLen);
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonTiles,
-                     &SPRITE_GFX[moon-&gt;tileIdx * OFFSET_MULTIPLIER],
+                     &amp;SPRITE_GFX[moon-&gt;tileIdx * OFFSET_MULTIPLIER],
                      moonTilesLen);
 }
             </programlisting>
@@ -2336,7 +2343,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
                 include <filename>assert.h</filename> in order to use them.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-#include <assert.h>
+#include &lt;assert.h&gt;
             </programlisting>
             <para>
                 The assert macro allows the programmer to make assumptions
@@ -2426,8 +2433,8 @@ int main() {
                 (I probably even forgot to let you know about some of them.)
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-#include <nds.h>
-#include <assert.h>
+#include &lt;nds.h&gt;
+#include &lt;assert.h&gt;
 #include "sprites.h"
 
 /* Backgrounds */
@@ -2754,9 +2761,9 @@ int main() {
     displaySplash();
 
     static const int SHUTTLE_OAM_ID = 0;
-    SpriteEntry * shipEntry = &oam-&gt;spriteBuffer[SHUTTLE_OAM_ID];
-    SpriteRotation * shipRotation = &oam-&gt;matrixBuffer[SHUTTLE_OAM_ID];
-    Ship * ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
+    SpriteEntry * shipEntry = &amp;oam-&gt;spriteBuffer[SHUTTLE_OAM_ID];
+    SpriteRotation * shipRotation = &amp;oam-&gt;matrixBuffer[SHUTTLE_OAM_ID];
+    Ship * ship = new Ship(&amp;spriteInfo[SHUTTLE_OAM_ID]);
 
     /* Accelerate the ship for a little while to make it move. */
     for (int i = 0; i &lt; 10; i++) {
@@ -2813,7 +2820,6 @@ int main() {
                 vblank, and then we update the OAM, telling it that we changed
                 some attributes on the sprites and it needs to handle that.
             </para>
-        </sect1>
             <programlisting linenumbering="unnumbered" language="C++">
     for (;;) {
         /* Update the game state. */
@@ -3021,6 +3027,7 @@ touch-&gt;py; // This contains the y pixel location.
                     IPC struct and is safe for future use.
                 </para>
             </note>
+        </sect1>
         <sect1>
             <title>Writing an Input Updating Function</title>
             <para>
@@ -3062,8 +3069,6 @@ void updateInput(touchPosition * touch) {
                 other keys. See if you can tell what each key does from the
                 code listing below.
             </para>
-            <para>
-                
             <programlisting linenumbering="unnumbered" language="C++">
 void handleInput(Ship * ship, MathVector2D&lt;int&gt; * moonPos,
                  SpriteInfo * moonInfo, touchPosition * touch) {
@@ -3200,22 +3205,22 @@ int main() {
 
     /* Make the ship object */
     static const int SHUTTLE_AFFINE_ID = 0;
-    SpriteEntry * shipEntry = &oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
-    SpriteRotation * shipRotation = &oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
-    Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+    SpriteEntry * shipEntry = &amp;oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteRotation * shipRotation = &amp;oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
+    Ship * ship = new Ship(&amp;spriteInfo[SHUTTLE_AFFINE_ID]);
 
     /* Make the moon */
     static const int MOON_AFFINE_ID = 1;
-    SpriteEntry * moonEntry = &oam-&gt;spriteBuffer[MOON_AFFINE_ID];
-    SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
-    MathVector2D&lt;int&gt; * moonPos = new MathVector2D&lt;int&gt();
+    SpriteEntry * moonEntry = &amp;oam-&gt;spriteBuffer[MOON_AFFINE_ID];
+    SpriteInfo * moonInfo = &amp;spriteInfo[MOON_AFFINE_ID];
+    MathVector2D&lt;int&gt; * moonPos = new MathVector2D&lt;int&gt;();
     moonPos-&gt;x = moonEntry-&gt;posX;
     moonPos-&gt;y = moonEntry-&gt;posY;
 
     for (;;) {
         /* Update the game state. */
-        updateInput(&touch);
-        handleInput(ship, moonPos, moonInfo, &touch);
+        updateInput(&amp;touch);
+        handleInput(ship, moonPos, moonInfo, &amp;touch);
         ship-&gt;moveShip();
 
         /* Update ship sprite attributes. */
@@ -3486,14 +3491,14 @@ int main() {
 
     /* Make the ship object */
     static const int SHUTTLE_AFFINE_ID = 0;
-    SpriteEntry * shipEntry = &oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
-    SpriteRotation * shipRotation = &oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
-    Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+    SpriteEntry * shipEntry = &amp;oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteRotation * shipRotation = &amp;oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
+    Ship * ship = new Ship(&amp;spriteInfo[SHUTTLE_AFFINE_ID]);
 
     /* Make the moon */
     static const int MOON_AFFINE_ID = 1;
-    SpriteEntry * moonEntry = &oam-&gt;spriteBuffer[MOON_AFFINE_ID];
-    SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
+    SpriteEntry * moonEntry = &amp;oam-&gt;spriteBuffer[MOON_AFFINE_ID];
+    SpriteInfo * moonInfo = &amp;spriteInfo[MOON_AFFINE_ID];
     MathVector2D&lt;int&gt; * moonPos = new MathVector2D&lt;int&gt;();
     moonPos-&gt;x = moonEntry-&gt;posX;
     moonPos-&gt;y = moonEntry-&gt;posY;
@@ -3509,8 +3514,8 @@ int main() {
 
     for (;;) {
         /* Update the game state. */
-        updateInput(&touch);
-        handleInput(ship, moonPos, moonInfo, thrust_sound, &touch);
+        updateInput(&amp;touch);
+        handleInput(ship, moonPos, moonInfo, thrust_sound, &amp;touch);
         ship-&gt;moveShip();
 
         /* Update ship sprite attributes. */
@@ -3590,8 +3595,8 @@ int main() {
                 Check your includes.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-#include <nds.h>
-#include <assert.h>
+#include &lt;nds.h&gt;
+#include &lt;assert.h&gt;
 #include "sprites.h"
 #include "ship.h"
 
@@ -3629,20 +3634,87 @@ int main() {
         </sect1>
     </chapter>
 
+    <section>
+        <title>Postface</title>
+        <para>
+            I hope you've enjoyed reading this manual as much as I've enjoyed
+            writing it. I hope it has helped you to learn the basics of
+            Nintendo DS programming, and if not, that it has pointed you in the
+            correct direction. I wish you luck in all your future projects and
+            endeavors.
+        </para>
+        <para>
+            Feel free to contact me <ulink
+            url="mailto:jaeder@patatersoft.info"/>, if you need any help or
+            have corrections or suggestions.
+        </para>
+    </section>
+
+    <section>
+        <title>Acknowledgements</title>
+        <para>
+            I'd like to offer special thanks to all those who have taught me
+            these past few years about Nintendo DS programming. I apologize if
+            I've left anyone off the list who has helped me. Special thanks to:
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>John Haugeland</para>
+            </listitem>
+            <listitem>
+                <para>Martin Korth</para>
+            </listitem>
+            <listitem>
+                <para>Dave Murphy</para>
+            </listitem>
+            <listitem>
+                <para>Liran Nuna</para>
+            </listitem>
+            <listitem>
+                <para>Thorsten Lemke</para>
+            </listitem>
+            <listitem>
+                <para>Tobias Weyand</para>
+            </listitem>
+            <listitem>
+                <para>Shaun Taylor</para>
+            </listitem>
+            <listitem>
+                <para>Bryant Poffenberger</para>
+            </listitem>
+            <listitem>
+                <para>Hollis Jacobsen</para>
+            </listitem>
+            <listitem>
+                <para>Jeff Katz</para>
+            </listitem>
+            <listitem>
+                <para>James Zawacki</para>
+            </listitem>
+            <listitem>
+                <para>Michael Noland</para>
+            </listitem>
+            <listitem>
+                <para>Jasper Vijn</para>
+            </listitem>
+            <listitem>
+                <para>Jason Rogers</para>
+            </listitem>
+            <listitem>
+                <para>Christopher Double</para>
+            </listitem>
+            <listitem>
+                <para>Matt Luckett</para>
+            </listitem>
+            <listitem>
+                <para>Mathias Onisseit</para>
+            </listitem>
+        </itemizedlist>
+    </section>
+
 <!--
     <appendix>
         <title>A</title>
-    </appendix>
-    <appendix>
-        <title>About the Author</title>
-        <authorblurb>
-            <para>
-                Jaeden Amero is currently an Electrical Engineering student at
-                Brigham Young University in Provo, Utah, USA. He enjoys
-                programming the Nintendo DS and Game Boy Advance, FPGA
-                coding, and unicycling in his free time.
-            </para>
-        </authorblurb>
     </appendix>
     <index>
     
@@ -3688,9 +3760,18 @@ int main() {
             </glossdef>
         </glossentry>
     </glossdiv>
-</glossary>
+</glossary>-->
 
-</book>-->
+    <section>
+        <title>About the Author</title>
+        <para>
+            Jaeden Amero is currently an Electrical Engineering student at
+            Brigham Young University in Provo, Utah, USA. He enjoys
+            programming the Nintendo DS and Game Boy Advance, FPGA
+            coding, and unicycling in his free time.
+        </para>
+    </section>
+</book>
 
 <!-- Appendix sprites with bit twiddling TODO
         <sect1>

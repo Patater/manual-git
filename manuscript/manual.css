@@ -1,0 +1,35 @@
+table
+{
+border:none;
+}
+
+table th
+{
+color:#FFFFFF;
+background-color:#108fc0;
+border:1px solid;
+}
+
+table td
+{
+color:#000000;
+background-color:#b9dbea;
+border:1px solid;
+border-color:white;
+}
+
+a
+{
+color:#051caa;
+}
+
+/* This is annoying to some people. */
+/*p:hover
+{
+  background-color:#e0f3e8;
+}*/
+
+h1,h2,h3
+{
+  color:#268334;
+}
