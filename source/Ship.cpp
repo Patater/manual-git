@@ -72,7 +72,7 @@ void Ship::accelerate() {
 }
 
 void Ship::moveShip() {
-	
+
 }
 
 void Ship::reverseTurn() {
