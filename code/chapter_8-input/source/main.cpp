@@ -11,8 +11,7 @@
 #include "orangeShuttle.h"
 #include "moon.h"
 
-/* Select a low priority DMA channel to perform our sprite and background
- * copying. */
+/* Select a low priority DMA channel to perform our background copying. */
 static const int DMA_CHANNEL = 3;
 
 void initVideo() {
@@ -244,22 +243,22 @@ void initSprites(tOAM *oam, SpriteInfo *spriteInfo) {
     /*************************************************************************/
 
     /* Copy over the sprite palettes */
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttlePal,
                      &SPRITE_PALETTE[shuttleInfo->affineId *
                                      COLORS_PER_PALETTE],
                      orangeShuttlePalLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonPal,
                      &SPRITE_PALETTE[moonInfo->affineId * COLORS_PER_PALETTE],
                      moonPalLen);
 
     /* Copy the sprite graphics to sprite graphics memory */
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttleTiles,
                      &SPRITE_GFX[shuttle->tileIdx * OFFSET_MULTIPLIER],
                      orangeShuttleTilesLen);
-    dmaCopyHalfWords(DMA_CHANNEL,
+    dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonTiles,
                      &SPRITE_GFX[moon->tileIdx * OFFSET_MULTIPLIER],
                      moonTilesLen);
@@ -293,10 +292,10 @@ void displaySplash() {
 }
 
 void updateInput(touchPosition * touch) {
-	//updates the key registers with current values
+	// Update the key registers with current values.
 	scanKeys();
 
-    //update the touch screen read values
+    // Update the touch screen values.
     *touch = touchReadXY();
 }
 
@@ -321,7 +320,14 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos,
 		ship->turnClockwise();
 	}
 
-    /* Handle the touch screen. */
+    /*
+     *  Handle the touch screen.
+     *  
+     *  This is basically some fancy pants junk to enable grabbing and moving
+     *  of the moon. It isn't essential to know how this code works to
+     *  understand how to reach values from the touch screen, but it was cool
+     *  enough that I wanted to put it in the case study.
+    */
     static MathVector2D<int> moonGrip;
     if (keysDown() & KEY_TOUCH) {
         /* Record the grip */

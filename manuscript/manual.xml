@@ -2838,6 +2838,13 @@ int main() {
     return 0;
 }
             </programlisting>
+            <para>
+                The OAM really shines through here. The all powerful Nintendo
+                DS hardware, an incredible masterpiece, will rotate and move
+                our ship with very little effort on our part. In hindsight, all
+                we have done is flip a few bits in a few registers in a
+                structured manner, and our ship comes to life. Incredible.
+            </para>
         </sect1>
         <sect1>
             <title>Compiling</title>
@@ -2878,17 +2885,15 @@ int main() {
         <sect1>
             <title>Overview</title>
             <para>
-                The Nintendo DS has many different user input systems, including
-                buttons, touch screen, and a microphone. Most video game
-                systems only have buttons and an analog stick or two. While
-                the Nintendo DS does not have an analog stick, it does have an
-                amazing touch screen which has millions of diﬀerent creative
-                uses. In the first edition of this manual, I will only cover
-                buttons though. If you wish to learn more about the touch
-                screen and the microphone, I’d recommend reading <ulink
-                url="http://www.bottledlight.com/ds/index.php/Misc/TouchScreen"/>
-                and although a bit outdated, the only microphone resource I
-                know of <ulink
+                The Nintendo DS has many different user input systems,
+                including buttons, touch screen, and a microphone. Most video
+                game systems only have buttons and an analog stick or two.
+                While the Nintendo DS does not have an analog stick, it does
+                have an amazing touch screen which has millions of different
+                creative uses. We will only cover the touch screen and buttons,
+                though. If you wish to learn more about the microphone, I'd
+                recommend reading, although a bit outdated, the only microphone
+                resource I know of <ulink
                 url="http://www.double.co.nz/nintendo_ds/nds_develop9.html"/>.
             </para>
         </sect1>
@@ -2897,14 +2902,21 @@ int main() {
             <para>
                 libnds provides us with a very nice abstraction for key input.
                 Instead of having to AND registers with cryptic masks to
-                discover which keys we are pressing, we simply call scanKeys(),
-                then check one of three input functions, keysDown(),
-                keysHeld(), or keysUp(). In order to see which keys have been
-                recently pressed, use keysDown(). To see which keys are
-                currently held, use keysHeld(). To see which keys have just
-                been released, use keysUp(). libnds provides us with defines
-                for some key masks as well. How they are set up is explained in
-                <xref linkend="libnds_key_defines"/>.
+                discover which keys we are pressing, we simply call <code
+                language="C++"><function>scanKeys</function></code>, then check
+                one of three input functions, <code
+                language="C++"><function>keysDown()</function></code>, <code
+                language="C++"><function>keysHeld</function></code>, or <code
+                language="C++"><function>keysUp</function></code>. In order to
+                see which keys have been recently pressed, use <code
+                language="C++"><function>keysDown</function></code>. To see
+                which keys are currently held, use <code
+                language="C++"><function>keysHeld</function></code>. To see
+                which keys have just been released, use <code
+                language="C++"><function>keysUp</function></code>. libnds
+                provides us with defines for some key masks as well. How they
+                are set up is explained in <xref
+                linkend="libnds_key_defines"/>.
             </para>
             <table id="libnds_key_defines">
                 <title>libnds Key Defines</title>
@@ -2979,98 +2991,276 @@ int main() {
             </table>
         </sect1>
         <sect1>
+            <title>Touch!</title>
+            <para>
+                Utada Hikaru wants to touch it. You have to code it. Let's go!
+            </para>
+            <para>
+                The touch screen a big part of what makes the Nintendo DS
+                awesome. The libnds API for using it is cake easy too. We'll be
+                ready for Utada Hikaru in no time. Whenever you want to read the
+                current touch location, simply call the function <code
+                language="C++"><function>touchReadXY</function></code>. This
+                function returns a struct that contains the x and y coordinate
+                of the touch. You access it like so.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+/* To read from the touch screen, we can do this stuff. */
+touchPosition touch = touchReadXY();
+touch->px; // This contains the x pixel location.
+touch->py; // This contains the y pixel location.
+            </programlisting>
+            <note>
+                <title>What is the IPC?</title>
+                <para>
+                    You may see code that uses something called the IPC to
+                    interact with the touch screen. Use of the IPC struct is
+                    deprecated. This means that you shouldn't use it and should
+                    not depend on it being there in the future. The method we
+                    use to read values from the touch screen does not use the
+                    IPC struct and is safe for future use.
+                </para>
+            </note>
+        <sect1>
             <title>Writing an Input Updating Function</title>
             <para>
                 Now that we know a bit about how input is laid out on the
-                Nintendo DS, leťs write a function in our
-                <filename>main.cpp</filename> to handle the input. We'll call
-                it <code
-                language="C++"><function>handleInput</function></code>. First,
-                we want the ship to accelerate when we press up. To do this, we
-                detect when the Nintendo DS has the Up Key on the D-pad held
-                (which included the initial down press) and accelerate the ship
-                if so. The Up key will constantly read as held, so long as it
-                is held.  Reading the input does not aﬀect the keys register.
-                We'll do similar things for each of the other keys. See if you
-                can tell what each key does from the code listing below.
+                Nintendo DS, let's write a function in our
+                <filename>main.cpp</filename> to collect the input for us.
+                We'll call it <code
+                language="C++"><function>updateInput</function></code>. We'll
+                use this function as the first thing we call in our complete
+                game loop.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void handleInput(Ship * ship) {
-       //up
-       if (keysHeld() &amp; KEY_UP) {
-                //accelerate ship
-                ship-&gt;accelerate();
-       }
-       //down
-       if (keysHeld() &amp; KEY_DOWN) {
-                //reverse ship direction
-                ship-&gt;reverseTurn();
-       }
-       //left
-       if (keysHeld() &amp; KEY_LEFT) {
-                //rotate counter clockwise
-                ship-&gt;turnCounterClockwise();
-       }
-       //right
-       if (keysHeld() &amp; KEY_RIGHT) {
-                //rotate clockwise
-                ship-&gt;turnClockwise();
-       }
-       return;
+void updateInput(touchPosition * touch) {
+	// Update the key registers with current values.
+	scanKeys();
+
+    // Update the touch screen values.
+    *touch = touchReadXY();
+}
+            </programlisting>
+        </sect1>
+        <sect1>
+            <title>Writing an Input Handling Function</title>
+            <para>
+                This function will be part of our game state updating game loop
+                component. It will react to outside input and modify the game
+                state accordingly. As such, it will have to know about and be
+                able to modify the game state. We'll pass the game state to it
+                as function parameters. Let's call the function <code
+                language="C++"><function>handleInput</function></code>.
+            </para>
+            <para>
+                First, we want the ship to accelerate when we press up. To do
+                this, we detect when the Nintendo DS has the up key on the
+                D-pad held (which included the initial down press) and
+                accelerate the ship if so. The up key will constantly read as
+                held, so long as it is held. Reading the input does not affect
+                the keys register. We'll do similar things for each of the
+                other keys. See if you can tell what each key does from the
+                code listing below.
+            </para>
+            <para>
+                
+            <programlisting linenumbering="unnumbered" language="C++">
+void handleInput(Ship * ship, MathVector2D<int> * moonPos,
+                 SpriteInfo * moonInfo, touchPosition * touch) {
+
+    /* Handle up and down parts of D-Pad. */
+	if (keysHeld() &amp; KEY_UP) {
+		//accelerate ship
+		ship->accelerate();
+	} else if (keysHeld() &amp; KEY_DOWN) {
+		//reverse ship direction
+		ship->reverseTurn();
+    }
+	
+    /* Handle left and right parts of D-Pad. */
+	if (keysHeld() &amp; KEY_LEFT) {
+		//rotate counter clockwise
+		ship->turnCounterClockwise();
+    } else if (keysHeld() &amp; KEY_RIGHT) {
+		//rotate clockwise
+		ship->turnClockwise();
+	}
+
+    /*
+     *  Handle the touch screen.
+     *  
+     *  This is basically some fancy pants junk to enable grabbing and moving
+     *  of the moon. It isn't essential to know how this code works to
+     *  understand how to reach values from the touch screen, but it was cool
+     *  enough that I wanted to put it in the case study.
+    */
+    static MathVector2D<int> moonGrip;
+    if (keysDown() &amp; KEY_TOUCH) {
+        /* Record the grip */
+        moonGrip.x = touch->px;
+        moonGrip.y = touch->py;
+    } else if (keysHeld() &amp; KEY_TOUCH) {
+        int newX = moonPos->x + touch->px - moonGrip.x;
+        int newY = moonPos->y + touch->py - moonGrip.y;
+
+        /* Prevent dragging off the screen */
+        if (newX &lt; 0) {
+            moonPos->x = 0;
+        } else if (newX > (SCREEN_WIDTH - moonInfo->width)) {
+            moonPos->x = SCREEN_WIDTH - moonInfo->width;
+        } else {
+            moonPos->x = newX;
+        }
+        if (newY &lt; 0) {
+            moonPos->y = 0;
+        } else if (newY > (SCREEN_HEIGHT - moonInfo->height)) {
+            moonPos->y = SCREEN_HEIGHT - moonInfo->height;
+        } else {
+            moonPos->y = newY;
+        }
+
+        /* Record the grip again. */
+        moonGrip.x = touch->px;
+        moonGrip.y = touch->py;
+    }
 }
             </programlisting>
             <para>
-                As you've noticed, having that Ship class made input handling extremely easy. Our keys will
-                directly affect various properties of the ship as we press them. This is really amazing, but the
-                true miracle is yet to come.
+                As you've noticed, having that Ship class made input handling
+                extremely easy. Our keys will directly affect various
+                properties of the ship as we press them. This is really
+                amazing, but the true miracle is yet to come.
+            </para>
+            <para>
+                As for the moon, since we didn't make one class for it, the
+                code came together a little more messily. We also had to pass
+                two parameters to the <code
+                language="C++"><function>handleInput</function></code> function
+                to represent the moon portion of the game state instead of one.
+                If we had wanted to be more clean, we could have even produced
+                a game state struct that contained all the game state and all
+                operations on it in one place.
             </para>
         </sect1>
         <sect1>
             <title>Creating the Main Game Loop, Again</title>
             <para>
-                Let's check back in on our main function now. It's time for use
-                to create an infinite loop to run our program. The first thing we
-                want to happen in our game loop is for the key registers to get
-                updated. We make a call to scanKeys and it all happens for us.
-                Next, we handle the input we just received by calling our
-                recently created handleInput function, passing in our ship
-                object that it can change our ship for us. Next, we tell our
-                ship to move at it's current velocity. This will change the
-                ship’s position. Then we update the sprite attributes with new
-                information about our ship, as handleInput most likely changed
-                some properties about the ship. Finally, we call a function
-                that will make sure our program does not exceed 60fps (speed of
-                the graphics on the Nintendo DS), and update the OAM, telling
-                it that we changed some attributes on the sprites and it need
-                to handle that.
+                Let's check back in on our <code
+                language="C++"><function>main</function></code> function now.
+                We need to make some adjustments to our game loop since we've
+                now added the ability to collect input and to react to input.
+                The first thing we now want to happen in our game loop is for
+                the key registers and read touch screen coordinates to get
+                updated. We make a call to updateInput and it all happens for
+                us. Next, we handle the input we just received by calling our
+                recently created <code
+                language="C++"><function>handleInput</function></code>
+                function, passing in our game state so that it can change it
+                for us. Everything else is as before. 
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-//former functions above here
 int main() {
-      //our former code here
-      for (;;) {
-             scanKeys();
-             handleInput(ship);
-             ship-&gt;moveShip();
-             //update sprite attributes
-             Coordinate position = ship-&gt;getPosition();
-             moveSprite(&amp;spritesMain[0], (int)position.x, (int)position.y);
-             rotateSprite(&amp;spriteRotationsMain[0], ship-&gt;getAngleDeg512());
-             swiWaitForVBlank();
-             updateOAM(spritesMain);
-      }
+    /*  Turn on the 2D graphics core. */
+    powerON(POWER_ALL_2D);
+
+    /*
+     *  Set up interrupts.
+     *
+     *  We don't really get into what these do exactly at this point in the
+     *  manual, but we still need to do them for now.
+     */
+    irqInit();
+    irqSet(IRQ_VBLANK, 0);
+
+    /*
+     *  Configure the VRAM and background control registers.
+     *
+     *  Place the main screen on the bottom physical screen. Then arrange the
+     *  VRAM banks. Next, confiure the background control registers.
+     */
+    lcdMainOnBottom();
+    initVideo();
+    initBackgrounds();
+
+    /* Set up a few sprites. */
+    SpriteInfo spriteInfo[SPRITE_COUNT];
+    tOAM *oam = new tOAM();
+    initOAM(oam);
+    initSprites(oam, spriteInfo);
+
+    /* Display the backgrounds. */
+    displayStarField();
+    displayPlanet();
+    displaySplash();
+
+    /*************************************************************************/
+
+    /* Keep track of the touch screen coordinates */
+    touchPosition touch;
+
+    /* Make the ship object */
+    static const int SHUTTLE_AFFINE_ID = 0;
+    SpriteEntry * shipEntry = &oam->spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
+    Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+
+    /* Make the moon */
+    static const int MOON_AFFINE_ID = 1;
+    SpriteEntry * moonEntry = &oam->spriteBuffer[MOON_AFFINE_ID];
+    SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
+    MathVector2D<int> * moonPos = new MathVector2D<int>();
+    moonPos->x = moonEntry->posX;
+    moonPos->y = moonEntry->posY;
+
+    for (;;) {
+        /* Update the game state. */
+		updateInput(&touch);
+		handleInput(ship, moonPos, moonInfo, &touch);
+        ship->moveShip();
+
+        /* Update ship sprite attributes. */
+        MathVector2D<float> position = ship->getPosition();
+        shipEntry->posX = (int)position.x;
+        shipEntry->posY = (int)position.y;
+        rotateSprite(shipRotation, ship->getAngleDeg512());
+        /* Update moon sprite attributes. */
+        moonEntry->posX = (int)moonPos->x;
+        moonEntry->posY = (int)moonPos->y;
+
+        /*
+         *  Update the OAM.
+         *
+         *  We have to copy our copy of OAM data into the actual OAM during
+         *  VBlank (writes to it are locked during other times).
+         */
+        swiWaitForVBlank();
+        updateOAM(oam);
+    }
+
+    return 0;
 }
             </programlisting>
-            <para>
-                The OAM really shines through here. The all powerful Nintendo
-                DS hardware, an incredible masterpiece, will rotate and move
-                our ship with very little effort on our part. In hindsight, all
-                we have done is flip a few bits in a few registers in a
-                structured manner, and our ship comes to life. Incredible.
-            </para>
         </sect1>
         <sect1>
             <title>Compiling</title>
+            <para>
+                Again, we should double check that we have all the
+                proper includes before compiling.
+            </para>
+            <programlisting linenumbering="unnumbered" language="C++">
+#include &lt;nds.h&gt;
+#include &lt;assert.h&gt;
+#include "sprites.h"
+#include "ship.h"
+
+/* Backgrounds */
+#include "starField.h"
+#include "planet.h"
+#include "splash.h"
+/* Sprites */
+#include "orangeShuttle.h"
+#include "moon.h"
+            </programlisting>
             <para>
                 Now we can control our ship with the D-Pad. What fun! The game
                 should now appear as in <xref
@@ -3107,7 +3297,7 @@ int main() {
             <para>
                 Many games don’t need music. For instance, a game with the
                 programmer’s or game designer’s favorite song may annoy many
-                players who have diﬀerent tastes of music. Instead, give the
+                players who have different tastes of music. Instead, give the
                 player the option to listen to their own music, on their own
                 audio equipment. Not to mention, music is costly in data size.
             </para>
