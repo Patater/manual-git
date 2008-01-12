@@ -145,7 +145,7 @@ int main() {
      *  manual, but we still need to do them for now.
      */
     irqInit();
-    irqSet(IRQ_VBLANK, 0);
+    irqEnable(IRQ_VBLANK);
 
     /*  Configure the VRAM and background control registers. */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen
