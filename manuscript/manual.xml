@@ -3765,10 +3765,11 @@ int main() {
     <section>
         <title>About the Author</title>
         <para>
-            Jaeden Amero is currently an Electrical Engineering student at
-            Brigham Young University in Provo, Utah, USA. He enjoys
-            programming the Nintendo DS and Game Boy Advance, FPGA
-            coding, and unicycling in his free time.
+            Jaeden Amero is currently an electrical engineering student at
+            Brigham Young University in Provo, Utah, USA. He looks forward to
+            graduating before August 2008. He enjoys programming the Nintendo
+            DS and Game Boy Advance, FPGA coding, unicycling, and playing the
+            accordion in his free time.
         </para>
     </section>
 </book>
@@ -3780,7 +3781,7 @@ int main() {
                 Now for some real fun. Moving sprites in hardware, and not
                 having to worry about clipping, buffers, or anything, is such a
                 wonderful feeling. To move a sprite, we simply change some
-                attributes in that sprite’s SpriteEntry. Attribute 1 in a
+                attributes in that sprite's SpriteEntry. Attribute 1 in a
                 sprite always contains, in bits 0-8, the X position of the
                 sprite. Attribute 0, among other things, contains the Y
                 position of the sprite, in bits 0-7. I have provided some
