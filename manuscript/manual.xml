@@ -2088,7 +2088,7 @@ uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle-&gt;tileIdx *
                 the tile data into VRAM. We can also calculate how many tiles
                 an image uses from its length in bytes by diving the length in
                 bytes by how many bytes a tile takes up. In our case, as we'll
-                be using 16-color tiles, a tile (8x8 pixels) takes up 16 bytes.
+                be using 16-color tiles, a tile (8x8 pixels) takes up 32 bytes.
             </para>
         </sect1>
         <sect1>
