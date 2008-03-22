@@ -1403,11 +1403,14 @@ void initBackgrounds() {
                 Whenever you have the opportunity to use DMA, you should. It is
                 always better to use DMA than to use a for loop to copy data.
                 When using DMA to copy from main memory, do not forget to flush
-                main memory before using DMA. Another issue to consider would
-                be that in the middle of a DMA, the main CPUs are prevented
-                from using certain memory hardware<!--(XXX bus contention or
-                something?)-->. This can cause awkward bugs with interrupt
-                handling. For this reason, and <code
+                main memory before using DMA. The DMA doesn't use the cache
+                where the relevant memory may currently be stored, so flushing
+                to main memory guarantees that DMA sees the correct data.
+                Another issue to consider would be that in the middle of a DMA,
+                the main CPUs are prevented from using certain memory
+                hardware<!--(XXX bus contention or something?)-->. This can
+                cause awkward bugs with interrupt handling. For this reason,
+                and <code
                 language="C++"><function>swifastcopy</function></code> may be
                 safer, and is not too much slower. The safest bet is always
                 <code language="C++"><function>memcopy</function></code> and
@@ -1782,10 +1785,15 @@ const u16 data[] = {
                 before copying our copy of the OAM into the actualy OAM.
             </para>
             <para>
-                Updating the OAM is very straightforward. First, we flush local
-                memory (a must whenever performing a DMA operation). Then, we
-                tell the OAM to look into the tOAM instance we will create
-                later for information about each one of our sprites.
+                Updating the OAM is very straightforward. We do this by copying
+                our copy of the OAM to the real OAM. Our copy of the OAM might
+                still be stuck in the cache and may not have made it into main
+                memory yet, so we first flush local memory (a must whenever
+                performing a DMA operation) to ensure that DMA sees the correct
+                data. The data we want to copy might be stuck in cache still
+                and may not have made it into main memory yet. Then, we tell
+                the OAM to look into the tOAM instance we will create later for
+                information about each one of our sprites.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void updateOAM(tOAM * oam) {
