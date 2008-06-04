@@ -4,5 +4,8 @@
 # Disable transparency
 -gT!
 
+# Bitmap image
+-gb
+
 # Set the bit depth to 16
 -gB16

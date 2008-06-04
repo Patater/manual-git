@@ -4,5 +4,8 @@
 # Set the transparent color to 000000 (rrggbb hex)
 -gT000000
 
+# Bitmap image
+-gb
+
 # Set the bit depth to 16
 -gB16
