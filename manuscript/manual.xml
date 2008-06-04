@@ -1553,7 +1553,15 @@ void displaySplash() {
                 commented grit rule files for all images we will use in this
                 manual. These make good examples and can help you get the hang
                 of using grit.
-            </para><!-- TODO This grit section is just a cop out right now. We'll have to improve it later (as in actually teach how to use grit). -->
+            </para>
+            <para>
+                For more information regarding grit, you can visit the project
+                homepage and read the grit manual at <ulink
+                url="http://www.coranac.com/projects/grit/"> and <ulink
+                url="http://www.coranac.com/man/grit/html/grit.htm">
+                respectively. You can also download the latest version of grit
+                from the grit project homepage.
+            </para>
         </sect1>
         <sect1>
             <title>Putting in the Star Fields</title>
