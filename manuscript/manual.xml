@@ -2238,7 +2238,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      */
     shuttle-&gt;posX = SCREEN_WIDTH / 2 - shuttleInfo-&gt;width * 2 +
                     shuttleInfo-&gt;width / 2;
-    shuttle-&gt;rsMatrixIdx = ATTR1_ROTDATA(shuttleInfo-&gt;oamId);
+    shuttle-&gt;rsMatrixIdx = shuttleInfo-&gt;oamId;
     shuttle-&gt;objSize = OBJSIZE_64;
 
     /* 
