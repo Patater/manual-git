@@ -152,7 +152,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     shuttleInfo->oamId = SHUTTLE_OAM_ID;
     shuttleInfo->width = 64;
     shuttleInfo->height = 64;
-    shuttleInfo->angle = 462;
+    shuttleInfo->angle = 29568;
     shuttleInfo->entry = shuttle;
 
     /*
@@ -215,7 +215,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     moonInfo->oamId = MOON_OAM_ID;
     moonInfo->width = 32;
     moonInfo->height = 32;
-    moonInfo->angle = 462;
+    moonInfo->angle = 29568;
     moonInfo->entry = moon;
 
     /*
@@ -435,7 +435,7 @@ int main() {
         MathVector2D<float> position = ship->getPosition();
         shipEntry->x = (int)position.x;
         shipEntry->y = (int)position.y;
-        rotateSprite(shipRotation, ship->getAngleDeg512());
+        rotateSprite(shipRotation, ship->getAngleDeg());
         /* Update moon sprite attributes. */
         moonEntry->x = (int)moonPos->x;
         moonEntry->y = (int)moonPos->y;
