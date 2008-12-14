@@ -31,7 +31,7 @@ typedef struct {
  *  Update the OAM.
  *
  */
-void updateOAM(tOAM * oam);
+void updateOAM(OAMTable * oam);
 
 /*
  *  initOAM
@@ -39,7 +39,7 @@ void updateOAM(tOAM * oam);
  *  Initialize the OAM.
  *
  */
-void initOAM(tOAM * oam);
+void initOAM(OAMTable * oam);
 
 /*
  *  rotateSprite
@@ -47,7 +47,7 @@ void initOAM(tOAM * oam);
  *  Rotate a sprite.
  *
  */
-void rotateSprite(SpriteRotation * spriteRotation, u16 angle);
+void rotateSprite(SpriteRotation * spriteRotation, int angle);
 
 /*
  *  setSpriteVisibility
