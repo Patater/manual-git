@@ -16,7 +16,7 @@ include $(DEVKITARM)/ds_rules
 # INCLUDES is a list of directories containing extra header files
 # GRAPHICS is a list of directories containing files to be processed by grit
 # AUDIO is a list of directories containing files to be processed by mmutil
-# SOUNDBANK_FILE is the filename of the maxmod generated soundbank
+# SOUNDBANK_NAME is the name of the maxmod generated soundbank
 #
 # All directories are specified relative to the project directory where
 # the makefile is found.
@@ -25,11 +25,11 @@ include $(DEVKITARM)/ds_rules
 TARGET		:=	$(notdir $(CURDIR))
 BUILD		:=	build
 SOURCES		:=	source
-DATA		:=	data
+DATA		:=	
 INCLUDES	:=	include
 GRAPHICS	:=	gfx
-AUDIO		:=	sound music
-SOUNDBANK_FILE  :=	soundbank.bin
+AUDIO		:=	audio
+SOUNDBANK_NAME  :=	soundbank
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -70,19 +70,17 @@ ifneq ($(BUILD),$(notdir $(CURDIR)))
 export OUTPUT	:=	$(CURDIR)/$(TARGET)
  
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
-					$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
-					$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
+			$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
+			$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir)) \
+			$(foreach dir,$(AUDIO),$(CURDIR)/$(dir))
 
 export DEPSDIR	:=	$(CURDIR)/$(BUILD)
 
 CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
 CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
 SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
-BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*)))
-#GRITFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.grit)))
-#GFXFILES	:=	$(filter-out $(GRITFILES),$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*))))
-GFXFILES	:=	$(foreach dir,$(AUDIO),$(notdir $(wildcard $(dir)/*)))
-AUDIOFILES	:=	$(foreach dir,$(AUDIO),$(notdir $(wildcard $(dir)/*)))
+BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*))) $(SOUNDBANK_NAME).bin
+PNGFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
@@ -98,18 +96,20 @@ else
 endif
 #---------------------------------------------------------------------------------
 
-export OFILES	:=	$(addsuffix .o,$(BINFILES)) \
-			$(shell (echo $(GFXFILES) | tr '\040' '\012' | sed -e 's/\(.*\)\..*/\1.o/')) \
-			$(CPPFILES:.cpp=.o) \
-			$(CFILES:.c=.o) \
-			$(SFILES:.s=.o)
+export OFILES		:=	$(addsuffix .o,$(BINFILES)) \
+				$(PNGFILES:.png=.o) \
+				$(CPPFILES:.cpp=.o) \
+				$(CFILES:.c=.o) \
+				$(SFILES:.s=.o) \
+
+export AUDIOFILES	:=	$(foreach dir,$(AUDIO),$(notdir $(wildcard $(dir)/*)))
  
-export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
-			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-			-I$(CURDIR)/$(BUILD)
+export INCLUDE		:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
+				$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+				$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
+				-I$(CURDIR)/$(BUILD)
  
-export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+export LIBPATHS		:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
 .PHONY: $(BUILD) clean
  
@@ -149,47 +149,24 @@ $(OUTPUT).elf	:	$(OFILES)
 	@$(bin2o)
 
 #---------------------------------------------------------------------------------
-# This rule creates object files from binary data with the .raw extension
-#---------------------------------------------------------------------------------
-%.raw.o	: %.raw
-#---------------------------------------------------------------------------------
-	@echo $(notdir $<)
-	@$(bin2o)
-
-#---------------------------------------------------------------------------------
-# This rule creates the soundbank file for your project using mmutil.
-# mmutil takes all audio files in the audio folder and puts them into a
-# soundbank file.
-#---------------------------------------------------------------------------------
-$(SOUNDBANK_FILE) : $(AUDIOFILES)
-#---------------------------------------------------------------------------------
-	@echo $(notdir $^)
-	@mmutil $^ -o$(SOUNDBANK_FILE) -hsoundbank.h -d
-
-#---------------------------------------------------------------------------------
 # This rule creates assembly source files using grit.
-# grit takes an image file and a .grit describing how the file is to be
-# processed. Add additional rules like this for each image extension you use in
-# the graphics folders.
-#---------------------------------------------------------------------------------
-%.s %.h	: %.bmp %.grit
-#---------------------------------------------------------------------------------
-	grit $< -fts -o$*
-
+# grit takes an image file and a .grit file describing how the file is to be
+# processed.
 #---------------------------------------------------------------------------------
 %.s %.h	: %.png %.grit
 #---------------------------------------------------------------------------------
 	grit $< -fts -o$*
 
 #---------------------------------------------------------------------------------
-%.s %.h	: %.tif %.grit
+# This rule creates the soundbank file for your project using mmutil.
+# mmutil takes all audio files in the audio folder and puts them into a
+# soundbank file.
 #---------------------------------------------------------------------------------
-	grit $< -fts -o$*
+$(SOUNDBANK_NAME).bin : $(AUDIOFILES)
+#---------------------------------------------------------------------------------
+	@echo $(notdir $^)
+	@mmutil -d $^ -o$(SOUNDBANK_NAME).bin -h$(SOUNDBANK_NAME).h
 
-#---------------------------------------------------------------------------------
-%.s %.h	: %.gif %.grit
-#---------------------------------------------------------------------------------
-	grit $< -fts -o$*
  
 -include $(DEPSDIR)/*.d
  

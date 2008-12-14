@@ -60,14 +60,13 @@ protected:
     float mass;
  
     /*
-     *  radToDeg512
+     *  radToDeg
      *
      *  This function converts radians (our unit of choice for measuring
-     *  angles) to the Nintendo DS's 512 degree system. We only use this
-     *  function from within the Ship object, so we can make this a protected
-     *  function.
+     *  angles) to the libnds degree system. We only use this function from
+     *  within the Ship object, so we can make this a protected function.
      */
-    int radToDeg512(float rad);
+    int radToDeg(float rad);
  
     void init(const Ship & other);
 
@@ -149,13 +148,13 @@ public:
     float getAngleRad();
 
     /*
-     *  getAngleDeg512
+     *  getAngleDeg
      *
-     *  Returns the int representing the ship's angle in the Nintendo DS's 512
-     *  degree system.
+     *  Returns the int representing the ship's angle in the libnds degree
+     *  system.
      *
      */
-    int getAngleDeg512();
+    int getAngleDeg();
 
 };
 

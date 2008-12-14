@@ -7,6 +7,7 @@
  */
 
 #include <nds.h>
+#include <maxmod9.h>
 #include <assert.h>
 #include "sprites.h"
 #include "ship.h"
@@ -19,7 +20,8 @@
 #include "orangeShuttle.h"
 #include "moon.h"
 /* Sounds */
-#include "thrust_1_22050_8_s_raw.h"
+#include "soundbank.h"
+#include "soundbank_bin.h"
 
 /* Select a low priority DMA channel to perform our background copying. */
 static const int DMA_CHANNEL = 3;
@@ -63,64 +65,65 @@ void initVideo() {
 }
 
 void initBackgrounds() {
-    /*  Set up affine background 3 on main as a 16-bit color background */
-    BG3_CR = BG_BMP16_256x256 |
-             BG_BMP_BASE(0) | // The starting place in memory
-             BG_PRIORITY(3); // A low priority
-
-    /*  Set the affine transformation matrix for the main screen background 3
-     *  to be the identity matrix.
-     */
-    BG3_XDX = 1 << 8;
-    BG3_XDY = 0;
-    BG3_YDX = 0;
-    BG3_YDY = 1 << 8;
-
-    /*  Place main screen background 3 at the origin (upper left of the screen)
-     */
-    BG3_CX = 0;
-    BG3_CY = 0;
-
-    /*  Set up affine background 2 on main as a 16-bit color background */
-    BG2_CR = BG_BMP16_128x128 |
-             BG_BMP_BASE(8) | // The starting place in memory
-             BG_PRIORITY(2);  // A higher priority
-
-    /*  Set the affine transformation matrix for the main screen background 3
-     *  to be the identity matrix.
-     */
-    BG2_XDX = 1 << 8;
-    BG2_XDY = 0;
-    BG2_YDX = 0;
-    BG2_YDY = 1 << 8;
-
-    /*  Place main screen background 2 an interesting place. */
-    BG2_CX = -(SCREEN_WIDTH / 2 - 32) << 8;
-    BG2_CY = -32 << 8;
-
-    /*  Set up affine background 3 on the sub screen as a 16-bit color
-     *  background
-     */
-    SUB_BG3_CR = BG_BMP16_256x256 |
+    /*  Set up affine background 3 on main as a 16-bit color background. */
+    REG_BG3CNT = BG_BMP16_256x256 |
                  BG_BMP_BASE(0) | // The starting place in memory
                  BG_PRIORITY(3); // A low priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    REG_BG3PA = 1 << 8;
+    REG_BG3PB = 0;
+    REG_BG3PC = 0;
+    REG_BG3PD = 1 << 8;
+
+    /*  Place main screen background 3 at the origin (upper left of the
+     *  screen).
+     */
+    REG_BG3X = 0;
+    REG_BG3Y = 0;
+
+    /*  Set up affine background 2 on main as a 16-bit color background. */
+    REG_BG2CNT = BG_BMP16_128x128 |
+                 BG_BMP_BASE(8) | // The starting place in memory
+                 BG_PRIORITY(2);  // A higher priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    REG_BG2PA = 1 << 8;
+    REG_BG2PB = 0;
+    REG_BG2PC = 0;
+    REG_BG2PD = 1 << 8;
+
+    /*  Place main screen background 2 in an interesting place. */
+    REG_BG2X = -(SCREEN_WIDTH / 2 - 32) << 8;
+    REG_BG2Y = -32 << 8;
+
+    /*  Set up affine background 3 on the sub screen as a 16-bit color
+     *  background.
+     */
+    REG_BG3CNT_SUB = BG_BMP16_256x256 |
+                     BG_BMP_BASE(0) | // The starting place in memory
+                     BG_PRIORITY(3); // A low priority
 
     /*  Set the affine transformation matrix for the sub screen background 3
      *  to be the identity matrix.
      */
-    SUB_BG3_XDX = 1 << 8;
-    SUB_BG3_XDY = 0;
-    SUB_BG3_YDX = 0;
-    SUB_BG3_YDY = 1 << 8;
+    REG_BG3PA_SUB = 1 << 8;
+    REG_BG3PB_SUB = 0;
+    REG_BG3PC_SUB = 0;
+    REG_BG3PD_SUB = 1 << 8;
 
     /*
      *  Place main screen background 3 at the origin (upper left of the screen)
      */
-    SUB_BG3_CX = 0;
-    SUB_BG3_CY = 0;
+    REG_BG3X_SUB = 0;
+    REG_BG3Y_SUB = 0;
 }
 
-void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
+void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     /*  Define some sprite configuration specific constants.
      * 
      *  We will use these to compute the proper index into memory for certain
@@ -147,34 +150,34 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     static const int SHUTTLE_OAM_ID = 0;
     assert(SHUTTLE_OAM_ID < SPRITE_COUNT);
     SpriteInfo * shuttleInfo = &spriteInfo[SHUTTLE_OAM_ID];
-    SpriteEntry * shuttle = &oam->spriteBuffer[SHUTTLE_OAM_ID];
+    SpriteEntry * shuttle = &oam->oamBuffer[SHUTTLE_OAM_ID];
 
     /* Initialize shuttleInfo */
     shuttleInfo->oamId = SHUTTLE_OAM_ID;
     shuttleInfo->width = 64;
     shuttleInfo->height = 64;
-    shuttleInfo->angle = 462;
+    shuttleInfo->angle = 29568;
     shuttleInfo->entry = shuttle;
 
     /*
      *  Configure attribute 0. 
      *
      *  OBJCOLOR_16 will make a 16-color sprite. We specify that we want an
-     *  affine sprite (via isRotoscale) here because we would like to rotate
+     *  affine sprite (via isRotateScale) here because we would like to rotate
      *  the ship.
      */
-    shuttle->posY = SCREEN_HEIGHT / 2 - shuttleInfo->height;
-    shuttle->isRotoscale = true;
+    shuttle->y = SCREEN_HEIGHT / 2 - shuttleInfo->height;
+    shuttle->isRotateScale = true;
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
      * assert can be helpful. */
-    assert(!shuttle->isRotoscale || (shuttleInfo->oamId < MATRIX_COUNT));
-    shuttle->rsDouble = false;
-    shuttle->objMode = OBJMODE_NORMAL;
+    assert(!shuttle->isRotateScale || (shuttleInfo->oamId < MATRIX_COUNT));
+    shuttle->isSizeDouble = false;
+    shuttle->blendMode = OBJMODE_NORMAL;
     shuttle->isMosaic = false;
-    shuttle->colMode = OBJCOLOR_16;
-    shuttle->objShape = OBJSHAPE_SQUARE;
+    shuttle->colorMode = OBJCOLOR_16;
+    shuttle->shape = OBJSHAPE_SQUARE;
 
     /*
      *  Configure attribute 1.
@@ -183,10 +186,10 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  set it to a location computed with a macro. OBJSIZE_64, in our case
      *  since we are making a square sprite, creates a 64x64 sprite.
      */
-    shuttle->posX = SCREEN_WIDTH / 2 - shuttleInfo->width * 2 +
+    shuttle->x = SCREEN_WIDTH / 2 - shuttleInfo->width * 2 +
                     shuttleInfo->width / 2;
-    shuttle->rsMatrixIdx = shuttleInfo->oamId;
-    shuttle->objSize = OBJSIZE_64;
+    shuttle->rotationIndex = shuttleInfo->oamId;
+    shuttle->size = OBJSIZE_64;
 
     /* 
      *  Configure attribute 2.
@@ -195,10 +198,10 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  be placed onto, which palette the sprite should use, and whether or not
      *  to show the sprite.
      */
-    shuttle->tileIdx = nextAvailableTileIdx;
+    shuttle->gfxIndex = nextAvailableTileIdx;
     nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE;
-    shuttle->objPriority = OBJPRIORITY_0;
-    shuttle->objPal = shuttleInfo->oamId;
+    shuttle->priority = OBJPRIORITY_0;
+    shuttle->palette = shuttleInfo->oamId;
 
     /* Rotate the sprite */
     rotateSprite(&oam->matrixBuffer[shuttleInfo->oamId],
@@ -210,13 +213,13 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     static const int MOON_OAM_ID = 1;
     assert(MOON_OAM_ID < SPRITE_COUNT);
     SpriteInfo * moonInfo = &spriteInfo[MOON_OAM_ID];
-    SpriteEntry * moon = &oam->spriteBuffer[MOON_OAM_ID];
+    SpriteEntry * moon = &oam->oamBuffer[MOON_OAM_ID];
 
     /* Initialize moonInfo */
     moonInfo->oamId = MOON_OAM_ID;
     moonInfo->width = 32;
     moonInfo->height = 32;
-    moonInfo->angle = 462;
+    moonInfo->angle = 29568;
     moonInfo->entry = moon;
 
     /*
@@ -225,31 +228,31 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  OBJCOLOR_16 will make a 16-color sprite. We won't specify that we want
      *  an affine sprite here because we don't want one this time.
      */
-    moon->posY = SCREEN_WIDTH / 2 + moonInfo->height / 2;
-    moon->isRotoscale = false;
+    moon->y = SCREEN_WIDTH / 2 + moonInfo->height / 2;
+    moon->isRotateScale = false;
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
      * assert can be helpful. */
-    assert(!moon->isRotoscale || (moonInfo->oamId < MATRIX_COUNT));
+    assert(!moon->isRotateScale || (moonInfo->oamId < MATRIX_COUNT));
     moon->isHidden = false;
-    moon->objMode = OBJMODE_NORMAL;
+    moon->blendMode = OBJMODE_NORMAL;
     moon->isMosaic = false;
-    moon->colMode = OBJCOLOR_16;
-    moon->objShape = OBJSHAPE_SQUARE;
+    moon->colorMode = OBJCOLOR_16;
+    moon->shape = OBJSHAPE_SQUARE;
 
     /*
      * Configure attribute 1.
      *
      * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
      * square sprite. Since we are using a non-affine sprite, attribute 1
-     * doesn't have an rsMatrixIdx anymore. Instead, it has the ability to flip
+     * doesn't have an rotationIndex anymore. Instead, it has the ability to flip
      * the sprite vertically or horizontally.
      */
-    moon->posX = SCREEN_WIDTH / 2 + moonInfo->width + moonInfo->width / 2;
+    moon->x = SCREEN_WIDTH / 2 + moonInfo->width + moonInfo->width / 2;
     moon->hFlip = false;
     moon->vFlip = false;
-    moon->objSize = OBJSIZE_32;
+    moon->size = OBJSIZE_32;
 
     /* 
      *  Configure attribute 2.
@@ -258,10 +261,10 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  be placed onto, which palette the sprite should use, and whether or not
      *  to show the sprite.
      */
-    moon->tileIdx = nextAvailableTileIdx;
+    moon->gfxIndex = nextAvailableTileIdx;
     nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
-    moon->objPriority = OBJPRIORITY_2;
-    moon->objPal = moonInfo->oamId;
+    moon->priority = OBJPRIORITY_2;
+    moon->palette = moonInfo->oamId;
 
     /*************************************************************************/
 
@@ -279,11 +282,11 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     /* Copy the sprite graphics to sprite graphics memory */
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttleTiles,
-                     &SPRITE_GFX[shuttle->tileIdx * OFFSET_MULTIPLIER],
+                     &SPRITE_GFX[shuttle->gfxIndex * OFFSET_MULTIPLIER],
                      orangeShuttleTilesLen);
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonTiles,
-                     &SPRITE_GFX[moon->tileIdx * OFFSET_MULTIPLIER],
+                     &SPRITE_GFX[moon->gfxIndex * OFFSET_MULTIPLIER],
                      moonTilesLen);
 }
 
@@ -315,21 +318,22 @@ void displaySplash() {
 }
 
 void updateInput(touchPosition * touch) {
-	//updates the key registers with current values
+	// Update the key registers with current values.
 	scanKeys();
 
-    //update the touch screen read values
-    *touch = touchReadXY();
+    // Update the touch screen values.
+    touchRead(touch);
 }
 
-void handleInput(Ship * ship, MathVector2D<int> * moonPos,
-                 SpriteInfo * moonInfo, TransferSoundData * soundData,
+void handleInput(Ship * ship,
+                 MathVector2D<int> * moonPos,
+                 SpriteInfo * moonInfo,
                  touchPosition * touch) {
 
     /* Handle up and down parts of D-Pad. */
     if (keysDown() & KEY_UP) {
         // Play our sound only when the button is initially pressed
-		playSound(soundData);
+		mmEffect(SFX_THRUST);
     }
 	if (keysHeld() & KEY_UP) {
 		//accelerate ship
@@ -348,7 +352,14 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos,
 		ship->turnClockwise();
 	}
 
-    /* Handle the touch screen. */
+    /*
+     *  Handle the touch screen.
+     *  
+     *  This is basically some fancy pants junk to enable grabbing and moving
+     *  of the moon. It isn't essential to know how this code works to
+     *  understand how to reach values from the touch screen, but it was cool
+     *  enough that I wanted to put it in the case study.
+    */
     static MathVector2D<int> moonGrip;
     if (keysDown() & KEY_TOUCH) {
         /* Record the grip */
@@ -382,16 +393,7 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos,
 
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     /*
      *  Configure the VRAM and background control registers.
@@ -403,9 +405,12 @@ int main() {
     initVideo();
     initBackgrounds();
 
+    /* Initialize maxmod using the memory based soundbank set up. */
+    mmInitDefaultMem((mm_addr)soundbank_bin);
+
     /* Set up a few sprites. */
     SpriteInfo spriteInfo[SPRITE_COUNT];
-    tOAM *oam = new tOAM();
+    OAMTable *oam = new OAMTable();
     initOAM(oam);
     initSprites(oam, spriteInfo);
 
@@ -421,41 +426,35 @@ int main() {
 
     /* Make the ship object */
     static const int SHUTTLE_OAM_ID = 0;
-    SpriteEntry * shipEntry = &oam->spriteBuffer[SHUTTLE_OAM_ID];
+    SpriteEntry * shipEntry = &oam->oamBuffer[SHUTTLE_OAM_ID];
     SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];
     Ship * ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
 
     /* Make the moon */
     static const int MOON_OAM_ID = 1;
-    SpriteEntry * moonEntry = &oam->spriteBuffer[MOON_OAM_ID];
+    SpriteEntry * moonEntry = &oam->oamBuffer[MOON_OAM_ID];
     SpriteInfo * moonInfo = &spriteInfo[MOON_OAM_ID];
     MathVector2D<int> * moonPos = new MathVector2D<int>();
-    moonPos->x = moonEntry->posX;
-    moonPos->y = moonEntry->posY;
+    moonPos->x = moonEntry->x;
+    moonPos->y = moonEntry->y;
 
     /*  Set up sound data.*/
-	TransferSoundData * thrust_sound = new TransferSoundData();
-	thrust_sound->data = thrust_1_22050_8_s_raw;
-	thrust_sound->len = thrust_1_22050_8_s_raw_size;
-	thrust_sound->rate = 22050; //22050Hz Sample Rate
-	thrust_sound->vol = 127; //Volume can be from 0 to 127
-	thrust_sound->pan = 64; //Sound comes equally from both speakers (0-127, left to right)
-	thrust_sound->format = 1; //1 - 8bit, 0 - 16bit
+	mmLoadEffect(SFX_THRUST);
 
     for (;;) {
         /* Update the game state. */
 		updateInput(&touch);
-		handleInput(ship, moonPos, moonInfo, thrust_sound, &touch);
+		handleInput(ship, moonPos, moonInfo, &touch);
         ship->moveShip();
 
         /* Update ship sprite attributes. */
         MathVector2D<float> position = ship->getPosition();
-        shipEntry->posX = (int)position.x;
-        shipEntry->posY = (int)position.y;
-        rotateSprite(shipRotation, ship->getAngleDeg512());
+        shipEntry->x = (int)position.x;
+        shipEntry->y = (int)position.y;
+        rotateSprite(shipRotation, ship->getAngleDeg());
         /* Update moon sprite attributes. */
-        moonEntry->posX = (int)moonPos->x;
-        moonEntry->posY = (int)moonPos->y;
+        moonEntry->x = (int)moonPos->x;
+        moonEntry->y = (int)moonPos->y;
 
         /*
          *  Update the OAM.
