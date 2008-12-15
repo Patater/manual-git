@@ -11,7 +11,7 @@
 #include "ship.h"
 
 int Ship::radToDeg(float rad) {
-	return (int)(rad * (DEGREES_IN_CIRCLE/(2 *PI)));
+	return (int)(rad * (DEGREES_IN_CIRCLE/(2 * PI)));
 }
 
 Ship::Ship(SpriteInfo * _spriteInfo) {

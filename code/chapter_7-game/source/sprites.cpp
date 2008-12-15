@@ -13,24 +13,24 @@
 #include <nds/arm9/trig_lut.h>
 #include "sprites.h"
 
-void updateOAM(tOAM * oam) {
+void updateOAM(OAMTable * oam) {
     DC_FlushAll();
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-                     oam->spriteBuffer,
+                     oam->oamBuffer,
                      OAM,
                      SPRITE_COUNT * sizeof(SpriteEntry));
 }
 
-void initOAM(tOAM * oam) {
+void initOAM(OAMTable * oam) {
     /*
      * For all 128 sprites on the DS, disable and clear any attributes they 
      * might have. This prevents any garbage from being displayed and gives 
      * us a clean slate to work with.
      */
     for (int i = 0; i < SPRITE_COUNT; i++) {
-        oam->spriteBuffer[i].attribute[0] = ATTR0_DISABLED;
-        oam->spriteBuffer[i].attribute[1] = 0;
-        oam->spriteBuffer[i].attribute[2] = 0;
+        oam->oamBuffer[i].attribute[0] = ATTR0_DISABLED;
+        oam->oamBuffer[i].attribute[1] = 0;
+        oam->oamBuffer[i].attribute[2] = 0;
     }
     for (int i = 0; i < MATRIX_COUNT; i++) {
         /* If you look carefully, you'll see this is that affine trasformation
@@ -45,9 +45,9 @@ void initOAM(tOAM * oam) {
     updateOAM(oam);
 }
 
-void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
-    s16 s = SIN[angle & SPRITE_ANGLE_MASK] >> 4;
-    s16 c = COS[angle & SPRITE_ANGLE_MASK] >> 4;
+void rotateSprite(SpriteRotation * spriteRotation, int angle) {
+    s16 s = sinLerp(angle) >> 4;
+    s16 c = cosLerp(angle) >> 4;
     
     spriteRotation->hdx = c;
     spriteRotation->hdy = s;
@@ -67,7 +67,7 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
          * redundant, but it is faster than a branch to just set it regardless
          * of whether or not it is already set.
          */
-        spriteEntry->isRotoscale = false; // Bit 9 off
+        spriteEntry->isRotateScale = false; // Bit 9 off
         spriteEntry->isHidden = true; // Bit 8 on
     } else {
         /* Make the sprite visible.*/
@@ -79,13 +79,13 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
              * not be able to properly hide and restore double bound sprites.
              * We enable bit 9 here because we want an affine sprite.
              */
-            spriteEntry->isRotoscale = true;
+            spriteEntry->isRotateScale = true;
 
             /* The double bound flag only acts as the double bound flag when
              * the sprite is an affine sprite. At all other times, it acts as
              * the sprite invisibility flag. We only enable bit 8 here if we want
              * a double bound sprite. */
-            spriteEntry->rsDouble = doubleBound;
+            spriteEntry->isSizeDouble = doubleBound;
         } else {
             /* Bit 9 (the affine flag) will already be off here, so we don't
              * need to clear it. However, bit 8 (the sprite invisibility flag)

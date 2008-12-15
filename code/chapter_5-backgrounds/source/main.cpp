@@ -47,61 +47,62 @@ void initVideo() {
 }
 
 void initBackgrounds() {
-    /*  Set up affine background 3 on main as a 16-bit color background */
-    BG3_CR = BG_BMP16_256x256 |
-             BG_BMP_BASE(0) | // The starting place in memory
-             BG_PRIORITY(3); // A low priority
-
-    /*  Set the affine transformation matrix for the main screen background 3
-     *  to be the identity matrix.
-     */
-    BG3_XDX = 1 << 8;
-    BG3_XDY = 0;
-    BG3_YDX = 0;
-    BG3_YDY = 1 << 8;
-
-    /*  Place main screen background 3 at the origin (upper left of the screen)
-     */
-    BG3_CX = 0;
-    BG3_CY = 0;
-
-
-    /*  Set up affine background 2 on main as a 16-bit color background */
-    BG2_CR = BG_BMP16_128x128 |
-             BG_BMP_BASE(8) | // The starting place in memory
-             BG_PRIORITY(2);  // A higher priority
-
-    /*  Set the affine transformation matrix for the main screen background 3
-     *  to be the identity matrix.
-     */
-    BG2_XDX = 1 << 8;
-    BG2_XDY = 0;
-    BG2_YDX = 0;
-    BG2_YDY = 1 << 8;
-
-    /*  Place main screen background 2 an interesting place
-     */
-    BG2_CX = -(SCREEN_WIDTH / 2 - 32) << 8;
-    BG2_CY = -32 << 8;
-
-    /*  Set up affine background 3 on sub as a 16-bit color background */
-    SUB_BG3_CR = BG_BMP16_256x256 |
+    /*  Set up affine background 3 on main as a 16-bit color background. */
+    REG_BG3CNT = BG_BMP16_256x256 |
                  BG_BMP_BASE(0) | // The starting place in memory
                  BG_PRIORITY(3); // A low priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    REG_BG3PA = 1 << 8;
+    REG_BG3PB = 0;
+    REG_BG3PC = 0;
+    REG_BG3PD = 1 << 8;
+
+    /*  Place main screen background 3 at the origin (upper left of the
+     *  screen).
+     */
+    REG_BG3X = 0;
+    REG_BG3Y = 0;
+
+    /*  Set up affine background 2 on main as a 16-bit color background. */
+    REG_BG2CNT = BG_BMP16_128x128 |
+                 BG_BMP_BASE(8) | // The starting place in memory
+                 BG_PRIORITY(2);  // A higher priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    REG_BG2PA = 1 << 8;
+    REG_BG2PB = 0;
+    REG_BG2PC = 0;
+    REG_BG2PD = 1 << 8;
+
+    /*  Place main screen background 2 in an interesting place. */
+    REG_BG2X = -(SCREEN_WIDTH / 2 - 32) << 8;
+    REG_BG2Y = -32 << 8;
+
+    /*  Set up affine background 3 on the sub screen as a 16-bit color
+     *  background.
+     */
+    REG_BG3CNT_SUB = BG_BMP16_256x256 |
+                     BG_BMP_BASE(0) | // The starting place in memory
+                     BG_PRIORITY(3); // A low priority
 
     /*  Set the affine transformation matrix for the sub screen background 3
      *  to be the identity matrix.
      */
-    SUB_BG3_XDX = 1 << 8;
-    SUB_BG3_XDY = 0;
-    SUB_BG3_YDX = 0;
-    SUB_BG3_YDY = 1 << 8;
+    REG_BG3PA_SUB = 1 << 8;
+    REG_BG3PB_SUB = 0;
+    REG_BG3PC_SUB = 0;
+    REG_BG3PD_SUB = 1 << 8;
 
     /*
      *  Place main screen background 3 at the origin (upper left of the screen)
      */
-    SUB_BG3_CX = 0;
-    SUB_BG3_CY = 0;
+    REG_BG3X_SUB = 0;
+    REG_BG3Y_SUB = 0;
 }
 
 void displayStarField() {
@@ -136,16 +137,7 @@ void displaySplash() {
 
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     /*  Configure the VRAM and background control registers. */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen

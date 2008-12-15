@@ -10,8 +10,8 @@
 #include <math.h>
 #include "ship.h"
 
-int Ship::radToDeg512(float rad) {
-	return (int)(rad * (256/PI));
+int Ship::radToDeg(float rad) {
+	return (int)(rad * (DEGREES_IN_CIRCLE/(2 * PI)));
 }
 
 Ship::Ship(SpriteInfo * _spriteInfo) {
@@ -64,6 +64,6 @@ MathVector2D<float> Ship::getPosition() {
 	return position;
 }
 
-int Ship::getAngleDeg512() {
-	return radToDeg512(angle);
+int Ship::getAngleDeg() {
+	return radToDeg(angle);
 }
