@@ -13,6 +13,13 @@
         Amero</holder></copyright>
         <revhistory>
             <revision>
+                <revnumber>6.1</revnumber>
+                <date>14 Dec 2008</date>
+                <authorinitials>jna</authorinitials>
+                <revremark>This manual has been updated for use with libnds
+                1.3.1.</revremark>
+            </revision>
+            <revision>
                 <revnumber>6.0</revnumber>
                 <date>03 Jan 2008</date>
                 <authorinitials>jna</authorinitials>
@@ -750,7 +757,8 @@
                 (as opposed to who knows where). Their prices are quite often
                 the best, too. When you are ready to purchase a Slot-1 device,
                 I recommend that you visit <ulink
-                url="http://electrobee.com/"/>.
+                url="http://electrobee.com/index.php?ref=16"
+                >electrobee.com</ulink>.
             </para>
         </sect1>
         <sect1>
@@ -1120,29 +1128,19 @@
             <title>Initializing the Hardware</title>
             <para>
                 In order to get the hardware to do what we want, we have to
-                first initialize it. This means turning on the 2D core and
-                setting up a VBlank <glossterm linkend="irq_handler">IRQ
-                handler</glossterm>. This is where we first fall in love with
-                libnds. (We'll fall in love with it repeatedly over the course
-                of this manual.) libnds makes it incredibly simple to do these
-                two things. Add the following code to your new
-                <filename>main.cpp</filename> C++ code file.
+                first initialize it. This means turning on the 2D graphics core.
+                This is where we first fall in love with libnds. (We'll fall in
+                love with it repeatedly over the course of this manual.) libnds
+                makes it incredibly simple to do these two things. Add the
+                following code to your new <filename>main.cpp</filename> C++
+                code file.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 #include &lt;nds.h&gt;
 
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     return 0;
 }
@@ -1294,61 +1292,62 @@ void initVideo() {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 void initBackgrounds() {
-    /*  Set up affine background 3 on main as a 16-bit color background */
-    BG3_CR = BG_BMP16_256x256 |
-             BG_BMP_BASE(0) | // The starting place in memory
-             BG_PRIORITY(3); // A low priority
-
-    /*  Set the affine transformation matrix for the main screen background 3
-     *  to be the identity matrix.
-     */
-    BG3_XDX = 1 &lt;&lt; 8;
-    BG3_XDY = 0;
-    BG3_YDX = 0;
-    BG3_YDY = 1 &lt;&lt; 8;
-
-    /*  Place main screen background 3 at the origin (upper left of the screen)
-     */
-    BG3_CX = 0;
-    BG3_CY = 0;
-
-
-    /*  Set up affine background 2 on main as a 16-bit color background */
-    BG2_CR = BG_BMP16_128x128 |
-             BG_BMP_BASE(8) | // The starting place in memory
-             BG_PRIORITY(2);  // A higher priority
-
-    /*  Set the affine transformation matrix for the main screen background 3
-     *  to be the identity matrix.
-     */
-    BG2_XDX = 1 &lt;&lt; 8;
-    BG2_XDY = 0;
-    BG2_YDX = 0;
-    BG2_YDY = 1 &lt;&lt; 8;
-
-    /*  Place main screen background 2 an interesting place
-     */
-    BG2_CX = -(SCREEN_WIDTH / 2 - 32) &lt;&lt; 8;
-    BG2_CY = -32 &lt;&lt; 8;
-
-    /*  Set up affine background 3 on sub as a 16-bit color background */
-    SUB_BG3_CR = BG_BMP16_256x256 |
+    /*  Set up affine background 3 on main as a 16-bit color background. */
+    REG_BG3CNT = BG_BMP16_256x256 |
                  BG_BMP_BASE(0) | // The starting place in memory
                  BG_PRIORITY(3); // A low priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    REG_BG3PA = 1 &lt;&lt; 8;
+    REG_BG3PB = 0;
+    REG_BG3PC = 0;
+    REG_BG3PD = 1 &lt;&lt; 8;
+
+    /*  Place main screen background 3 at the origin (upper left of the
+     *  screen).
+     */
+    REG_BG3X = 0;
+    REG_BG3Y = 0;
+
+    /*  Set up affine background 2 on main as a 16-bit color background. */
+    REG_BG2CNT = BG_BMP16_128x128 |
+                 BG_BMP_BASE(8) | // The starting place in memory
+                 BG_PRIORITY(2);  // A higher priority
+
+    /*  Set the affine transformation matrix for the main screen background 3
+     *  to be the identity matrix.
+     */
+    REG_BG2PA = 1 &lt;&lt; 8;
+    REG_BG2PB = 0;
+    REG_BG2PC = 0;
+    REG_BG2PD = 1 &lt;&lt; 8;
+
+    /*  Place main screen background 2 in an interesting place. */
+    REG_BG2X = -(SCREEN_WIDTH / 2 - 32) &lt;&lt; 8;
+    REG_BG2Y = -32 &lt;&lt; 8;
+
+    /*  Set up affine background 3 on the sub screen as a 16-bit color
+     *  background.
+     */
+    REG_BG3CNT_SUB = BG_BMP16_256x256 |
+                     BG_BMP_BASE(0) | // The starting place in memory
+                     BG_PRIORITY(3); // A low priority
 
     /*  Set the affine transformation matrix for the sub screen background 3
      *  to be the identity matrix.
      */
-    SUB_BG3_XDX = 1 &lt;&lt; 8;
-    SUB_BG3_XDY = 0;
-    SUB_BG3_YDX = 0;
-    SUB_BG3_YDY = 1 &lt;&lt; 8;
+    REG_BG3PA_SUB = 1 &lt;&lt; 8;
+    REG_BG3PB_SUB = 0;
+    REG_BG3PC_SUB = 0;
+    REG_BG3PD_SUB = 1 &lt;&lt; 8;
 
     /*
      *  Place main screen background 3 at the origin (upper left of the screen)
      */
-    SUB_BG3_CX = 0;
-    SUB_BG3_CY = 0;
+    REG_BG3X_SUB = 0;
+    REG_BG3Y_SUB = 0;
 }
             </programlisting>
         </sect1>
@@ -1580,16 +1579,7 @@ void displaySplash() {
 
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     /*  Configure the VRAM and background control registers. */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen
@@ -1800,14 +1790,14 @@ const u16 data[] = {
                 performing a DMA operation) to ensure that DMA sees the correct
                 data. The data we want to copy might be stuck in cache still
                 and may not have made it into main memory yet. Then, we tell
-                the OAM to look into the tOAM instance we will create later for
-                information about each one of our sprites.
+                the OAM to look into the OAMTable instance we will create later
+                for information about each one of our sprites.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void updateOAM(tOAM * oam) {
+void updateOAM(OAMTable * oam) {
     DC_FlushAll();
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-                     oam-&gt;spriteBuffer,
+                     oam-&gt;oamBuffer,
                      OAM,
                      SPRITE_COUNT * sizeof(SpriteEntry));
 }
@@ -1822,16 +1812,16 @@ void updateOAM(tOAM * oam) {
                 language="C++"><function>updateOAM</function></code> function.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void initOAM(tOAM * oam) {
+void iniOAMTable(OAMTable * oam) {
     /*
      * For all 128 sprites on the DS, disable and clear any attributes they 
      * might have. This prevents any garbage from being displayed and gives 
      * us a clean slate to work with.
      */
     for (int i = 0; i &lt; SPRITE_COUNT; i++) {
-        oam-&gt;spriteBuffer[i].attribute[0] = ATTR0_DISABLED;
-        oam-&gt;spriteBuffer[i].attribute[1] = 0;
-        oam-&gt;spriteBuffer[i].attribute[2] = 0;
+        oam-&gt;oamBuffer[i].attribute[0] = ATTR0_DISABLED;
+        oam-&gt;oamBuffer[i].attribute[1] = 0;
+        oam-&gt;oamBuffer[i].attribute[2] = 0;
     }
     for (int i = 0; i &lt; MATRIX_COUNT; i++) {
         /* If you look carefully, you'll see this is that affine trasformation
@@ -1843,9 +1833,6 @@ void initOAM(tOAM * oam) {
         oam-&gt;matrixBuffer[i].vdx = 0;
         oam-&gt;matrixBuffer[i].vdy = 1 &lt;&lt; 8;
     }
-
-    /* Be sure to wait for vblank before trying to update the OAM. */
-    swiWaitForVBlank();
     updateOAM(oam);
 }
             </programlisting>
@@ -1861,12 +1848,12 @@ void initOAM(tOAM * oam) {
                 pretty as if the rotations had been done elsewhere.
             </para>
             <para>
-                The libnds's sin and cos lookup tables employ a 512 degree
+                The libnds's sin and cos lookup tables employ a 32768 degree
                 system. Humans usually use a 360 degree system or radians. The
                 angle we'll work with in this function will be one that is part
-                of the 512 degree system. You'll have to convert your radians
+                of the 32768 degree system. You'll have to convert your radians
                 or weird 360 degree value (Seriously, why 360? Silly
-                Babylonians.) to the 512 degree system before using this
+                Babylonians.) to the 32768 degree system before using this
                 function in order to see the results you are expecting.
             </para>
             <para>
@@ -1874,14 +1861,14 @@ void initOAM(tOAM * oam) {
                 playing with an affine transformation matrix. The sprite's
                 affine transformation matrix is used slightly differently from
                 the background affine transformation matrix. If you have a
-                background in linear algebra, I’d recommend reading up on this
+                background in linear algebra, I'd recommend reading up on this
                 portion of the hardware at <ulink
                 url="http://www.coranac.com/tonc/text/affine.htm"/>.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void rotateSprite(SpriteRotation * spriteRotation, u16 angle) {
-    s16 s = SIN[angle &amp; SPRITE_ANGLE_MASK] &gt;&gt; 4;
-    s16 c = COS[angle &amp; SPRITE_ANGLE_MASK] &gt;&gt; 4;
+void rotateSprite(SpriteRotation * spriteRotation, int angle) {
+    s16 s = sinLerp(angle) &gt;&gt; 4;
+    s16 c = cosLerp(angle) &gt;&gt; 4;
     
     spriteRotation-&gt;hdx = c;
     spriteRotation-&gt;hdy = s;
@@ -1917,7 +1904,7 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
          * redundant, but it is faster than a branch to just set it regardless
          * of whether or not it is already set.
          */
-        spriteEntry-&gt;isRotoscale = false; // Bit 9 off
+        spriteEntry-&gt;isRotateScale = false; // Bit 9 off
         spriteEntry-&gt;isHidden = true; // Bit 8 on
     } else {
         /* Make the sprite visible.*/
@@ -1929,13 +1916,13 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
              * not be able to properly hide and restore double bound sprites.
              * We enable bit 9 here because we want an affine sprite.
              */
-            spriteEntry-&gt;isRotoscale = true;
+            spriteEntry-&gt;isRotateScale = true;
 
             /* The double bound flag only acts as the double bound flag when
              * the sprite is an affine sprite. At all other times, it acts as
              * the sprite invisibility flag. We only enable bit 8 here if we want
              * a double bound sprite. */
-            spriteEntry-&gt;rsDouble = doubleBound;
+            spriteEntry-&gt;isSizeDouble = doubleBound;
         } else {
             /* Bit 9 (the affine flag) will already be off here, so we don't
              * need to clear it. However, bit 8 (the sprite invisibility flag)
@@ -1952,7 +1939,7 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
                 Now for some real fun. Moving sprites in hardware, and not
                 having to worry about clipping, buffers, or anything, is such a
                 wonderful feeling. To move a sprite, we simply change the
-                SpriteEntry properties posX and posY. This is a case where we
+                SpriteEntry properties x and y. This is a case where we
                 don't have to think much about the underlying arrangement of
                 this information. The libnds union SpriteEntry describes the
                 organization of data to the compiler for us and the compiler
@@ -1965,8 +1952,8 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 /* This is what we'd do if we wanted to move a sprite. */
-spriteEntry-&gt;posX = 0;
-spriteEntry-&gt;posY = 0;
+spriteEntry-&gt;x = 0;
+spriteEntry-&gt;y = 0;
             </programlisting>
         </sect1>
         <sect1>
@@ -1987,13 +1974,13 @@ spriteEntry-&gt;posY = 0;
             </para>
             <para>  
                 To set the sprite priority, we'll simply set the SpriteEntry
-                property objPriority to one of four different values, depending
+                property priority to one of four different values, depending
                 on which priority we wish to assign: OBJPRIORITY_0,
                 OBJPRIORITY_1, OBJPRIORITY_2, or OBJPRIORITY_3. The following
                 code listing shows an example of what this looks like.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-spriteEntry-&gt;objPriority = OBJPRIORITY_3;
+spriteEntry-&gt;priority = OBJPRIORITY_3;
             </programlisting>
         </sect1>
         <sect1>
@@ -2092,7 +2079,7 @@ static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
                                        * (can be set in REG_DISPCNT) */
 static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
                                      sizeof(SPRITE_GFX[0]);
-uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle-&gt;tileIdx *
+uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle-&gt;gfxIndex *
                                            OFFSET_MULTIPLIER];
             </programlisting>
             <para>
@@ -2181,7 +2168,7 @@ uint16 * tileVramAddress = &amp;SPRITE_GFX[shuttle-&gt;tileIdx *
                 the comments and the code below.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
+void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     /*  Define some sprite configuration specific constants.
      * 
      *  We will use these to compute the proper index into memory for certain
@@ -2208,7 +2195,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     static const int SHUTTLE_OAM_ID = 0;
     assert(SHUTTLE_OAM_ID &lt; SPRITE_COUNT);
     SpriteInfo * shuttleInfo = &amp;spriteInfo[SHUTTLE_OAM_ID];
-    SpriteEntry * shuttle = &amp;oam-&gt;spriteBuffer[SHUTTLE_OAM_ID];
+    SpriteEntry * shuttle = &amp;oam-&gt;oamBuffer[SHUTTLE_OAM_ID];
 
     /* Initialize shuttleInfo */
     shuttleInfo-&gt;oamId = SHUTTLE_OAM_ID;
@@ -2221,17 +2208,17 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  Configure attribute 0. 
      *
      *  OBJCOLOR_16 will make a 16-color sprite. We specify that we want an
-     *  affine sprite (via isRotoscale) here because we would like to rotate
+     *  affine sprite (via isRotateScale) here because we would like to rotate
      *  the ship.
      */
-    shuttle-&gt;posY = SCREEN_HEIGHT / 2 - shuttleInfo-&gt;height;
-    shuttle-&gt;isRotoscale = true;
+    shuttle-&gt;y = SCREEN_HEIGHT / 2 - shuttleInfo-&gt;height;
+    shuttle-&gt;isRotateScale = true;
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
      * assert can be helpful. */
-    assert(!shuttle-&gt;isRotoscale || (shuttleInfo-&gt;oamId &lt; MATRIX_COUNT));
-    shuttle-&gt;rsDouble = false;
+    assert(!shuttle-&gt;isRotateScale || (shuttleInfo-&gt;oamId &lt; MATRIX_COUNT));
+    shuttle-&gt;isSizeDouble = false;
     shuttle-&gt;objMode = OBJMODE_NORMAL;
     shuttle-&gt;isMosaic = false;
     shuttle-&gt;colMode = OBJCOLOR_16;
@@ -2240,13 +2227,13 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     /*
      *  Configure attribute 1.
      *
-     *  rsMatrixId refers to the loation of affine transformation matrix. We
+     *  rotationIndex refers to the loation of affine transformation matrix. We
      *  set it to a location computed with a macro. OBJSIZE_64, in our case
      *  since we are making a square sprite, creates a 64x64 sprite.
      */
-    shuttle-&gt;posX = SCREEN_WIDTH / 2 - shuttleInfo-&gt;width * 2 +
+    shuttle-&gt;x = SCREEN_WIDTH / 2 - shuttleInfo-&gt;width * 2 +
                     shuttleInfo-&gt;width / 2;
-    shuttle-&gt;rsMatrixIdx = shuttleInfo-&gt;oamId;
+    shuttle-&gt;rotationIndexx = shuttleInfo-&gt;oamId;
     shuttle-&gt;objSize = OBJSIZE_64;
 
     /* 
@@ -2256,10 +2243,10 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  be placed onto, which palette the sprite should use, and whether or not
      *  to show the sprite.
      */
-    shuttle-&gt;tileIdx = nextAvailableTileIdx;
+    shuttle-&gt;gfxIndex = nextAvailableTileIdx;
     nextAvailableTileIdx += orangeShuttleTilesLen / BYTES_PER_16_COLOR_TILE;
-    shuttle-&gt;objPriority = OBJPRIORITY_0;
-    shuttle-&gt;objPal = shuttleInfo-&gt;oamId;
+    shuttle-&gt;priority = OBJPRIORITY_0;
+    shuttle-&gt;palette = shuttleInfo-&gt;oamId;
 
     /* Rotate the sprite */
     rotateSprite(&amp;oam-&gt;matrixBuffer[shuttleInfo-&gt;oamId],
@@ -2271,7 +2258,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     static const int MOON_OAM_ID = 1;
     assert(MOON_OAM_ID &lt; SPRITE_COUNT);
     SpriteInfo * moonInfo = &amp;spriteInfo[MOON_OAM_ID];
-    SpriteEntry * moon = &amp;oam-&gt;spriteBuffer[MOON_OAM_ID];
+    SpriteEntry * moon = &amp;oam-&gt;oamBuffer[MOON_OAM_ID];
 
     /* Initialize moonInfo */
     moonInfo-&gt;oamId = MOON_OAM_ID;
@@ -2286,13 +2273,13 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  OBJCOLOR_16 will make a 16-color sprite. We won't specify that we want
      *  an affine sprite here because we don't want one this time.
      */
-    moon-&gt;posY = SCREEN_WIDTH / 2 + moonInfo-&gt;height / 2;
-    moon-&gt;isRotoscale = false;
+    moon-&gt;y = SCREEN_WIDTH / 2 + moonInfo-&gt;height / 2;
+    moon-&gt;isRotateScale = false;
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
      * assert can be helpful. */
-    assert(!moon-&gt;isRotoscale || (moonInfo-&gt;oamId &lt; MATRIX_COUNT));
+    assert(!moon-&gt;isRotateScale || (moonInfo-&gt;oamId &lt; MATRIX_COUNT));
     moon-&gt;isHidden = false;
     moon-&gt;objMode = OBJMODE_NORMAL;
     moon-&gt;isMosaic = false;
@@ -2304,10 +2291,10 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *
      * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
      * square sprite. Since we are using a non-affine sprite, attribute 1
-     * doesn't have an rsMatrixIdx anymore. Instead, it has the ability to flip
-     * the sprite vertically or horizontally.
+     * doesn't have an rotationIndexx anymore. Instead, it has the ability to
+     * flip the sprite vertically or horizontally.
      */
-    moon-&gt;posX = SCREEN_WIDTH / 2 + moonInfo-&gt;width + moonInfo-&gt;width / 2;
+    moon-&gt;x = SCREEN_WIDTH / 2 + moonInfo-&gt;width + moonInfo-&gt;width / 2;
     moon-&gt;hFlip = false;
     moon-&gt;vFlip = false;
     moon-&gt;objSize = OBJSIZE_32;
@@ -2319,10 +2306,10 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
      *  be placed onto, which palette the sprite should use, and whether or not
      *  to show the sprite.
      */
-    moon-&gt;tileIdx = nextAvailableTileIdx;
+    moon-&gt;gfxIndex = nextAvailableTileIdx;
     nextAvailableTileIdx += moonTilesLen / BYTES_PER_16_COLOR_TILE;
-    moon-&gt;objPriority = OBJPRIORITY_2;
-    moon-&gt;objPal = moonInfo-&gt;oamId;
+    moon-&gt;priority = OBJPRIORITY_2;
+    moon-&gt;palette = moonInfo-&gt;oamId;
 
     /*************************************************************************/
 
@@ -2340,11 +2327,11 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
     /* Copy the sprite graphics to sprite graphics memory */
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      orangeShuttleTiles,
-                     &amp;SPRITE_GFX[shuttle-&gt;tileIdx * OFFSET_MULTIPLIER],
+                     &amp;SPRITE_GFX[shuttle-&gt;gfxIndex * OFFSET_MULTIPLIER],
                      orangeShuttleTilesLen);
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
                      moonTiles,
-                     &amp;SPRITE_GFX[moon-&gt;tileIdx * OFFSET_MULTIPLIER],
+                     &amp;SPRITE_GFX[moon-&gt;gfxIndex * OFFSET_MULTIPLIER],
                      moonTilesLen);
 }
             </programlisting>
@@ -2393,16 +2380,7 @@ void initSprites(tOAM * oam, SpriteInfo *spriteInfo) {
             <programlisting linenumbering="unnumbered" language="C++">
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     /*
      *  Configure the VRAM and background control registers.
@@ -2416,8 +2394,8 @@ int main() {
 
     /* Set up a few sprites. */
     SpriteInfo spriteInfo[SPRITE_COUNT];
-    tOAM *oam = new tOAM();
-    initOAM(oam);
+    OAMTable *oam = new OAMTable();
+    iniOAMTable(oam);
     initSprites(oam, spriteInfo);
 
     /* Display the backgrounds. */
@@ -2692,39 +2670,42 @@ MathVector2D&lt;float&gt; Ship::getPosition() {
             <title>Getting the Ship's Angle</title>
             <para>
                 This one is a bit more tricky and involved. I suppose I should
-                start by explaining that a Nintendo DS circle has 512 degrees.
-                It doesn’t actually have 512 degrees, nor does a Nintendo DS
-                even know what a circle is, but it is easy to understand the
-                hardware a bit better when we think of it this way. I will say,
-                however, that the reason for the 512 degrees is due to libnds’s
-                built-in look up tables for the sin and cos functions. Having
-                only 360 entries in your lookup table would be a waste of space
-                when it takes just as many bits to index into a 360 entry table
-                as it does a 512 entry one. More entries allow finer accuracy.
-                In order for the Nintendo DS to know how to rotate our sprites,
-                we have to convert the internally stored radian angle value to
-                a 512 degree system. This is an easy conversion.
+                start by explaining that a Nintendo DS circle has 32768
+                degrees. It doesn't actually have 32768 degrees, nor does a
+                Nintendo DS even know what a circle is, but it is easy to
+                understand the hardware a bit better when we think of it this
+                way. I will say, however, that the reason for the 32768 degrees
+                is due to libnds's built-in look up tables for the sin and cos
+                functions. Having only 360 entries in your lookup table would
+                be a waste of space when it takes just as many bits to index
+                into a 360 entry table as it does a 512 entry one. libnds gives
+                us more accuracy by presenting a 32768 entry one. More
+                entries allow finer accuracy. In order for the Nintendo DS to
+                know how to rotate our sprites, we have to convert the
+                internally stored radian angle value to a value within the
+                32768 degree system. This is an easy conversion.
             </para>
             <para>
-                The first step is to convert to a 360 degree system, as you must
-                have learned in junior high school. This is done by multiplying
-                the radian value by 180/π. The 180 part is half the number of
-                degrees in a circle. So, in a 512 degree system we can convert
-                by multiplying the radian value by 256/π. Lastly, just return
-                that value as an integer. (The hardware does not have any
-                floating point, so when rotating our sprites, we use a fixed
-                point value disguised as an ordinary integer.)
+                The first step is to convert to a 360 degree system, as you
+                must have learned in junior high school. This is done by
+                multiplying the radian value by 180/PI. The 180 part is half
+                the number of degrees in a circle. So, in a 32768 degree system
+                we can convert by multiplying the radian value by
+                DEGREES_IN_A_CIRCLE/(2 * PI). Lastly, just return that value as
+                an integer. (The hardware does not have any floating point, so
+                when rotating our sprites, we use a fixed point value disguised
+                as an ordinary integer.)
             </para>
             <para>
                 Then, we make a function to return a converted angle value, for
                 whenever we need it.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-int Ship::radToDeg512(float rad) {
-      return (int)(rad * (256/PI));
+int Ship::radToDeg(float rad) {
+      return (int)(rad * (DEGREES_IN_A_CIRCLE/(2 * PI)));
 }
-int Ship::getAngleDeg512() {
-      return radToDeg512(angle);
+int Ship::getAngleDeg() {
+      return radToDeg(angle);
 }
             </programlisting>
         </sect1>
@@ -2744,16 +2725,7 @@ int Ship::getAngleDeg512() {
         <programlisting linenumbering="unnumbered" language="C++">
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     /*
      *  Configure the VRAM and background control registers.
@@ -2767,8 +2739,8 @@ int main() {
 
     /* Set up a few sprites. */
     SpriteInfo spriteInfo[SPRITE_COUNT];
-    tOAM *oam = new tOAM();
-    initOAM(oam);
+    OAMTable *oam = new OAMTable();
+    iniOAMTable(oam);
     initSprites(oam, spriteInfo);
 
     /* Display the backgrounds. */
@@ -2776,8 +2748,9 @@ int main() {
     displayPlanet();
     displaySplash();
 
+    /* Make the ship object */
     static const int SHUTTLE_OAM_ID = 0;
-    SpriteEntry * shipEntry = &amp;oam-&gt;spriteBuffer[SHUTTLE_OAM_ID];
+    SpriteEntry * shipEntry = &amp;oam-&gt;oamBuffer[SHUTTLE_OAM_ID];
     SpriteRotation * shipRotation = &amp;oam-&gt;matrixBuffer[SHUTTLE_OAM_ID];
     Ship * ship = new Ship(&amp;spriteInfo[SHUTTLE_OAM_ID]);
 
@@ -2843,9 +2816,9 @@ int main() {
 
         /* Update sprite attributes. */
         MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
-        shipEntry-&gt;posX = (int)position.x;
-        shipEntry-&gt;posY = (int)position.y;
-        rotateSprite(shipRotation, ship-&gt;getAngleDeg512());
+        shipEntry-&gt;x = (int)position.x;
+        shipEntry-&gt;y = (int)position.y;
+        rotateSprite(shipRotation, ship-&gt;getAngleDeg());
 
         /*
          *  Update the OAM.
@@ -3022,13 +2995,14 @@ int main() {
                 awesome. The libnds API for using it is cake easy too. We'll be
                 ready for Utada Hikaru in no time. Whenever you want to read the
                 current touch location, simply call the function <code
-                language="C++"><function>touchReadXY</function></code>. This
-                function returns a struct that contains the x and y coordinate
-                of the touch. You access it like so.
+                language="C++"><function>touchRead</function></code>. This
+                function assigns values to a struct that contains the x and y
+                coordinate of the touch. You use it like so.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 /* To read from the touch screen, we can do this stuff. */
-touchPosition touch = touchReadXY();
+touchPosition touch;
+touchRead(&amp;touch);
 touch-&gt;px; // This contains the x pixel location.
 touch-&gt;py; // This contains the y pixel location.
             </programlisting>
@@ -3061,7 +3035,7 @@ void updateInput(touchPosition * touch) {
     scanKeys();
 
     // Update the touch screen values.
-    *touch = touchReadXY();
+    *touch = touchRead();
 }
             </programlisting>
         </sect1>
@@ -3182,16 +3156,7 @@ void handleInput(Ship * ship, MathVector2D&lt;int&gt; * moonPos,
             <programlisting linenumbering="unnumbered" language="C++">
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     /*
      *  Configure the VRAM and background control registers.
@@ -3205,8 +3170,8 @@ int main() {
 
     /* Set up a few sprites. */
     SpriteInfo spriteInfo[SPRITE_COUNT];
-    tOAM *oam = new tOAM();
-    initOAM(oam);
+    OAMTable *oam = new OAMTable();
+    iniOAMTable(oam);
     initSprites(oam, spriteInfo);
 
     /* Display the backgrounds. */
@@ -3221,17 +3186,17 @@ int main() {
 
     /* Make the ship object */
     static const int SHUTTLE_AFFINE_ID = 0;
-    SpriteEntry * shipEntry = &amp;oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteEntry * shipEntry = &amp;oam-&gt;oamBuffer[SHUTTLE_AFFINE_ID];
     SpriteRotation * shipRotation = &amp;oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
     Ship * ship = new Ship(&amp;spriteInfo[SHUTTLE_AFFINE_ID]);
 
     /* Make the moon */
     static const int MOON_AFFINE_ID = 1;
-    SpriteEntry * moonEntry = &amp;oam-&gt;spriteBuffer[MOON_AFFINE_ID];
+    SpriteEntry * moonEntry = &amp;oam-&gt;oamBuffer[MOON_AFFINE_ID];
     SpriteInfo * moonInfo = &amp;spriteInfo[MOON_AFFINE_ID];
     MathVector2D&lt;int&gt; * moonPos = new MathVector2D&lt;int&gt;();
-    moonPos-&gt;x = moonEntry-&gt;posX;
-    moonPos-&gt;y = moonEntry-&gt;posY;
+    moonPos-&gt;x = moonEntry-&gt;x;
+    moonPos-&gt;y = moonEntry-&gt;y;
 
     for (;;) {
         /* Update the game state. */
@@ -3241,12 +3206,12 @@ int main() {
 
         /* Update ship sprite attributes. */
         MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
-        shipEntry-&gt;posX = (int)position.x;
-        shipEntry-&gt;posY = (int)position.y;
-        rotateSprite(shipRotation, ship-&gt;getAngleDeg512());
+        shipEntry-&gt;x = (int)position.x;
+        shipEntry-&gt;y = (int)position.y;
+        rotateSprite(shipRotation, ship-&gt;getAngleDeg());
         /* Update moon sprite attributes. */
-        moonEntry-&gt;posX = (int)moonPos-&gt;x;
-        moonEntry-&gt;posY = (int)moonPos-&gt;y;
+        moonEntry-&gt;x = (int)moonPos-&gt;x;
+        moonEntry-&gt;y = (int)moonPos-&gt;y;
 
         /*
          *  Update the OAM.
@@ -3316,14 +3281,15 @@ int main() {
                 clashing, car engines, and so forth.
             </para>
             <para>
-                Many games don’t need music. For instance, a game with the
-                programmer’s or game designer’s favorite song may annoy many
-                players who have different tastes of music. Instead, give the
+                Many games don't need music. For instance, a game with the
+                programmer's or game designer's favorite song may annoy many
+                players who have different tastes in music. Instead, give the
                 player the option to listen to their own music, on their own
-                audio equipment. Not to mention, music is costly in data size.
+                audio equipment. Not to mention, music can be costly in data
+                size.
             </para>
             <para>
-                Sound eﬀects on the other hand, are quite useful. A word of
+                Sound effects on the other hand, are quite useful. A word of
                 warning, however, a game with bad sounds (scratchy, annoying,
                 too repetitive, etc.) is worse than a silent game. Take care
                 when engineering sounds for your game.
@@ -3333,7 +3299,7 @@ int main() {
             <title>The Hardware</title>
             <para>
                 The Nintendo DS has amazing sound hardware. We will only be
-                able to scratch the surface of it, and even still, we won’t
+                able to scratch the surface of it, and even still, we won't
                 leave any scratch marks. The Nintendo DS has 16 channels to
                 play sounds, numbered 0 through 15. Channels 8-15 are special
                 channels. All channels can play ADPCM or PCM sounds, while 8-13
@@ -3345,77 +3311,53 @@ int main() {
         <sect1>
             <title>Making the Sounds</title>
             <para>
-                To play our sounds, we need to convert them into a PCM format
-                that the DS will understand. The format we will use is 8-bit
-                signed 22050Hz raw audio. You can experiment with other
-                combinations if you'd like, but in the interest of keeping this
-                manual simple we'll just be using the aforementioned format.
+                To play our sounds, we will use the unbelievebly impressive
+                homebrew audtio library, maxmod. maxmod is distributed with
+                libnds, so you should already have it installed. maxmod can
+                play music as well as sound effects, in such formats as mod,
+                it, s3m, xm, and wav, but we'll just be using it as a wav
+                player to play our sound effects. For more information and
+                deeper coverage of the library, visit <ulink
+                url="http://maxmod.org/"/>.
             </para>
-            <para>
-                There are a myriad of programs our there to do sound conversion
-                for us, but I will present the most universal method of sound
-                conversion: the open source program SoX. SoX stands for Sound
-                eXchange. It is available for Linux, Macintosh OS X, and
-                Windows. I have included pre-compiled versions for Mac OS X
-                PPC, Mac OS X x86, and Windows. For Linux, just compile the
-                included SoX source.
-            </para>
-            <para>
-                To use SoX, simple convert your file as shown below. You can
-                practice with my included audio file “thrust.aif ”. The relevant
-                command line options work as follows: -b 8-bit, -s signed, -r
-                22050 22050Hz sample rate. SoX knows to turn your sound into a
-                .raw by reading the file extension on the output ﬁlename. Keep
-                in mind since raw sounds have no headers, to somehow label them
-                with their formatting information. I use the ﬁlename to do
-                this, as you can see.
-            </para>
-            <screen>
-                <prompt>patater@patater.com:~$</prompt><command>sox
-                sounds/thrust.aif -bsr 22050
-                data/thrust_1_22050_8_s.raw</command>
-            </screen>
         </sect1>
         <sect1>
             <title>Using the Sounds</title>
             <para>
-                The makefile I've included with my manual has a custom bin2o
-                rule for creating .o files from .raw files. There is really
-                nothing special about it. It does the same thing that the .bin
-                bin2o rule does. The libnds default makefiles require you to
-                explicitly specify the file types you want to be processed.
-            </para>
-            <para>
-                After the makefile processes the raw sound file, the header for
-                it will look like so
-                <filename>thrust_1_22050_8_s_raw.h</filename> and will be
-                located in the build directory.
+                The makefile I've included with my manual has a custom rule for
+                creating a <filename>soundbank.bin</filename> file from all
+                audio files in the <filename>audio</filename> project folder.
+                The rule runs mmutil to create the
+                <filename>soundbank.bin</filename> and
+                <filename>soundbank.h</filename> files. The bin2o rule turns
+                the .bin file into something safe to link into your nds file
+                and creates the <filename>soundbank_bin.h</filename> file. All
+                of these header files will be located in the
+                <filename>build</filename> folder after a build, if you wish to
+                review their contents.
             </para>
         </sect1>
         <sect1>
             <title>Getting Down with the Code</title>
             <para>
-                Now it's ﬁnally time for some code. Libnds simpliﬁes sound
-                playing quite a bit. It provides a struct called
-                "TransferSoundData" that we can use to encapsulate our sound.
-                In a way, it acts as a header to let the DS know how to handle
-                it. libnds will handle the transfer of the sound to the ARM7
-                (the only processor that can control the sound hardware),
-                although it is a bit inefficient, frumpy (and yes, for those of
-                you who don’t know, libnds is a girl), and limited. It will
-                serve our purposes for now, as a springboard into more advanced
-                forms of sound. Enough with the chatter, here's some code for
-                our <filename>main.cpp</filename>.
+                Now it's finally time for some code. maxmod simplifies sound
+                playing quite a bit. All we need to do is initialize the
+                library, let it know where our soundbank is, load the sound
+                from our soundbank, and call a function to play the sound. It
+                will serve our purposes for now, as a springboard into more
+                advanced forms of sound. Enough with the chatter, here's some
+                code for our <filename>main.cpp</filename>.
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
-void handleInput(Ship * ship, MathVector2D&lt;int&gt; * moonPos,
-                 SpriteInfo * moonInfo, TransferSoundData * soundData,
+void handleInput(Ship * ship,
+                 MathVector2D&lt;int&gt; * moonPos,
+                 SpriteInfo * moonInfo,
                  touchPosition * touch) {
 
     /* Handle up and down parts of D-Pad. */
     if (keysDown() &amp; KEY_UP) {
         // Play our sound only when the button is initially pressed
-        playSound(soundData);
+        mmEffect(SFX_THRUST);
     }
     if (keysHeld() &amp; KEY_UP) {
         //accelerate ship
@@ -3468,16 +3410,7 @@ void handleInput(Ship * ship, MathVector2D&lt;int&gt; * moonPos,
 
 int main() {
     /*  Turn on the 2D graphics core. */
-    powerON(POWER_ALL_2D);
-
-    /*
-     *  Set up interrupts.
-     *
-     *  We don't really get into what these do exactly at this point in the
-     *  manual, but we still need to do them for now.
-     */
-    irqInit();
-    irqEnable(IRQ_VBLANK);
+    powerOn(POWER_ALL_2D);
 
     /*
      *  Configure the VRAM and background control registers.
@@ -3489,10 +3422,13 @@ int main() {
     initVideo();
     initBackgrounds();
 
+    /* Initialize maxmod using the memory based soundbank set up. */
+    mmInitDefaultMem((mm_addr)soundbank_bin);
+
     /* Set up a few sprites. */
     SpriteInfo spriteInfo[SPRITE_COUNT];
-    tOAM *oam = new tOAM();
-    initOAM(oam);
+    OAMTable *oam = new OAMTable();
+    iniOAMTable(oam);
     initSprites(oam, spriteInfo);
 
     /* Display the backgrounds. */
@@ -3507,41 +3443,35 @@ int main() {
 
     /* Make the ship object */
     static const int SHUTTLE_AFFINE_ID = 0;
-    SpriteEntry * shipEntry = &amp;oam-&gt;spriteBuffer[SHUTTLE_AFFINE_ID];
+    SpriteEntry * shipEntry = &amp;oam-&gt;oamBuffer[SHUTTLE_AFFINE_ID];
     SpriteRotation * shipRotation = &amp;oam-&gt;matrixBuffer[SHUTTLE_AFFINE_ID];
     Ship * ship = new Ship(&amp;spriteInfo[SHUTTLE_AFFINE_ID]);
 
     /* Make the moon */
     static const int MOON_AFFINE_ID = 1;
-    SpriteEntry * moonEntry = &amp;oam-&gt;spriteBuffer[MOON_AFFINE_ID];
+    SpriteEntry * moonEntry = &amp;oam-&gt;oamBuffer[MOON_AFFINE_ID];
     SpriteInfo * moonInfo = &amp;spriteInfo[MOON_AFFINE_ID];
     MathVector2D&lt;int&gt; * moonPos = new MathVector2D&lt;int&gt;();
-    moonPos-&gt;x = moonEntry-&gt;posX;
-    moonPos-&gt;y = moonEntry-&gt;posY;
+    moonPos-&gt;x = moonEntry-&gt;x;
+    moonPos-&gt;y = moonEntry-&gt;y;
 
     /*  Set up sound data.*/
-    TransferSoundData * thrust_sound = new TransferSoundData();
-    thrust_sound-&gt;data = thrust_1_22050_8_s_raw;
-    thrust_sound-&gt;len = thrust_1_22050_8_s_raw_size;
-    thrust_sound-&gt;rate = 22050; //22050Hz Sample Rate
-    thrust_sound-&gt;vol = 127; //Volume can be from 0 to 127
-    thrust_sound-&gt;pan = 64; //Sound comes equally from both speakers (0-127, left to right)
-    thrust_sound-&gt;format = 1; //1 - 8bit, 0 - 16bit
+	mmLoadEffect(SFX_THRUST);
 
     for (;;) {
         /* Update the game state. */
         updateInput(&amp;touch);
-        handleInput(ship, moonPos, moonInfo, thrust_sound, &amp;touch);
+        handleInput(ship, moonPos, moonInfo,&amp;touch);
         ship-&gt;moveShip();
 
         /* Update ship sprite attributes. */
         MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
-        shipEntry-&gt;posX = (int)position.x;
-        shipEntry-&gt;posY = (int)position.y;
-        rotateSprite(shipRotation, ship-&gt;getAngleDeg512());
+        shipEntry-&gt;x = (int)position.x;
+        shipEntry-&gt;y = (int)position.y;
+        rotateSprite(shipRotation, ship-&gt;getAngleDeg());
         /* Update moon sprite attributes. */
-        moonEntry-&gt;posX = (int)moonPos-&gt;x;
-        moonEntry-&gt;posY = (int)moonPos-&gt;y;
+        moonEntry-&gt;x = (int)moonPos-&gt;x;
+        moonEntry-&gt;y = (int)moonPos-&gt;y;
 
         /*
          *  Update the OAM.
@@ -3557,52 +3487,24 @@ int main() {
 }
             </programlisting>
             <para>
-                In summary, we simply set up our sound in the
-                <code language="C++"><function>main</function></code> function,
-                modified the <code
+                In summary, we simply set up our sound in the <code
+                language="C++"><function>main</function></code> function, and
+                had the <code
                 language="C++"><function>handleInput</function></code> function
-                to accept a sound pointer, and had the <code
-                language="C++"><function>handleInput</function></code> function
-                play our sound whenever the up key is held.
+                play our sound whenever the up key is initially pressed.
             </para>
         </sect1>
         <sect1>
-            <title>Wait, What's Going on Here?</title>
+            <title>The all powerful maxmod</title>
             <para>
-                Now, for an explanation of what libnds is doing behind the
-                scenes. A pointer to your sound data in shared memory (iwram)
-                is given to the arm7 from the arm9 via the IPC. If the pointer
-                is null, then no sound will be played. If the pointer is not
-                null, the arm7 ﬁnds an open sound channel. If any channels are
-                open, it reads the header information from your
-                TransferSoundData struct and then calls an internal function,
-                startSound, which plays the sound for us.
-            </para>
-            <para>
-                The startSound function is not very ﬂexible (nor is the
-                TransferSoundData struct). The sound can only be 8-bit or
-                16-bit. We have no way of signaling the arm7 that we want the
-                sound to loop, unfortunately. We also have no way of telling
-                the sound to stop playing (which is extremely unfortunate). If
-                we wanted these very useful capabilities, we’d have to create a
-                nice inter-processor communication system.
-            </para>
-        </sect1>
-        <sect1>
-            <title>The Need for Inter-processor Communication</title>
-            <para>
-                The need for a standard inter-processor communication system is
-                real. Dekutree has written the presumably first one for the
-                Nintendo DS. Chris Double used Dekutree's interprocessor
-                communication model in his tutorials. Tobias Weyand, the
-                creator of NitroTracker and the DS Sampling Keyboard, also used
-                Dekutree's interprocessor communication model. Many programmers
-                prefer to use the FIFO (a special queue for inter-processor
-                communication built into the Nintendo DS hardware). I will
-                address both of these methods and present a nice abstraction
-                that will allow the programmer to choose either method
-                (according to their needs and opinions) in a later edition of
-                this manual.
+                We are barely touching what maxmod can do in this case study.
+                maxmod can stop sounds after they've started playing, loop
+                sounds, play music, and more without breaking a sweat (because
+                the Nintendo DS doesn't have sweat glands anyway). I highly
+                recommend you read about it on <ulink
+                url="http://maxmod.org/">its homepage</ulink>, or at least run
+                the maxmod demo (featured on said homepage) on a real Nintendo
+                DS. You won't be disappointed.
             </para>
         </sect1>
         <sect1>
@@ -3612,6 +3514,7 @@ int main() {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 #include &lt;nds.h&gt;
+#include &lt;maxmod9.h&lt;
 #include &lt;assert.h&gt;
 #include "sprites.h"
 #include "ship.h"
@@ -3624,14 +3527,16 @@ int main() {
 #include "orangeShuttle.h"
 #include "moon.h"
 /* Sounds */
-#include "thrust_1_22050_8_s_raw.h"
+#include "soundbank.h"
+#include "soundbank_bin.h"
             </programlisting>
             <para>
-                This is the ﬁnal iteration of the Orange Spaceship demo that we
-                will cover in this edition of the manual. Compile it and enjoy
-                the fruits of your labors. Mmm, tasty. You should hear a nice
-                sound when you press the thrust button. The game output should
-                now look like the screen shots in <xref linkend="chapter_9_screen_shot"/>.
+                This is the final iteration of the Orange Spaceship demo that
+                we will cover in this edition of the manual. Compile it and
+                enjoy the fruits of your labors. Mmm, tasty. You should hear a
+                nice sound when you press the thrust button. The game output
+                should now look like the screen shots in <xref
+                linkend="chapter_9_screen_shot"/>.
             </para>
             <figure id="chapter_9_screen_shot">
                 <title>Flying around in the Orange Shuttle, with sound!</title>
@@ -3781,11 +3686,11 @@ int main() {
     <section>
         <title>About the Author</title>
         <para>
-            Jaeden Amero is currently an electrical engineering student at
-            Brigham Young University in Provo, Utah, USA. He looks forward to
-            graduating before August 2008. He enjoys programming the Nintendo
-            DS and Game Boy Advance, FPGA coding, unicycling, and playing the
-            accordion in his free time.
+            Jaeden Amero is currently a multi-platform driver developer at
+            National Instruments in Austin, Texas, USA. He graduated in
+            December 2008 from Brigham Young University. He enjoys programming
+            the Nintendo DS and Game Boy Advance, FPGA coding, unicycling, and
+            playing the accordion in his free time.
         </para>
     </section>
 </book>

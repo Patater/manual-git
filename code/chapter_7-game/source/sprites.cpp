@@ -13,6 +13,8 @@
 #include <nds/arm9/trig_lut.h>
 #include "sprites.h"
 
+static const int SPRITE_DMA_CHANNEL = 3;
+
 void updateOAM(OAMTable * oam) {
     DC_FlushAll();
     dmaCopyHalfWords(SPRITE_DMA_CHANNEL,

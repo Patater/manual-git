@@ -166,7 +166,8 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
-     * assert can be helpful. */
+     * assert can be helpful.
+     */
     assert(!shuttle->isRotateScale || (shuttleInfo->oamId < MATRIX_COUNT));
     shuttle->isSizeDouble = false;
     shuttle->blendMode = OBJMODE_NORMAL;
@@ -177,7 +178,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     /*
      *  Configure attribute 1.
      *
-     *  rsMatrixId refers to the loation of affine transformation matrix. We
+     *  rotationIndex refers to the loation of affine transformation matrix. We
      *  set it to a location computed with a macro. OBJSIZE_64, in our case
      *  since we are making a square sprite, creates a 64x64 sprite.
      */
@@ -241,8 +242,8 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
      *
      * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
      * square sprite. Since we are using a non-affine sprite, attribute 1
-     * doesn't have an rotationIndex anymore. Instead, it has the ability to flip
-     * the sprite vertically or horizontally.
+     * doesn't have an rotationIndex anymore. Instead, it has the ability to
+     * flip the sprite vertically or horizontally.
      */
     moon->x = SCREEN_WIDTH / 2 + moonInfo->width + moonInfo->width / 2;
     moon->hFlip = false;
