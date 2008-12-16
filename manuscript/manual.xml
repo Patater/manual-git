@@ -3514,7 +3514,7 @@ int main() {
             </para>
             <programlisting linenumbering="unnumbered" language="C++">
 #include &lt;nds.h&gt;
-#include &lt;maxmod9.h&lt;
+#include &lt;maxmod9.h&gt;
 #include &lt;assert.h&gt;
 #include "sprites.h"
 #include "ship.h"
