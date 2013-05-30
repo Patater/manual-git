@@ -1,0 +1,8 @@
+* Remove dependence on svn in Makefiles and shell scripts
+* Add an infinite loop in main to prevent falling off into reset
+* Update names of SpriteEntry fields
+* Update touchRead in the manuscript
+* Automatically generate code from a single source, so the manuscript and each
+  code folder won't ever get out of date. Each code snippet should get
+  automatically placed into the correct locations according to templates. There
+  should only be one definitive source for each code snippet.
