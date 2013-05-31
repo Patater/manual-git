@@ -1,5 +1,4 @@
 * Remove dependence on svn in Makefiles and shell scripts
-* Add an infinite loop in main to prevent falling off into reset
 * Update names of SpriteEntry fields
 * Update touchRead in the manuscript
 * Automatically generate code from a single source, so the manuscript and each
