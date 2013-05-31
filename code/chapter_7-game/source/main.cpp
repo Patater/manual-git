@@ -1,6 +1,6 @@
 /*
  *  main.cpp
- *  
+ *
  *  Created by Jaeden Amero on 11/12/07.
  *  Copyright 2007. All rights reserved.
  *
@@ -25,7 +25,7 @@ static const int DMA_CHANNEL = 3;
 void initVideo() {
     /*
      *  Map VRAM to display a background on the main and sub screens.
-     * 
+     *
      *  The vramSetMainBanks function takes four arguments, one for each of the
      *  major VRAM banks. We can use it as shorthand for assigning values to
      *  each of the VRAM bank's control registers.
@@ -104,8 +104,8 @@ void initBackgrounds() {
                      BG_BMP_BASE(0) | // The starting place in memory
                      BG_PRIORITY(3); // A low priority
 
-    /*  Set the affine transformation matrix for the sub screen background 3
-     *  to be the identity matrix.
+    /*  Set the affine transformation matrix for the sub screen background 3 to
+     *  be the identity matrix.
      */
     REG_BG3PA_SUB = 1 << 8;
     REG_BG3PB_SUB = 0;
@@ -121,7 +121,7 @@ void initBackgrounds() {
 
 void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     /*  Define some sprite configuration specific constants.
-     * 
+     *
      *  We will use these to compute the proper index into memory for certain
      *  tiles or palettes.
      *
@@ -139,7 +139,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
                                          sizeof(SPRITE_GFX[0]);
 
-    /* Keep track of the available tiles */
+    /* Keep track of the available tiles. */
     int nextAvailableTileIdx = 0;
 
     /* Create the ship sprite. */
@@ -156,7 +156,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     shuttleInfo->entry = shuttle;
 
     /*
-     *  Configure attribute 0. 
+     *  Configure attribute 0.
      *
      *  OBJCOLOR_16 will make a 16-color sprite. We specify that we want an
      *  affine sprite (via isRotateScale) here because we would like to rotate
@@ -167,7 +167,8 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     /* This assert is a check to see a matrix is available to store the affine
      * transformation matrix for this sprite. Of course, you don't have to have
      * the matrix id match the affine id, but if you do make them match, this
-     * assert can be helpful. */
+     * assert can be helpful.
+     */
     assert(!shuttle->isRotateScale || (shuttleInfo->oamId < MATRIX_COUNT));
     shuttle->isSizeDouble = false;
     shuttle->blendMode = OBJMODE_NORMAL;
@@ -178,7 +179,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     /*
      *  Configure attribute 1.
      *
-     *  rsMatrixId refers to the loation of affine transformation matrix. We
+     *  rotationIndex refers to the loation of affine transformation matrix. We
      *  set it to a location computed with a macro. OBJSIZE_64, in our case
      *  since we are making a square sprite, creates a 64x64 sprite.
      */
@@ -187,9 +188,9 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     shuttle->rotationIndex = shuttleInfo->oamId;
     shuttle->size = OBJSIZE_64;
 
-    /* 
+    /*
      *  Configure attribute 2.
-     * 
+     *
      *  Configure which tiles the sprite will use, which priority layer it will
      *  be placed onto, which palette the sprite should use, and whether or not
      *  to show the sprite.
@@ -238,21 +239,21 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     moon->shape = OBJSHAPE_SQUARE;
 
     /*
-     * Configure attribute 1.
+     *  Configure attribute 1.
      *
-     * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
-     * square sprite. Since we are using a non-affine sprite, attribute 1
-     * doesn't have an rotationIndex anymore. Instead, it has the ability to flip
-     * the sprite vertically or horizontally.
+     *  OBJSIZE_32 will create a sprite of size 32x32, since we are making a
+     *  square sprite. Since we are using a non-affine sprite, attribute 1
+     *  doesn't have an rotationIndex anymore. Instead, it has the ability to
+     *  flip the sprite vertically or horizontally.
      */
     moon->x = SCREEN_WIDTH / 2 + moonInfo->width + moonInfo->width / 2;
     moon->hFlip = false;
     moon->vFlip = false;
     moon->size = OBJSIZE_32;
 
-    /* 
+    /*
      *  Configure attribute 2.
-     * 
+     *
      *  Configure which tiles the sprite will use, which priority layer it will
      *  be placed onto, which palette the sprite should use, and whether or not
      *  to show the sprite.
@@ -292,7 +293,8 @@ void displayStarField() {
                                        * grit. */
                      (uint16 *)BG_BMP_RAM(0), /* Our address for main
                                                * background 3 */
-                     starFieldBitmapLen);
+                     starFieldBitmapLen); /* This length (in bytes) is
+                                           * generated from grit. */
 }
 
 void displayPlanet() {
@@ -301,7 +303,8 @@ void displayPlanet() {
                                     * grit. */
                      (uint16 *)BG_BMP_RAM(8), /* Our address for main
                                                * background 2 */
-                     planetBitmapLen);
+                     planetBitmapLen); /* This length (in bytes) is generated
+                                        * from grit. */
 }
 
 void displaySplash() {
@@ -309,12 +312,13 @@ void displaySplash() {
                      splashBitmap, /* This variable is generated for us by
                                     * grit. */
                      (uint16 *)BG_BMP_RAM_SUB(0), /* Our address for sub
-                                                     background 3 */
-                     splashBitmapLen);
+                                                   * background 3 */
+                     splashBitmapLen); /* This length (in bytes) is generated
+                                        * from grit. */
 }
 
 int main() {
-    /*  Turn on the 2D graphics core. */
+    /* Turn on the 2D graphics core. */
     powerOn(POWER_ALL_2D);
 
     /*
@@ -338,7 +342,7 @@ int main() {
     displayPlanet();
     displaySplash();
 
-    /* Make the ship object */
+    /* Make the ship object. */
     static const int SHUTTLE_OAM_ID = 0;
     SpriteEntry * shipEntry = &oam->oamBuffer[SHUTTLE_OAM_ID];
     SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];

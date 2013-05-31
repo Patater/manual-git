@@ -1,6 +1,6 @@
 /*
  *  Ship.h
- *  
+ *
  *
  *  Created by Jaeden Amero on 3/12/06.
  *  Copyright 2006. All rights reserved.
@@ -29,12 +29,13 @@ protected:
     /*
      *  Game Engine Interfae
      *
-     *  This variable provides an interface into the game engine. It connects this game object to a sprite via a SpriteInfo struct.
+     *  This variable provides an interface into the game engine. It connects
+     *  this game object to a sprite via a SpriteInfo struct.
      *
      */
     SpriteInfo * spriteInfo;
 
-    /* 
+    /*
      *  Kinematic Dynamics
      *
      *  These variables track dynamic kinematic properties of the ship.
@@ -44,21 +45,21 @@ protected:
      */
     MathVector2D<float> position;
     MathVector2D<float> velocity;
-    float angle; //in radians
- 
+    float angle; // in radians
+
     /*
      *  Kinematic Statics
      *
      *  These variables rarely change. When modified, they can change how the
      *  ship handles. The turning speed is stored in radians as a float. It
      *  should be a relatively small portion of 2 * PI. Thrust, maximum speed,
-     *  and the mass of the ship are each stored as floats. 
+     *  and the mass of the ship are each stored as floats.
      */
     float turnSpeed;
     float thrust;
     float maxSpeed;
     float mass;
- 
+
     /*
      *  radToDeg
      *
@@ -67,11 +68,11 @@ protected:
      *  within the Ship object, so we can make this a protected function.
      */
     int radToDeg(float rad);
- 
+
     void init(const Ship & other);
 
 public:
-    /*  
+    /*
      *  Ship
      *
      *  This is the default constructor. It requires a SpriteInfo struct in
@@ -89,7 +90,7 @@ public:
      *
      */
     virtual ~Ship();
- 
+
     /*
      *  accelerate
      *

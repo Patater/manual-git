@@ -1,8 +1,8 @@
 /*
  *  Sprites.h
- *  
- *	Adapted from Liran Nuna's sprite handling code. Special thanks to Liran
- *	Nuna.
+ *
+ *  Adapted from Liran Nuna's sprite handling code. Special thanks to Liran
+ *  Nuna.
  *
  *  Created by Jaeden Amero on 3/12/06.
  *  Copyright 2006. All rights reserved.

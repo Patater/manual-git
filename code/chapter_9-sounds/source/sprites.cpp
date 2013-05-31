@@ -1,6 +1,6 @@
 /*
  *  Sprites.cpp
- *  
+ *
  *  Adapted from Liran Nuna's sprite handling code. Special thanks to Liran
  *  Nuna.
  *
@@ -23,9 +23,9 @@ void updateOAM(OAMTable * oam) {
 
 void initOAM(OAMTable * oam) {
     /*
-     * For all 128 sprites on the DS, disable and clear any attributes they 
-     * might have. This prevents any garbage from being displayed and gives 
-     * us a clean slate to work with.
+     * For all 128 sprites on the DS, disable and clear any attributes they
+     * might have. This prevents any garbage from being displayed and gives us
+     * a clean slate to work with.
      */
     for (int i = 0; i < SPRITE_COUNT; i++) {
         oam->oamBuffer[i].attribute[0] = ATTR0_DISABLED;
@@ -35,7 +35,7 @@ void initOAM(OAMTable * oam) {
     for (int i = 0; i < MATRIX_COUNT; i++) {
         /* If you look carefully, you'll see this is that affine trasformation
          * matrix again. We initialize it to the identity matrix, as we did
-         * with backgrounds
+         * with backgrounds.
          */
         oam->matrixBuffer[i].hdx = 1 << 8;
         oam->matrixBuffer[i].hdy = 0;
@@ -48,7 +48,7 @@ void initOAM(OAMTable * oam) {
 void rotateSprite(SpriteRotation * spriteRotation, int angle) {
     s16 s = sinLerp(angle) >> 4;
     s16 c = cosLerp(angle) >> 4;
-    
+
     spriteRotation->hdx = c;
     spriteRotation->hdy = s;
     spriteRotation->vdx = -s;
@@ -60,7 +60,7 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
     if (hidden) {
         /*
          * Make the sprite invisible.
-         * 
+         *
          * An affine sprite cannot be hidden. We have to turn it into a
          * non-affine sprite before we can hide it. To hide any sprite, we must
          * set bit 8 and clear bit 9. For non-affine sprites, this is a bit
@@ -83,8 +83,8 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
 
             /* The double bound flag only acts as the double bound flag when
              * the sprite is an affine sprite. At all other times, it acts as
-             * the sprite invisibility flag. We only enable bit 8 here if we want
-             * a double bound sprite. */
+             * the sprite invisibility flag. We only enable bit 8 here if we
+             * want a double bound sprite. */
             spriteEntry->isSizeDouble = doubleBound;
         } else {
             /* Bit 9 (the affine flag) will already be off here, so we don't

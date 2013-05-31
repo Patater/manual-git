@@ -1,6 +1,6 @@
 /*
  *  main.cpp
- *  
+ *
  *  Created by Jaeden Amero on 11/12/07.
  *  Copyright 2007. All rights reserved.
  *
@@ -18,7 +18,7 @@ static const int DMA_CHANNEL = 3;
 void initVideo() {
     /*
      *  Map VRAM to display a background on the main and sub screens.
-     * 
+     *
      *  The vramSetMainBanks function takes four arguments, one for each of the
      *  major VRAM banks. We can use it as shorthand for assigning values to
      *  each of the VRAM bank's control registers.
@@ -39,7 +39,7 @@ void initVideo() {
     /*  Set the video mode on the main screen. */
     videoSetMode(MODE_5_2D | // Set the graphics mode to Mode 5
                  DISPLAY_BG2_ACTIVE | // Enable BG2 for display
-                 DISPLAY_BG3_ACTIVE); //Enable BG3 for display
+                 DISPLAY_BG3_ACTIVE); // Enable BG3 for display
 
     /*  Set the video mode on the sub screen. */
     videoSetModeSub(MODE_5_2D | // Set the graphics mode to Mode 5
@@ -90,8 +90,8 @@ void initBackgrounds() {
                      BG_BMP_BASE(0) | // The starting place in memory
                      BG_PRIORITY(3); // A low priority
 
-    /*  Set the affine transformation matrix for the sub screen background 3
-     *  to be the identity matrix.
+    /*  Set the affine transformation matrix for the sub screen background 3 to
+     *  be the identity matrix.
      */
     REG_BG3PA_SUB = 1 << 8;
     REG_BG3PB_SUB = 0;
@@ -111,8 +111,8 @@ void displayStarField() {
                                        * grit. */
                      (uint16 *)BG_BMP_RAM(0), /* Our address for main
                                                * background 3 */
-                     starFieldBitmapLen); /* This length (in bytes) is generated
-                                           * from grit. */
+                     starFieldBitmapLen); /* This length (in bytes) is
+                                           * generated from grit. */
 }
 
 void displayPlanet() {
@@ -136,16 +136,16 @@ void displaySplash() {
 }
 
 int main() {
-    /*  Turn on the 2D graphics core. */
+    /* Turn on the 2D graphics core. */
     powerOn(POWER_ALL_2D);
 
-    /*  Configure the VRAM and background control registers. */
+    /* Configure the VRAM and background control registers. */
     lcdMainOnBottom(); // Place the main screen on the bottom physical screen
-    initVideo(); 
-    initBackgrounds(); 
+    initVideo();
+    initBackgrounds();
 
-    /*  Display the backgrounds */
-    displayStarField(); 
+    /* Display the backgrounds. */
+    displayStarField();
     displayPlanet();
     displaySplash();
 
