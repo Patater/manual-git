@@ -1,3 +1,5 @@
+DOCBOOK_XSL := /usr/share/xml/docbook/xsl-stylesheets-1.78.1/xhtml/docbook.xsl
+
 manual.zip: manual.html
 	# Make a temporary folder
 	mkdir /tmp/manual
@@ -20,8 +22,7 @@ manual.zip: manual.html
 	rm -rf /tmp/manual
 
 manual.html: manual.xml
-	xsltproc -o manual.html --stringparam html.stylesheet manual.css /usr/share/sgml/docbook/xsl-stylesheets/xhtml/docbook.xsl manual.xml
-#	xsltproc -o manual.html /usr/share/xml/docbook/stylesheet/nwalsh/xhtml/docbook.xsl manual.xml
+	xsltproc -o manual.html --stringparam html.stylesheet manual.css $(DOCBOOK_XSL) manual.xml
 
 clean:
 	@rm -rf /tmp/manual manual.html manual.zip
