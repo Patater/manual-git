@@ -1,4 +1,3 @@
-* Update touchRead in the manuscript
 * Automatically generate code from a single source, so the manuscript and each
   code folder won't ever get out of date. Each code snippet should get
   automatically placed into the correct locations according to templates. There

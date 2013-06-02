@@ -2927,7 +2927,7 @@ void updateInput(touchPosition * touch) {
   scanKeys();
 
   // Update the touch screen values.
-  *touch = touchRead();
+  touchRead(touch);
 }
       </programlisting>
     </sect1>
