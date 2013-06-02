@@ -5,7 +5,6 @@ dist: manual.html
 	svn export ../ dist/manual
 	# Clean up manuscript things in the dist version
 	rm -rf dist/manual/manuscript/Manual.pages
-	rm dist/manual/manuscript/manual_update.sh
 	rm dist/manual/manuscript/manual.xml
 	rm dist/manual/manuscript/Makefile
 	# Add the built manual.html into the dist version
