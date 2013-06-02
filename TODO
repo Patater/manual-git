@@ -1,4 +1,3 @@
-* Remove dependence on svn in Makefiles and shell scripts
 * Update names of SpriteEntry fields
 * Update touchRead in the manuscript
 * Automatically generate code from a single source, so the manuscript and each
