@@ -3559,10 +3559,10 @@ int main() {
   <section>
     <title>About the Author</title>
     <para>
-      Jaeden Amero is currently a multi-platform driver developer at National
-      Instruments in Austin, Texas, USA. He graduated in December 2008 from
-      Brigham Young University. He enjoys programming the Nintendo DS and Game
-      Boy Advance, FPGA coding, unicycling, and playing the accordion in his
+      Jaeden Amero is currently doing new board bring up work for National
+      Instruments in Austin, Texas, USA. He enjoys programming small computers,
+      like the Nintendo DS and Game Boy Advance; tiny web servers;
+      reconfigurable computing; unicycling; and playing the accordion in his
       free time.
     </para>
   </section>
