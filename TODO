@@ -2,3 +2,14 @@
   code folder won't ever get out of date. Each code snippet should get
   automatically placed into the correct locations according to templates. There
   should only be one definitive source for each code snippet.
+* Color the sprite_tile_layout program listing like we used to before moving to
+  DocBook.
+* Explain more about the benefits of using OOP on DS and how this doesn't mean
+  only code in C++.
+* Explain fixed point numbers better.
+* Rearrange the include files, so that our own header files come before system
+  ones.
+* See if we need to update rotateSprite. If so, we may also need to update the
+  explanation of how it works.
+* Explain caching better, to provide context around the functions like
+  DC_FlushAll and DC_FlushRange, hopefully making them more understandable.
