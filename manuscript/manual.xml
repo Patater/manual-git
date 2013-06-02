@@ -1388,8 +1388,9 @@ void initBackgrounds() {
         some graphics into memory. We use the function <code
         language="C++"><function>dmaCopyHalfWords</function></code> instead of
         <code language="C++"><function>dmaCopy</function></code> because it is
-        more explicit as to how it is copying. We'll use the same channel
-        (channel 3) that the ordinary <code
+        more explicit as to how it is copying and it lets us specify which DMA
+        channel to use when copying. We'll use the same channel (channel 3)
+        that the ordinary <code
         language="C++"><function>dmaCopy</function></code> uses, though. It
         also let's us specify which DMA channel to use when copying. Let's
         start out by writing some functions to display our backgrounds. Since
