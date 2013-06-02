@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  License CC BY-SA 3.0
+
+  Introduction to Nintendo DS Programming by Jaeden Amero is licensed under a
+  Creative Commons Attribution-ShareAlike 3.0 Unported License.
+  Based on a work at http://www.patater.com/manual.
+
+  See COPYING for licensing information.
+-->
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN"
   "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
 
@@ -10,6 +19,31 @@
       <surname>Amero</surname>
     </author>
     <copyright><year>2006-2008</year><holder>Jaeden Amero</holder></copyright>
+    <legalnotice>
+      <title>Licensed under a Creative Commons Attribution-ShareAlike 3.0
+      Unported License</title>
+      <sidebar>
+        <inlinemediaobject>
+          <imageobject>
+            <imagedata
+              fileref="images/by-sa-3.0-88x31.png"
+              width="88px"
+              height="31px"/>
+          </imageobject>
+          <textobject>
+            <phrase>CC BY-SA-3.0</phrase>
+          </textobject>
+        </inlinemediaobject>
+        <para>
+          Introduction to Nintendo DS Programming by Jaeden Amero is licensed
+          under a Creative Commons Attribution-ShareAlike 3.0 Unported License.
+          Based on a work at <ulink url="http://www.patater.com/manual"/>. See
+          <ulink
+          url="http://creativecommons.org/licenses/by-sa/3.0/deed.en_US"/> for
+          licensing information.
+        </para>
+      </sidebar>
+    </legalnotice>
     <revhistory>
       <revision>
         <revnumber>6.1</revnumber>
