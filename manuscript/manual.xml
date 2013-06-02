@@ -2135,10 +2135,10 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
    * assert can be helpful. */
   assert(!shuttle-&gt;isRotateScale || (shuttleInfo-&gt;oamId &lt; MATRIX_COUNT));
   shuttle-&gt;isSizeDouble = false;
-  shuttle-&gt;objMode = OBJMODE_NORMAL;
+  shuttle-&gt;blendMode = OBJMODE_NORMAL;
   shuttle-&gt;isMosaic = false;
-  shuttle-&gt;colMode = OBJCOLOR_16;
-  shuttle-&gt;objShape = OBJSHAPE_SQUARE;
+  shuttle-&gt;colorMode = OBJCOLOR_16;
+  shuttle-&gt;shape = OBJSHAPE_SQUARE;
 
   /*
    *  Configure attribute 1.
@@ -2149,8 +2149,8 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
    */
   shuttle-&gt;x = SCREEN_WIDTH / 2 - shuttleInfo-&gt;width * 2 +
           shuttleInfo-&gt;width / 2;
-  shuttle-&gt;rotationIndexx = shuttleInfo-&gt;oamId;
-  shuttle-&gt;objSize = OBJSIZE_64;
+  shuttle-&gt;rotationIndex = shuttleInfo-&gt;oamId;
+  shuttle-&gt;size = OBJSIZE_64;
 
   /*
    *  Configure attribute 2.
@@ -2197,23 +2197,23 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
    * assert can be helpful. */
   assert(!moon-&gt;isRotateScale || (moonInfo-&gt;oamId &lt; MATRIX_COUNT));
   moon-&gt;isHidden = false;
-  moon-&gt;objMode = OBJMODE_NORMAL;
+  moon-&gt;blendMode = OBJMODE_NORMAL;
   moon-&gt;isMosaic = false;
-  moon-&gt;colMode = OBJCOLOR_16;
-  moon-&gt;objShape = OBJSHAPE_SQUARE;
+  moon-&gt;colorMode = OBJCOLOR_16;
+  moon-&gt;shape = OBJSHAPE_SQUARE;
 
   /*
    * Configure attribute 1.
    *
    * OBJSIZE_32 will create a sprite of size 32x32, since we are making a
    * square sprite. Since we are using a non-affine sprite, attribute 1
-   * doesn't have an rotationIndexx anymore. Instead, it has the ability to
+   * doesn't have an rotationIndex anymore. Instead, it has the ability to
    * flip the sprite vertically or horizontally.
    */
   moon-&gt;x = SCREEN_WIDTH / 2 + moonInfo-&gt;width + moonInfo-&gt;width / 2;
   moon-&gt;hFlip = false;
   moon-&gt;vFlip = false;
-  moon-&gt;objSize = OBJSIZE_32;
+  moon-&gt;size = OBJSIZE_32;
 
   /*
    *  Configure attribute 2.

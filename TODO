@@ -1,4 +1,3 @@
-* Update names of SpriteEntry fields
 * Update touchRead in the manuscript
 * Automatically generate code from a single source, so the manuscript and each
   code folder won't ever get out of date. Each code snippet should get
