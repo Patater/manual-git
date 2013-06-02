@@ -812,12 +812,12 @@
     <sect1>
       <title>All About devkitPro</title>
       <para>
-        devkitPro brand name, like Microsoft or Adobe. You don't use your
-        Nintendo DS software anymore than you write your letters with Microsoft
-        or edit photos with Adobe. devkitPro produces a collection of
-        toolchains for homebrew developers. Toolchains are available for Game
-        Boy Advance, GP32, Playstation Portable, GameCube, and the Nintendo DS.
-        The toolchain we are most interested in is known as devkitARM.
+        devkitPro is a brand, like Microsoft or Adobe. You don't use Nintendo
+        DS software anymore than you write your letters with Microsoft or edit
+        photos with Adobe. devkitPro produces a collection of toolchains for
+        homebrew developers. Toolchains are available for Game Boy Advance,
+        GP32, Playstation Portable, GameCube, and the Nintendo DS. The
+        toolchain we are most interested in is known as devkitARM.
       </para>
       <para>
         devkitARM is a specific toolchain of devkitPro. It allows the compiling
