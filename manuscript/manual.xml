@@ -2271,7 +2271,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
         program will quit. Assertions are evaluated at runtime.
       </para>
       <para>
-        Assertions help you avoid bugs developing obscure later on since
+        Assertions help you avoid developing obscure bugs later on since
         they'll stop them right where something first goes wrong. Assertions
         are a good thing and should be used often.
       </para>
