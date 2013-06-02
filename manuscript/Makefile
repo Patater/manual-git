@@ -9,7 +9,6 @@ manual.zip: manual.html
 	cp -r ../manuscript /tmp/manual/
 	# Clean up manuscript things in the temporary copy
 	rm -rf /tmp/manual/manuscript/Manual.pages
-	rm /tmp/manual/manuscript/manual.xml
 	rm /tmp/manual/manuscript/Makefile
 	# Add the built manual.html into the temporary copy
 	cp manual.html /tmp/manual/manuscript/
