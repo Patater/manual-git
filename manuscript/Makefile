@@ -3,7 +3,9 @@ DOCBOOK_XSL := /usr/share/xml/docbook/xsl-stylesheets-1.78.1/xhtml/docbook.xsl
 manual.zip: manual.html
 	# Make a temporary folder
 	mkdir /tmp/manual
-	# Copy project directory to a temporary folder
+	# Copy project files to a temporary folder
+	cp ../README /tmp/manual/
+	cp ../COPYING /tmp/manual/
 	cp -r ../code /tmp/manual/
 	cp -r ../gfx /tmp/manual/
 	cp -r ../manuscript /tmp/manual/
