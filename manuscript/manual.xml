@@ -952,11 +952,11 @@
         beam, from the perspective of a person watching the television, travels
         from left to right, one scan line at a time. The beam never blast
         electrons from right to left. After the beam reaches the right edge of
-        the screen, it turns off and moves to the right and down one line. When
-        the beam finally reaches the bottom line of the screen, it travels back
-        up to the upper left of the screen and begins this drawing process all
-        over again. <xref linkend="raster_display"/> illustrates this process
-        in an exaggerated fashion.
+        the screen, it turns off and moves to the left edge and down one line.
+        When the beam finally reaches the bottom line of the screen, it travels
+        back up to the upper left of the screen and begins this drawing process
+        all over again. <xref linkend="raster_display"/> illustrates this
+        process in an exaggerated fashion.
       </para>
       <para>
         Two things are important to remember here. First, that the period of
