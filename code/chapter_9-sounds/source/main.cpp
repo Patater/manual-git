@@ -30,9 +30,9 @@ void initVideo() {
     /*
      *  Map VRAM to display a background on the main and sub screens.
      *
-     *  The vramSetMainBanks function takes four arguments, one for each of the
-     *  major VRAM banks. We can use it as shorthand for assigning values to
-     *  each of the VRAM bank's control registers.
+     *  The vramSetPrimaryBanks function takes four arguments, one for each of
+     *  the major VRAM banks. We can use it as shorthand for assigning values
+     *  to each of the VRAM bank's control registers.
      *
      *  We map banks A and B to main screen  background memory. This gives us
      *  256KB, which is a healthy amount for 16-bit graphics.
@@ -44,10 +44,10 @@ void initVideo() {
      *
      *  We map bank E to main screen sprite memory (aka object memory).
      */
-    vramSetMainBanks(VRAM_A_MAIN_BG_0x06000000,
-                     VRAM_B_MAIN_BG_0x06020000,
-                     VRAM_C_SUB_BG_0x06200000,
-                     VRAM_D_LCD);
+    vramSetPrimaryBanks(VRAM_A_MAIN_BG_0x06000000,
+                        VRAM_B_MAIN_BG_0x06020000,
+                        VRAM_C_SUB_BG_0x06200000,
+                        VRAM_D_LCD);
 
     vramSetBankE(VRAM_E_MAIN_SPRITE);
 
