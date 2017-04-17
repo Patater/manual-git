@@ -12,53 +12,61 @@ include $(DEVKITARM)/ds_rules
 # TARGET is the name of the output
 # BUILD is the directory where object files & intermediate files will be placed
 # SOURCES is a list of directories containing source code
-# DATA is a list of directories containing binary data
 # INCLUDES is a list of directories containing extra header files
-# GRAPHICS is a list of directories containing files to be processed by grit
-# AUDIO is a list of directories containing files to be processed by mmutil
-# SOUNDBANK_NAME is the name of the maxmod generated soundbank
-#
-# All directories are specified relative to the project directory where
-# the makefile is found.
-#
+# DATA is a list of directories containing binary files embedded using bin2o
+# GRAPHICS is a list of directories containing image files to be converted with grit
+# AUDIO is a list of directories containing audio to be converted by maxmod
+# ICON is the image used to create the game icon, leave blank to use default rule
+# NITRO is a directory that will be accessible via NitroFS
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
-BUILD		:=	build
-SOURCES		:=	source
-DATA		:=	
-INCLUDES	:=	include
-GRAPHICS	:=	gfx
-AUDIO		:=	audio
-SOUNDBANK_NAME  :=	soundbank
+TARGET   := $(shell basename $(CURDIR))
+BUILD    := build
+SOURCES  := source
+INCLUDES := include
+DATA     :=
+GRAPHICS := gfx
+AUDIO    := audio
+ICON     :=
+
+# specify a directory which contains the nitro filesystem
+# this is relative to the Makefile
+NITRO    :=
+
+# These set the information text in the nds file
+GAME_TITLE     := Advanced ARM9 template
+GAME_SUBTITLE1 := built with devkitARM
+GAME_SUBTITLE2 := http://devitpro.org
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
-ARCH	:=	-mthumb -mthumb-interwork
+ARCH := -marm -mthumb-interwork -march=armv5te -mtune=arm946e-s
 
-CFLAGS	:=	-g -Wall -O2\
- 		-march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
-		-ffast-math \
-		$(ARCH)
-
-CFLAGS	+=	$(INCLUDE) -DARM9
-CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
-
-ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
-
+CFLAGS   := -g -Wall -O3\
+            $(ARCH) $(INCLUDE) -DARM9
+CXXFLAGS := $(CFLAGS) -fno-rtti -fno-exceptions
+ASFLAGS  := -g $(ARCH)
+LDFLAGS   = -specs=ds_arm9.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
 #---------------------------------------------------------------------------------
-# any extra libraries we wish to link with the project
+# any extra libraries we wish to link with the project (order is important)
 #---------------------------------------------------------------------------------
-LIBS	:= -lmm9 -lnds9
- 
- 
+LIBS := -lnds9
+
+# automatigically add libraries for NitroFS
+ifneq ($(strip $(NITRO)),)
+LIBS := -lfilesystem -lfat $(LIBS)
+endif
+# automagically add maxmod library
+ifneq ($(strip $(AUDIO)),)
+LIBS := -lmm9 $(LIBS)
+endif
+
 #---------------------------------------------------------------------------------
 # list of directories containing libraries, this must be the top level containing
 # include and lib
 #---------------------------------------------------------------------------------
-LIBDIRS	:=	$(LIBNDS)
+LIBDIRS := $(LIBNDS) $(PORTLIBS)
 
 #---------------------------------------------------------------------------------
 # no real need to edit anything past this point unless you need to add additional
@@ -66,110 +74,139 @@ LIBDIRS	:=	$(LIBNDS)
 #---------------------------------------------------------------------------------
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
- 
-export OUTPUT	:=	$(CURDIR)/$(TARGET)
- 
-export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
-			$(foreach dir,$(DATA),$(CURDIR)/$(dir)) \
-			$(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir)) \
-			$(foreach dir,$(AUDIO),$(CURDIR)/$(dir))
 
-export DEPSDIR	:=	$(CURDIR)/$(BUILD)
+export OUTPUT := $(CURDIR)/$(TARGET)
 
-CFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
-CPPFILES	:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
-SFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
-BINFILES	:=	$(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*))) $(SOUNDBANK_NAME).bin
-PNGFILES	:=	$(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
+export VPATH := $(CURDIR)/$(subst /,,$(dir $(ICON)))\
+                $(foreach dir,$(SOURCES),$(CURDIR)/$(dir))\
+                $(foreach dir,$(DATA),$(CURDIR)/$(dir))\
+                $(foreach dir,$(GRAPHICS),$(CURDIR)/$(dir))
+
+export DEPSDIR := $(CURDIR)/$(BUILD)
+
+CFILES   := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+CPPFILES := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+SFILES   := $(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+PNGFILES := $(foreach dir,$(GRAPHICS),$(notdir $(wildcard $(dir)/*.png)))
+BINFILES := $(foreach dir,$(DATA),$(notdir $(wildcard $(dir)/*.*)))
+
+# prepare NitroFS directory
+ifneq ($(strip $(NITRO)),)
+  export NITRO_FILES := $(CURDIR)/$(NITRO)
+endif
+
+# get audio list for maxmod
+ifneq ($(strip $(AUDIO)),)
+  export MODFILES	:=	$(foreach dir,$(notdir $(wildcard $(AUDIO)/*.*)),$(CURDIR)/$(AUDIO)/$(dir))
+
+  # place the soundbank file in NitroFS if using it
+  ifneq ($(strip $(NITRO)),)
+    export SOUNDBANK := $(NITRO_FILES)/soundbank.bin
+
+  # otherwise, needs to be loaded from memory
+  else
+    export SOUNDBANK := soundbank.bin
+    BINFILES += $(SOUNDBANK)
+  endif
+endif
 
 #---------------------------------------------------------------------------------
 # use CXX for linking C++ projects, CC for standard C
 #---------------------------------------------------------------------------------
 ifeq ($(strip $(CPPFILES)),)
 #---------------------------------------------------------------------------------
-	export LD	:=	$(CC)
+  export LD := $(CC)
 #---------------------------------------------------------------------------------
 else
 #---------------------------------------------------------------------------------
-	export LD	:=	$(CXX)
+  export LD := $(CXX)
 #---------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------
 
-export OFILES		:=	$(addsuffix .o,$(BINFILES)) \
-				$(PNGFILES:.png=.o) \
-				$(CPPFILES:.cpp=.o) \
-				$(CFILES:.c=.o) \
-				$(SFILES:.s=.o) \
+export OFILES   := $(addsuffix .o,$(BINFILES))\
+                   $(PNGFILES:.png=.o)\
+                   $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+export INCLUDE  := $(foreach dir,$(INCLUDES),-iquote $(CURDIR)/$(dir))\
+                   $(foreach dir,$(LIBDIRS),-I$(dir)/include)\
+                   -I$(CURDIR)/$(BUILD)
+export LIBPATHS := $(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-export AUDIOFILES	:=	$(foreach dir,$(AUDIO),$(notdir $(wildcard $(dir)/*)))
- 
-export INCLUDE		:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
-				$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-				$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-				-I$(CURDIR)/$(BUILD)
- 
-export LIBPATHS		:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+ifeq ($(strip $(ICON)),)
+  icons := $(wildcard *.bmp)
+
+  ifneq (,$(findstring $(TARGET).bmp,$(icons)))
+    export GAME_ICON := $(CURDIR)/$(TARGET).bmp
+  else
+    ifneq (,$(findstring icon.bmp,$(icons)))
+      export GAME_ICON := $(CURDIR)/icon.bmp
+    endif
+  endif
+else
+  ifeq ($(suffix $(ICON)), .grf)
+    export GAME_ICON := $(CURDIR)/$(ICON)
+  else
+    export GAME_ICON := $(CURDIR)/$(BUILD)/$(notdir $(basename $(ICON))).grf
+  endif
+endif
 
 .PHONY: $(BUILD) clean
- 
+
 #---------------------------------------------------------------------------------
 $(BUILD):
-	@[ -d $@ ] || mkdir -p $@
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
- 
+	@mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(TARGET).arm9
- 
- 
+	@rm -fr $(BUILD) $(TARGET).elf $(TARGET).nds $(SOUNDBANK)
+
 #---------------------------------------------------------------------------------
 else
- 
+
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
-$(OUTPUT).nds	: 	$(OUTPUT).arm9
-$(OUTPUT).arm9	:	$(OUTPUT).elf
-$(OUTPUT).elf	:	$(OFILES)
+$(OUTPUT).nds: $(OUTPUT).elf $(GAME_ICON)
+$(OUTPUT).elf: $(OFILES)
 
-
-#---------------------------------------------------------------------------------
-# The bin2o rule should be copied and modified
-# for each extension used in the data directories
-#---------------------------------------------------------------------------------
+# need to build soundbank first
+$(OFILES): $(SOUNDBANK)
 
 #---------------------------------------------------------------------------------
-# This rule creates object files from binary data with the .bin extension
+# rule to build solution from music files
 #---------------------------------------------------------------------------------
-%.bin.o	: %.bin
+$(SOUNDBANK) : $(MODFILES)
+#---------------------------------------------------------------------------------
+	mmutil $^ -d -o$@ -hsoundbank.h
+
+#---------------------------------------------------------------------------------
+%.bin.o: %.bin
 #---------------------------------------------------------------------------------
 	@echo $(notdir $<)
-	@$(bin2o)
+	$(bin2o)
 
 #---------------------------------------------------------------------------------
-# This rule creates assembly source files using grit.
-# grit takes an image file and a .grit file describing how the file is to be
-# processed.
+# This rule creates assembly source files using grit
+# grit takes an image file and a .grit describing how the file is to be processed
+# add additional rules like this for each image extension
+# you use in the graphics folders
 #---------------------------------------------------------------------------------
-%.s %.h	: %.png %.grit
+%.s %.h: %.png %.grit
 #---------------------------------------------------------------------------------
 	grit $< -fts -o$*
 
 #---------------------------------------------------------------------------------
-# This rule creates the soundbank file for your project using mmutil.
-# mmutil takes all audio files in the audio folder and puts them into a
-# soundbank file.
+# Convert non-GRF game icon to GRF if needed
 #---------------------------------------------------------------------------------
-$(SOUNDBANK_NAME).bin : $(AUDIOFILES)
+$(GAME_ICON): $(notdir $(ICON))
 #---------------------------------------------------------------------------------
-	@echo $(notdir $^)
-	@mmutil -d $^ -o$(SOUNDBANK_NAME).bin -h$(SOUNDBANK_NAME).h
+	@echo convert $(notdir $<)
+	@grit $< -g -gt -gB4 -gT FF00FF -m! -p -pe 16 -fh! -ftr
 
- 
 -include $(DEPSDIR)/*.d
- 
+
 #---------------------------------------------------------------------------------------
 endif
 #---------------------------------------------------------------------------------------
