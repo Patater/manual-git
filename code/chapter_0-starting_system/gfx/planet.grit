@@ -1,3 +1,6 @@
+# Symbol name
+-s planet
+
 # Set the warning/log level to 3
 -W3
 
