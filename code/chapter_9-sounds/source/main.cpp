@@ -220,7 +220,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     moonInfo->oamId = MOON_OAM_ID;
     moonInfo->width = 32;
     moonInfo->height = 32;
-    moonInfo->angle = 29568;
+    moonInfo->angle = 0;
     moonInfo->entry = moon;
 
     /*
