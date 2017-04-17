@@ -2547,7 +2547,9 @@ void Ship::reverseTurn() {
       <title>Rotating the Ship</title>
       <para>
         Rotating the ship is also quite simple. We just increment or by ship’s
-        turning speed depending on which direction we wish to turn.
+        turning speed depending on which direction we wish to turn. Note that
+        we are storing the angle of the ship as a clockwise rotation. This will
+        be important to remember for later when we update the ship sprite.
       </para>
       <programlisting linenumbering="unnumbered" language="C++">
 void Ship::turnClockwise() {
@@ -2701,11 +2703,14 @@ int main() {
         don't have any input to collect yet. We tell our ship to move at it's
         current velocity. This will change the ship’s position. Then we update
         the sprite attributes with new information about our ship, as some
-        properties of the ship have now changed (i.e. its position). Finally,
-        we call a function that will make sure our program does not exceed
-        60fps (speed of the graphics on the Nintendo DS) by waiting for vblank,
-        and then we update the OAM, telling it that we changed some attributes
-        on the sprites and it needs to handle that.
+        properties of the ship have now changed (i.e. its angle and position).
+        Note that the rotateSprite function performs a counter-clockwise
+        rotation and our ship tracks its angle as a clockwise rotation; this is
+        resolved by simplying negating the angle to rotate by. Finally, we call
+        a function that will make sure our program does not exceed 60fps (speed
+        of the graphics on the Nintendo DS) by waiting for vblank, and then we
+        update the OAM, telling it that we changed some attributes on the
+        sprites and it needs to handle that.
       </para>
       <programlisting linenumbering="unnumbered" language="C++">
   for (;;) {
@@ -2716,7 +2721,7 @@ int main() {
     MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
     shipEntry-&gt;x = (int)position.x;
     shipEntry-&gt;y = (int)position.y;
-    rotateSprite(shipRotation, ship-&gt;getAngleDeg());
+    rotateSprite(shipRotation, -ship-&gt;getAngleDeg());
 
     /*
      *  Update the OAM.
@@ -3098,7 +3103,7 @@ int main() {
     MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
     shipEntry-&gt;x = (int)position.x;
     shipEntry-&gt;y = (int)position.y;
-    rotateSprite(shipRotation, ship-&gt;getAngleDeg());
+    rotateSprite(shipRotation, -ship-&gt;getAngleDeg());
     /* Update moon sprite attributes. */
     moonEntry-&gt;x = (int)moonPos-&gt;x;
     moonEntry-&gt;y = (int)moonPos-&gt;y;
@@ -3351,7 +3356,7 @@ int main() {
     MathVector2D&lt;float&gt; position = ship-&gt;getPosition();
     shipEntry-&gt;x = (int)position.x;
     shipEntry-&gt;y = (int)position.y;
-    rotateSprite(shipRotation, ship-&gt;getAngleDeg());
+    rotateSprite(shipRotation, -ship-&gt;getAngleDeg());
     /* Update moon sprite attributes. */
     moonEntry-&gt;x = (int)moonPos-&gt;x;
     moonEntry-&gt;y = (int)moonPos-&gt;y;

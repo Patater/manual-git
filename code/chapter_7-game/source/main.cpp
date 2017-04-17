@@ -152,7 +152,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     shuttleInfo->oamId = SHUTTLE_OAM_ID;
     shuttleInfo->width = 64;
     shuttleInfo->height = 64;
-    shuttleInfo->angle = 29568;
+    shuttleInfo->angle = 3186;
     shuttleInfo->entry = shuttle;
 
     /*
@@ -361,7 +361,7 @@ int main() {
         MathVector2D<float> position = ship->getPosition();
         shipEntry->x = (int)position.x;
         shipEntry->y = (int)position.y;
-        rotateSprite(shipRotation, ship->getAngleDeg());
+        rotateSprite(shipRotation, -ship->getAngleDeg());
 
         /*
          *  Update the OAM.

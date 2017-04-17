@@ -151,7 +151,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
     shuttleInfo->oamId = SHUTTLE_OAM_ID;
     shuttleInfo->width = 64;
     shuttleInfo->height = 64;
-    shuttleInfo->angle = 29568;
+    shuttleInfo->angle = 3186;
     shuttleInfo->entry = shuttle;
 
     /*

@@ -9,7 +9,5 @@
 * Explain fixed point numbers better.
 * Rearrange the include files, so that our own header files come before system
   ones.
-* See if we need to update rotateSprite. If so, we may also need to update the
-  explanation of how it works.
 * Explain caching better, to provide context around the functions like
   DC_FlushAll and DC_FlushRange, hopefully making them more understandable.

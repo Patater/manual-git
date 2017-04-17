@@ -43,7 +43,7 @@ void initOAM(OAMTable * oam);
 /*
  *  rotateSprite
  *
- *  Rotate a sprite.
+ *  Rotate a sprite counter-clockwise by the specified angle (in degrees).
  *
  */
 void rotateSprite(SpriteRotation * spriteRotation, int angle);
