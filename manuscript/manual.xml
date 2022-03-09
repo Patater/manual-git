@@ -1050,8 +1050,8 @@
       <para>
         An affine background, also known as an external rotation background or
         exrot background, is one that has the ability to be transformed by an
-        <glossaryterm linkend="affine_transformation_matrix">affine
-        transformation matrix</glossaryterm>. Since linear algebra is beyond
+        <glossterm linkend="affine_transformation_matrix">affine
+        transformation matrix</glossterm>. Since linear algebra is beyond
         the scope of this manual, I will cover briefly how to set up a basic
         affine background, but not get into rotating, scaling, or sheering it.
         For this manual, we'll just apply an identity transform, a transform
@@ -1215,8 +1215,8 @@ void initVideo() {
     <sect1>
       <title>Setting up the Affine Backgrounds</title>
       <para>
-        libnds helps us once again by provide a nice <glossaryterm
-        linkend="api">API</glossaryterm> for accessing the affine
+        libnds helps us once again by provide a nice <glossterm
+        linkend="api">API</glossterm> for accessing the affine
         transformation matrix of a particular affine background. libnds
         provides access to a background's affine transformation matrix through
         four variables. <xref linkend="libnds_affine_bg_api"/> shows the names
@@ -3539,7 +3539,7 @@ int main() {
           Write section on interprocessor communication and FIFO
           Build an index and a glossary-->
 <!-- XXX DISPLAY_SPR_1D_SIZE???-->
-<!--<glossary>
+<glossary>
   <title>Glossary</title>
   <para>
     Programming the Nintendo DS, and other embedded hardware systems in
@@ -3564,12 +3564,54 @@ int main() {
           artifacts and to keep screen updating from the software side in sync
           with screen updatingon the hardware side.
         </para>
-        <glossseealso otherterm="interrupt">
-        <glossseealso otherterm="vblank">
+        <glossseealso otherterm="interrupt"/>
+        <glossseealso otherterm="vblank"/>
+      </glossdef>
+    </glossentry>
+    <glossentry id="affine_transformation_matrix">
+      <glossterm>Affine transformation matrix</glossterm>
+      <glossdef>
+        <para>
+          Affine transformation matrix
+        </para>
+      </glossdef>
+    </glossentry>
+    <glossentry id="api">
+      <glossterm>Application programming interface</glossterm>
+      <acronym>API</acronym>
+      <glossdef>
+        <para>
+          Application programming interface
+        </para>
+      </glossdef>
+    </glossentry>
+    <glossentry id="affine">
+      <glossterm>Affine</glossterm>
+      <glossdef>
+        <para>
+          Affine
+        </para>
+      </glossdef>
+    </glossentry>
+    <glossentry id="interrupt">
+      <glossterm>Interrupt</glossterm>
+      <glossdef>
+        <para>
+          Interrupt
+        </para>
+      </glossdef>
+    </glossentry>
+    <glossentry id="vblank">
+      <glossterm>Vertical blanking period</glossterm>
+      <acronym>VBlank</acronym>
+      <glossdef>
+        <para>
+          Vertical blanking period
+        </para>
       </glossdef>
     </glossentry>
   </glossdiv>
-</glossary>-->
+</glossary>
 
   <section>
     <title>About the Author</title>
