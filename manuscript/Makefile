@@ -25,5 +25,14 @@ manual.zip: manual.html
 manual.html: manual.xml
 	xsltproc -o manual.html --stringparam html.stylesheet manual.css $(DOCBOOK_XSL) manual.xml
 
+index.html: manual.xml
+	pandoc --from docbook --to html --output index.html manual.xml
+
+manual.pdf: manual.xml
+	pandoc --from docbook --to latex --output manual.pdf manual.xml
+
+manual.epub: manual.xml
+	pandoc --from docbook --to epub3 --output manual.epub manual.xml
+
 clean:
-	@rm -rf /tmp/manual manual.html manual.zip
+	@rm -rf /tmp/manual index.html manual.pdf manual.epub manual.html manual.zip

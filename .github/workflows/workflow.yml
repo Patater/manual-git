@@ -24,21 +24,24 @@ jobs:
                 docbook-xsl-doc-html \
                 docbook-xsl-doc-pdf \
                 docbook-xsl-doc-pdf \
+                librsvg2-bin \
                 pandoc \
                 texlive \
+                texlive-latex-extra \
                 xsltproc \
 
       - name: Build HTML
         run: |
             make -C manuscript manual.html
+            make -C manuscript index.html
 
       - name: Build PDF
         run: |
-            true || make -C manuscript manual.pdf
+            make -C manuscript manual.pdf
 
       - name: Build EPUB
         run: |
-            true || make -C manuscript manual.pdf
+            make -C manuscript manual.epub
 
       - name: Deploy manuals
         run: |
@@ -47,7 +50,6 @@ jobs:
             touch .nojekyll
             git add .nojekyll
             mv ./manuscript/* ./
-            cp manual.html index.html
-            git add -f index.html manual.html manual.css images
+            git add -f index.html manual.pdf manual.epub manual.html manual.css images
             git commit -am "Deploy manual"
             git push -f origin HEAD:refs/heads/gh-pages
