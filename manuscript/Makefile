@@ -1,4 +1,4 @@
-DOCBOOK_XSL := /usr/share/xml/docbook/xsl-stylesheets-1.78.1/xhtml/docbook.xsl
+DOCBOOK_XSL := /usr/share/xml/docbook/stylesheet/docbook-xsl/xhtml/docbook.xsl
 
 manual.zip: manual.html
 	# Make a temporary folder

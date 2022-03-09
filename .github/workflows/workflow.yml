@@ -1,0 +1,53 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Install build environment
+        run: |
+            sudo apt-get update
+            sudo apt-get install \
+                docbook \
+                docbook-xml \
+                docbook-xsl \
+                docbook-xsl-doc-html \
+                docbook-xsl-doc-pdf \
+                docbook-xsl-doc-pdf \
+                pandoc \
+                texlive \
+                xsltproc \
+
+      - name: Build HTML
+        run: |
+            make -C manuscript manual.html
+
+      - name: Build PDF
+        run: |
+            true || make -C manuscript manual.pdf
+
+      - name: Build EPUB
+        run: |
+            true || make -C manuscript manual.pdf
+
+      - name: Deploy manuals
+        run: |
+            git config user.name "Jaeden Amero"
+            git config user.email "jaeden@patater.com"
+            touch .nojekyll
+            git add .nojekyll
+            mv ./manuscript/* ./
+            cp manual.html index.html
+            git add -f index.html manual.html manual.css images
+            git commit -am "Deploy manual"
+            git push -f origin HEAD:refs/heads/gh-pages
