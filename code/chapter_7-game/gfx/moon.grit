@@ -12,3 +12,6 @@
 
 # Set the bit depth to 4 (16 colors)
 -gB4
+
+# Ensure the generated palette is 16-color
+-pn16
