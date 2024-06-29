@@ -24,5 +24,6 @@
 
 [Postface](postface.md)
 [Appendix A - VRAM](vram.md)
+[Appendix B - Sprites with Bit Twiddling]()
 [Glossary](glossary.md)
 [About the Author](author.md)
