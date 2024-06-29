@@ -6,8 +6,11 @@ on:
       - master
   pull_request:
 
+env:
+  DOCBOOK_XSL: /usr/share/xml/docbook/stylesheet/docbook-xsl/xhtml/docbook.xsl
+
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -43,13 +46,34 @@ jobs:
         run: |
             make -C manuscript manual.epub
 
-      - name: Deploy manuals
+      - name: Prepare GitHub Pages site
         run: |
-            git config user.name "Jaeden Amero"
-            git config user.email "jaeden@patater.com"
-            touch .nojekyll
-            git add .nojekyll
-            mv ./manuscript/* ./
-            git add -f index.html manual.pdf manual.epub manual.html manual.css images
-            git commit -am "Deploy manual"
-            git push -f origin HEAD:refs/heads/gh-pages
+          cp -a manuscript/index.html _site/
+          cp -a manuscript/manual.pdf _site/
+          cp -a manuscript/manual.epub _site/
+          cp -a manuscript/manual.html _site/
+          cp -a manuscript/manual.css _site/
+          cp -a manuscript/images _site/
+
+      - name: Upload _site to GitHub
+        uses: actions/upload-pages-artifact@v3
+        with:
+          name: github-pages
+          path: _site
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
