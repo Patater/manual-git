@@ -108,7 +108,7 @@ grab the completed project for the chapter prior to the one you wish to skip
 to. To follow along with this manual, copy the `chapter_0-starting_system`
 folder to a nice place you wish to work from (I'd copy the folder to my
 `~/projects` directory and name the copy `manual`) and open `source/main.cpp`
-with your favorite text editor. (My favorite text editor is gvim.) Let's get
+with your favorite text editor. (My favorite text editor is vim.) Let's get
 going!
 
 ### Initializing the Hardware
