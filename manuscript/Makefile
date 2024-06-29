@@ -1,4 +1,4 @@
-DOCBOOK_XSL := /usr/local/share/xsl/docbook/xhtml-1_1/docbook.xsl
+DOCBOOK_XSL ?= /usr/local/share/xsl/docbook/xhtml-1_1/docbook.xsl
 
 manual.zip: manual.html
 	# Make a temporary folder
