@@ -1,6 +1,7 @@
-# How do I display a background?
+# Chapter 5
+## How do I display a background?
 
-## Some Background Information
+### Some Background Information
 
 Since the beginning of time, humans have used raster displays to draw
 electronic images. Raster images aren't used too much anymore, in practice.
@@ -33,11 +34,11 @@ draw. This would give us strange artifacts and is generally undesirable.
 
 <a name="raster_display"></a>
 
-### Figure 5.1, “The Raster Display”
+#### Figure 5.1, “The Raster Display”
 
 ![The Raster Display](./images/raster_display.svg)
 
-## The 2D Graphics Engines
+### The 2D Graphics Engines
 
 The Nintendo DS has two screens. As such, it has two graphics engines, one for
 each screen. The first engine is referred to as the "main" engine, while the
@@ -53,7 +54,7 @@ Next, we map memory for use with the engines. Finally, we load their memory
 with graphics data and palettes and they automatically just draw what we've set
 them up to do.
 
-## The Fifth Mode
+### The Fifth Mode
 
 Each of these graphics engines can be placed into one of seven different modes
 that support different features. In this manual, we'll cover one of the more
@@ -66,7 +67,7 @@ Mode 5 consists of four different backgrounds each with their own capabilities.
 
 <a name="mode_5_information"></a>
 
-### Table 5.1, “Mode 5 Information”
+#### Table 5.1, “Mode 5 Information”
 
 | Background | Purpose |
 | ---------- | ------- |
@@ -75,7 +76,7 @@ Mode 5 consists of four different backgrounds each with their own capabilities.
 | 2 | Extended Rotation Background |
 | 3 | Extended Rotation Background |
 
-## A Fine Affine Background
+### A Fine Affine Background
 
 An affine background, also known as an external rotation background or exrot
 background, is one that has the ability to be transformed by an affine
@@ -90,7 +91,7 @@ you can do with an affine background and an affine transformation matrix, I
 recommend you look at Cearn's tutorial on affine transformations at
 <http://www.coranac.com/tonc/text/affine.htm>.
 
-## Coding with this Manual
+### Coding with this Manual
 
 Since this is the first time in this manual where we'll start to write code, we
 should be aware of the resources available to assist us in following along with
@@ -110,7 +111,7 @@ folder to a nice place you wish to work from (I'd copy the folder to my
 with your favorite text editor. (My favorite text editor is gvim.) Let's get
 going!
 
-## Initializing the Hardware
+### Initializing the Hardware
 
 In order to get the hardware to do what we want, we have to first initialize
 it. This means turning on the 2D graphics core. This is where we first fall in
@@ -129,7 +130,7 @@ int main() {
 }
 ```
 
-## Configuring the VRAM Banks
+### Configuring the VRAM Banks
 
 After we get the basic setup done, we now have to tell the graphics engine
 where to get its display data from. The two graphics engines share the same
@@ -174,11 +175,11 @@ There are nine VRAM banks in total on the Nintendo DS. See [Table 5.2, “VRAM
 Bank Information”](#vram_bank_information) for details about them. Our 16-bit
 background images take up 128KB of memory each. Thus, each background has to
 have one whole VRAM bank assigned to it. Not all VRAM banks can be used for all
-purposes, however. Refer to Appendix A, for more detailed information.
+purposes, however. Refer to [Appendix A](vram.md), for more detailed information.
 
 <a name="vram_bank_information"></a>
 
-### Table 5.2. VRAM Bank Information
+#### Table 5.2. VRAM Bank Information
 
 | VRAM Bank | Control Register Address | Control Register | VRAM Bank Size |
 | --------- | ------------------------ | ---------------- | -------------- |
@@ -192,7 +193,7 @@ purposes, however. Refer to Appendix A, for more detailed information.
 | `VRAM_H` | `0x04000248` | `VRAM_H_CR` | 32KB |
 | `VRAM_I` | `0x04000249` | `VRAM_I_CR` | 16KB |
 
-## Setting up the Affine Backgrounds
+### Setting up the Affine Backgrounds
 
 libnds helps us once again by provide a nice API[^api] for accessing the affine
 transformation matrix of a particular affine background. libnds provides access
@@ -203,7 +204,7 @@ with.
 
 <a name="libnds_affine_bg_api"></a>
 
-### Figure 5.2. libnds Affine Background API
+#### Figure 5.2. libnds Affine Background API
 
 ![libnds Affine Background API](./images/libnds_affine_bg_api.svg)
 
@@ -284,7 +285,7 @@ void initBackgrounds() {
 }
 ```
 
-## Fixed Point Number Primer
+### Fixed Point Number Primer
 
 What's up with all those `<< 8` thingies? Those are fixed point numbers. The
 Nintendo DS expects many values to be in varying fixed point formats. A fixed
@@ -306,11 +307,11 @@ fractions.”](#fixed_point) illustrates the concept of fixed point numbers.
 
 <a name="fixed_point"></a>
 
-### Figure 5.3. Integer variables can be used to represent fractions.
+#### Figure 5.3. Integer variables can be used to represent fractions.
 
 ![Integer variables can be used to represent fractions](images/fixed_point.svg)
 
-## The Basics of DMA
+### The Basics of DMA
 
 DMA stands for Direct Memory Access. DMA allows the reading and writing of
 memory independently of the CPU. The Nintendo DS has special, dedicated DMA
@@ -390,7 +391,7 @@ void displaySplash() {
 }
 ```
 
-## Working with the Makefile
+### Working with the Makefile
 
 The default template makefile will turn your graphic files into object files
 for linking into your program. Never include data as a header file.
@@ -418,7 +419,7 @@ also include the length in bytes of the data references as
 For our project, we'll be putting the our graphic files and grit rule files
 into the `gfx` directory and having the makefile use `grit` on them.
 
-## Gritty Crash Course
+### Gritty Crash Course
 
 With the emergence of the awesome and multi-platform tool, `grit` there is no
 reason to not learn how to use it. It is now a standard tool in Nintendo DS and
@@ -437,7 +438,7 @@ read the grit manual at <http://www.coranac.com/projects/grit/> and
 <http://www.coranac.com/man/grit/html/grit.htm> respectively. You can also
 download the latest version of grit from the grit project homepage.
 
-## Putting in the Star Fields
+### Putting in the Star Fields
 
 Let's now put these functions into our `main()` function to get everything
 working together.
@@ -469,7 +470,7 @@ int main() {
 }
 ```
 
-## Compiling
+### Compiling
 
 Check over your code, referring to the included examples if needed. Make sure
 you have the graphics files and the grit rule files in the `gfx` directory in
@@ -484,7 +485,7 @@ you have chosen.
 
 <a name="chapter_5_screen_shot"></a>
 
-### Figure 5.4. The program should look like this when run.
+#### Figure 5.4. The program should look like this when run.
 
 ![Splash](images/splash.png)
 

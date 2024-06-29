@@ -1,6 +1,7 @@
-# Basic Game Mechanics Applied to the Space Shooter Genre
+# Chapter 7
+## Basic Game Mechanics Applied to the Space Shooter Genre
 
-## The Importance of Object Oriented Programming
+### The Importance of Object Oriented Programming
 
 Object oriented programming (OOP) is essential to making good games on a modern
 system. Although it is very much possible without object oriented programming,
@@ -9,7 +10,7 @@ modularization, and abstraction. It makes the programmer's job a lot easier.
 Also, due to modularization, collaborating on projects with your friends or
 coworkers is easily ten fold easier.
 
-## The Ship Class
+### The Ship Class
 
 The first thing we'll make is a `Ship` class. This class will encapsulate all
 the properties and functionality of any ship in an easy to use and understand
@@ -27,7 +28,7 @@ physical paper before you begin coding.
 
 <a name="ship_properties_and_functions"></a>
 
-### Table of Ship properties and functionality
+#### Table of Ship properties and functionality
 
 | Properties | Functionality |
 | ---------- | ------------- |
@@ -41,7 +42,7 @@ physical paper before you begin coding.
 | `maxSpeed` | |
 | `mass` | |
 
-## Making the Ship Class
+### Making the Ship Class
 
 I have provided a skeleton framework file for you to write your class in. It is
 all set and ready for you to implement in the `ship.cpp` file. The header file,
@@ -50,7 +51,7 @@ you should always make a skeleton framework class to work from. It makes
 implementation straightforward and you do not have to worry about the semantics
 of setting up a class so much.
 
-## The Constructor
+### The Constructor
 
 I have provided you with a simple constructor and private initialization method
 method. These are often mundane things to make. In fact, the compiler will
@@ -59,7 +60,7 @@ you if you don't explicitly make them. Feel free to modify the default values
 in the initializers to try out different effects of changing the ship
 properties.
 
-## Acceleration
+### Acceleration
 
 Acceleration is probably one of the most important things your ships can do. To
 accelerate, we simply increase our velocity by a certain increment, that being
@@ -100,7 +101,7 @@ void Ship::accelerate() {
 }
 ```
 
-## Moving the Ship
+### Moving the Ship
 
 This one is incredibly easy thanks to the Nintendo DS hardware. All we have to
 do is increment our position by our velocity. The hardware takes care of any
@@ -117,7 +118,7 @@ void Ship::moveShip() {
 }
 ```
 
-## Reversing the Ship's Direction
+### Reversing the Ship's Direction
 
 This one took me a while to figure out, even though it's just one line, but
 it's very useful. We can turn the ship around, not a 180 per se, but simply
@@ -131,7 +132,7 @@ void Ship::reverseTurn() {
 }
 ```
 
-## Rotating the Ship
+### Rotating the Ship
 
 Rotating the ship is also quite simple. We just increment or by ship’s turning
 speed depending on which direction we wish to turn. Note that we are storing
@@ -147,7 +148,7 @@ void Ship::turnCounterClockwise() {
 }
 ```
 
-## Getting the Ship's Position
+### Getting the Ship's Position
 
 Return the ship’s position.
 
@@ -157,7 +158,7 @@ MathVector2D<float> Ship::getPosition() {
 }
 ```
 
-## Getting the Ship's Angle
+### Getting the Ship's Angle
 
 This one is a bit more tricky and involved. I suppose I should start by
 explaining that a Nintendo DS circle has 32768 degrees. It doesn't actually
@@ -192,7 +193,7 @@ int Ship::getAngleDeg() {
 }
 ```
 
-## Linking the Ship into our Program
+### Linking the Ship into our Program
 
 We now need to create an instance of the ship in our main function. Creating an
 instance of a class, known as an object, is quite simple, as you can see below.
@@ -253,7 +254,7 @@ int main() {
 }
 ```
 
-## Creating the Main Game Loop
+### Creating the Main Game Loop
 
 The previous code isn't very exciting, since we never update the OAM more than
 once. We need to begin the creation of what is referred to as the game loop. We
@@ -314,7 +315,7 @@ incredible masterpiece, will rotate and move our ship with very little effort
 on our part. In hindsight, all we have done is flip a few bits in a few
 registers in a structured manner, and our ship comes to life. Incredible.
 
-## Compiling
+### Compiling
 
 Verify that you are including all the files you need to include now, before
 compiling.

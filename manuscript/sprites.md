@@ -1,6 +1,7 @@
-# What is a sprite? How do I use them?
+# Chapter 6
+## What is a sprite? How do I use them?
 
-## Magical Fairies?
+### Magical Fairies?
 
 No, sprites are not magical fairies. It is a term in 2D graphics programming
 which refers to an image or animation. The Nintendo DS has dedicated hardware
@@ -8,7 +9,7 @@ for dealing with sprites. This makes the system very useful for 2D. Most gaming
 systems do not have a 2D core, and all sprites and other 2D graphics have to be
 handled manually by painting 2D images on the side of a quad within 3D space.
 
-## The OAM
+### The OAM
 
 The OAM manages all the sprites. This is an immense job, most of it done behind
 the scenes for us. After using it, you might think it magical. It's not as
@@ -17,7 +18,7 @@ place in memory we use to keep track of and control our sprites. The OAM works
 with a `SpriteEntry` and a `SpriteRotation` struct to manage the attributes of
 our sprites.
 
-## Information About the Sprite Hardware
+### Information About the Sprite Hardware
 
 On the Nintendo DS, we can have up to 128 sprites. Only 32 of those sprites can
 be affine transformed (rotated, scaled, skewed, etc.). We are also only allowed
@@ -32,7 +33,7 @@ though both use the same tile data. Games often use this trick to make
 different colored enemies that look the same. The sprites still use the same
 tile data, but they use different palettes.
 
-## How Sprites are Stored in Memory
+### How Sprites are Stored in Memory
 
 Sprites are broken into 8x8 pixel pieces. This is called tiling. When drawn to
 screen, the hardware pieces these tiles together, like a puzzle where the
@@ -50,7 +51,7 @@ into the same place as background images, the `gfx` folder.
 
 <a name="sprite_tile_layout"></a>
 
-### Figure 6.1. The upper text shows information as it would be on a non-tiled background. The lower text shows the same data, tiled, for use in tiled graphic modes.
+#### Figure 6.1. The upper text shows information as it would be on a non-tiled background. The lower text shows the same data, tiled, for use in tiled graphic modes.
 
 <code>
 const u16 data[] = {
@@ -133,7 +134,7 @@ const u16 data[] = {
 </span>
 </code>
 
-## Sprite Attributes
+### Sprite Attributes
 
 Sprites have three attribute variables associated with them. With them, sprites
 can spin and flip and mosaic and perform all sorts of fun hardware effects.
@@ -156,7 +157,7 @@ these functions together in a new file called `sprites.cpp`. Our first step
 will be to create a that new source code file. Put a new file called
 `sprites.cpp` into the `source` folder of your project directory.
 
-## Updating the OAM
+### Updating the OAM
 
 Instead of keeping track of things directly in the OAM, we'll manage a copy of
 the OAM in memory that we will copy over every frame using `updateOAM()`. The
@@ -182,7 +183,7 @@ void updateOAM(OAMTable * oam) {
 }
 ```
 
-## Initializing the OAM
+### Initializing the OAM
 
 The first thing we do when initializing the OAM is to clear all the sprite data
 in the OAM. After that, we'll make a call to our afore written `updateOAM()`
@@ -214,7 +215,7 @@ void iniOAMTable(OAMTable * oam) {
 }
 ```
 
-## Rotating Sprites
+### Rotating Sprites
 
 Let's get to spinning. This is a bit more difficult than what we've done
 before, but still fun. It's nice to not have to make a separate sprite for each
@@ -247,7 +248,7 @@ void rotateSprite(SpriteRotation * spriteRotation, int angle) {
 }
 ```
 
-## Showing and Hiding Sprites
+### Showing and Hiding Sprites
 
 Up until now, we haven't used the fancy `SpriteEntry` union included in libnds.
 It allows us to avoid thinking about bit twiddling and masking in most cases.
@@ -300,7 +301,7 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
 }
 ```
 
-## Moving Sprites
+### Moving Sprites
 
 Now for some real fun. Moving sprites in hardware, and not having to worry
 about clipping, buffers, or anything, is such a wonderful feeling. To move a
@@ -320,7 +321,7 @@ spriteEntry->x = 0;
 spriteEntry->y = 0;
 ```
 
-## Setting Sprite Priorities
+### Setting Sprite Priorities
 
 The ability to set a sprites priorty is essential when dealing with multiple
 sprites, as we will be doing. As such, we'll now discuss sprite priorities and
@@ -343,14 +344,14 @@ like.
 spriteEntry->priority = OBJPRIORITY_3;
 ```
 
-## Using the Sprites
+### Using the Sprites
 
 Now that our `sprites.cpp` file is finished, let's get on to how sprites are
 stored in memory, how to load them, and so forth. So put away your sprites.cpp
 file into the source directory of your home folder and let's get back into our
 `main.cpp` file.
 
-## Setting up VRAM for Sprites
+### Setting up VRAM for Sprites
 
 We'll need to make a place for our sprite data to live in VRAM. Since we will
 be using sprites on the main graphics engine, we can use VRAM bank E for our
@@ -404,7 +405,7 @@ void initVideo() {
 }
 ```
 
-## Sprite Tile Addressing
+### Sprite Tile Addressing
 
 We'll be using the same memory alignment (boundary) as the GBA uses for our
 sprites. Tile VRAM addresses must be aligned to 32 bytes. If you feel shorted
@@ -439,7 +440,7 @@ uses from its length in bytes by diving the length in bytes by how many bytes a
 tile takes up. In our case, as we'll be using 16-color tiles, a tile (8x8
 pixels) takes up 32 bytes.
 
-## Loading in a Sprite
+### Loading in a Sprite
 
 Now, to see a sprite in action. Let's load in the `orangeShuttle` graphic and
 the moon graphic. Make a new function called `initSprites()`. Place it after
@@ -451,7 +452,7 @@ information about sprites that aren't explicitly contained in the `SpriteEntry`
 struct. We'll be using it to help us manage our information about sprites
 better.
 
-### Procedure 6.1. To Create a Sprite
+#### Procedure 6.1. To Create a Sprite
 
 1. We'll begin by filling in our `SpriteInfo` struct for the sprite. Each
    sprite will have its own `SpriteInfo` struct. The first thing we need to do
@@ -639,7 +640,7 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
 }
 ```
 
-## What are assertions?
+### What are assertions?
 
 In the above code, you'll find some things that look like function calls to a
 function called `assert()`. These aren't actually function calls, but macro
@@ -662,7 +663,7 @@ When you release a production version of your software, the assertions can be
 removed from your code by the preprocessor. To do this with a GNU compiler,
 like the ones we are using, you simply set `NDEBUG`.
 
-## Displaying the Sprites
+### Displaying the Sprites
 
 In our main function, we now need to initialize our copy of the OAM, create the
 structs which hold our sprite data, make a call to the `initSprites()` function
@@ -708,7 +709,7 @@ int main() {
 }
 ```
 
-## Compiling
+### Compiling
 
 Before you get to compiling, you may want to look at the top of your `main.cpp`
 file and verify that you are including all the proper files. There are a lot of
@@ -736,7 +737,7 @@ sprite”](#chapter_6_screen_shot).
 
 <a name="chapter_6_screen_shot"></a>
 
-### Figure 6.2. Output with both backgrounds and a sprite</title>
+#### Figure 6.2. Output with both backgrounds and a sprite</title>
 
 ![Splash](images/splash.png)
 

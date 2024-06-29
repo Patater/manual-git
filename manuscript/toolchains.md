@@ -1,6 +1,7 @@
-# How do I create programs?
+# Chapter 4
+## How do I create programs?
 
-## All About devkitPro
+### All About devkitPro
 
 devkitPro is a brand, like Microsoft or Adobe. You don't use Nintendo DS
 software anymore than you write your letters with Microsoft or edit photos with
@@ -16,7 +17,7 @@ the Nintendo DS, GBA, and GP32; all of which are run by the ARM processor.
 However, we will be using something to make our job much easier in addition to
 just devkitARM.
 
-## The Wonderful World of libnds
+### The Wonderful World of libnds
 
 libnds, the library for Nintendo DS, started out its life as NDSLIB. NDSLIB was
 a simple library created by joat (Michael Noland) and dovoto (Jason Rogers).
@@ -32,21 +33,21 @@ certain portions of the hardware from the programmer.
 Today, libnds is an incredibly useful library that over 96% of the Nintendo DS
 homebrew community uses.
 
-## Installing devkitARM
+### Installing devkitARM
 
 Installing devkitARM is quite simple. Directions are already documented on
 their website. Visit <http://www.devkitpro.org/setup.shtml> for directions.
 Although more geared towards Windows, the installation is fairly straight
 forward. Automated installers are available for Windows, Macintosh, and Linux.
 
-## Installing libnds from source
+### Installing libnds from source
 
 libnds's source install is less documented than devkitPro's source install, but
 is also quite simple in comparison. libnds is automatically installed by the
 automated installers of devkitARM. However, if you want to view the libnds
 source code, you'll have to install it from source.
 
-### Procedure 4.1. To install libnds from source
+#### Procedure 4.1. To install libnds from source
 
 1. Simply download the latest source from
    [SourceForge.net](http://sourceforge.net/project/showfiles.php%3Fgroup_id%3D114505%26package_id%3D151608).
@@ -66,7 +67,7 @@ source code, you'll have to install it from source.
    seconds and you'll be on your way to developing software for the Nintendo
    DS.
 
-## The Next Step
+### The Next Step
 
 Now that you have devkitARM and libnds installed on your computer, you have
 everything you need to start coding, excepting perhaps a bit of knowledge on

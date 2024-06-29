@@ -1,6 +1,7 @@
-# Politics of the Nintendo DS Homebrew Movement
+# Chapter 1
+## Politics of the Nintendo DS Homebrew Movement
 
-## Background Information
+### Background Information
 
 Since the Nintendo DS debut, Nintendo enthusiasts ranging from pre-pubescent
 kids to 30-year-old college dropouts have been wanting to develop their own
@@ -27,7 +28,7 @@ official Nintendo development). These dedicated hobbyists come from all walks
 of life and cultures, many from Europe and the U.S., and bring with them great
 knowledge. These people make up the homebrew movement.
 
-## Is Homebrew Legal?
+### Is Homebrew Legal?
 
 Homebrew is legal for a number of reasons. You own the hardware you reverse
 engineer, so you are free to do with it as you will so long as you don't break

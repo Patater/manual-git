@@ -1,6 +1,7 @@
-# What is a passthrough device and how do I use one?
+# Chapter 2
+## What is a passthrough device and how do I use one?
 
-## Purpose of the Passthrough
+### Purpose of the Passthrough
 
 The purpose of the pass through is to allow the running of programs on the
 Nintendo DS through the Game Boy Advance (GBA) cartridge slot. This is done
@@ -10,7 +11,7 @@ is a form of proprietary copy protection, we have to get the Nintendo DS to run
 code from a different place than the NDS card slot. Also, it is much easier to
 bypass the encryption than to try and break it.
 
-## How a PassMe Works
+### How a PassMe Works
 
 When the Nintendo DS first boots, it reads a header from the Nintendo DS card
 inserted into the NDS card slot. The Nintendo DS will read a small block of
@@ -22,7 +23,7 @@ passthrough's job is to read this header and modify it to point to a location
 someplace on the GBA cartridge inserted into the GBA cart slot. What location
 would this be? Why, our code of course.
 
-## History of the Passthrough
+### History of the Passthrough
 
 DarkFader (Rafael Vuijk) may have been the first to create a passthrough
 device. He designed his passthrough with an FPGA (Field Programmable Gate
@@ -40,11 +41,11 @@ today, providing a great option when looking to purchase a passthrough device.
 
 <a name="early_passme"></a>
 
-### Figure 2.1. Picture of an early PassMe and an FPGA
+#### Figure 2.1. Picture of an early PassMe and an FPGA
 
 ![Picture of an early PassMe](./images/passme.png) ![Picture of an FPGA](./images/ufb-x_profil.jpg)
 
-## The Future is Now, and Now, and Now, and Now
+### The Future is Now, and Now, and Now, and Now
 
 The PassMe was the first device invented to allow homebrew software to be run
 on the Nintendo DS. After Nintendo decided to crack down a little harder, in
@@ -54,7 +55,7 @@ in how it bypassed the copy protection of the Nintendo DS and also required the
 operator to have more resources (a GBA flash cart with SRAM) and go through a
 more involved process. After a while, a device called the NoPass surfaced.
 
-## About the NoPass
+### About the NoPass
 
 A NoPass pretends to be a real Nintendo DS game card. It contains code that is
 encrypted in the same manner as a real Nintendo DS game. The encryption was
@@ -63,7 +64,7 @@ then reverse engineered the encryption information from the BIOS code. NoPass
 devices are technically not considered passthroughs, since they don't bypass
 the copy protection of the Nintendo DS.
 
-## About Slot-1 Devices
+### About Slot-1 Devices
 
 Recently, due to Martin Korth's work, homebrew engineers have discovered a way
 to create a device that runs homebrew software from the Nintendo DS card slot
@@ -73,7 +74,7 @@ of providing memory to the Nintendo DS (via built-in flash memory or a microSD
 card slot). These devices are called "Slot-1 devices". The older style devices
 that plug into the GBA cart slot are referred to as "Slot-2 devices".
 
-## How do I get a Passthrough
+### How do I get a Passthrough
 
 Today, many passthrough and NoPass devices are on the market. It is highly
 recommended by the homebrew community to buy one from a fellow developer and
@@ -87,7 +88,7 @@ should be avoided at all costs. The best place to buy a passthrough device
 today is from
 [DSPassme.com](http://www.dspassme.com/oscommerce/catalog/index.php).
 
-## Which Passthrough Should I Buy?
+### Which Passthrough Should I Buy?
 
 It is recommended that you purchase a NoPass or a Slot-1 homebrew device, as
 these work on all Nintendo DS systems with no troubles or other complications
@@ -103,7 +104,7 @@ a Slot-1 device will give you more battery life than using a Slot-2 device.
 Many Slot-1 devices also double as NoPass devices, so you don't need to buy
 both a passthrough and a Slot-2 device anymore.
 
-## How would I choose an old style passthrough?
+### How would I choose an old style passthrough?
 
 If you still want to buy an old fashioned style passthrough, there are a number
 of things you'll need to consider. Depending on what kind of Nintendo DS you
@@ -132,7 +133,7 @@ a PassMe 2 or not. <a href="#game_eject_firmware_table">Table 2.1, “When
 ejecting the game, you'll discover your firmware version as shown."</a> will
 help you discover which firmware version you have.
 
-### Procedure 2.1. Checking the Firmware Version
+#### Procedure 2.1. Checking the Firmware Version
 
 1. Insert and Nintendo DS game into the DS card slot.
 1. Turn on the Nintendo DS. (If you have auto start enabled, hold down Start
@@ -143,7 +144,7 @@ help you discover which firmware version you have.
 1. You will notice either Pictochat freezing or both screens will
    change color.
 
-### Table 2.1. When ejecting the game, you'll discover your firmware version as shown.
+#### Table 2.1. When ejecting the game, you'll discover your firmware version as shown.
 
 <a name="game_eject_firmware_table"></a>
 | Observed Results | Firmware Version |
@@ -161,7 +162,7 @@ work with all Nintendo DS systems, past, present, and future. If you have a
 friend with a newer DS who may need to borrow your NoPass to play your games,
 it's always helpful to have a universal method of running them.
 
-## PassMe 2 Buying Tips
+### PassMe 2 Buying Tips
 
 When ordering a PassMe 2, be sure to select one pre-programmed to a common game
 that you own, such as the Metroid Prime Hunters Demo or Super Mario 64 DS. Each
@@ -172,7 +173,7 @@ trying to obtain a PassMe 2. Some newer GBA flash carts might only support save
 games on flash, so simply knowing that your flash cart supports save games
 isn't enough.
 
-## How do I use my Passthrough
+### How do I use my Passthrough
 
 Using a passthrough device is quite simple. Simply insert a game into the card
 slot on the passthrough and plug the device into the DS card slot on the top of
@@ -182,11 +183,11 @@ inserted into the DS card slot”</a> illustrates what this looks like.
 
 <a name="passme_in_use"></a>
 
-### Figure 2.2. The PassMe inserted into the DS card slot
+#### Figure 2.2. The PassMe inserted into the DS card slot
 
 ![The passme inserted into the DS card slot](./images/passme_insert_ds.png)
 
-## What to do with your Passthrough
+### What to do with your Passthrough
 
 One of the best things to do once you get your passthrough is to install a
 patch to your Nintendo DS firmware known as "FlashMe." This firmware patch

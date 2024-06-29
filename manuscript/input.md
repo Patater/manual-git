@@ -1,6 +1,7 @@
-# Nintendo DS Input Systems
+# Chapter 8
+## Nintendo DS Input Systems
 
-## Overview
+### Overview
 
 The Nintendo DS has many different user input systems, including buttons, touch
 screen, and a microphone. Most video game systems only have buttons and an
@@ -11,7 +12,7 @@ learn more about the microphone, I'd recommend reading, although a bit
 outdated, the only microphone resource I know of
 <http://www.double.co.nz/nintendo_ds/nds_develop9.html>.
 
-## Key Input
+### Key Input
 
 libnds provides us with a very nice abstraction for key input. Instead of
 having to AND registers with cryptic masks to discover which keys we are
@@ -24,7 +25,7 @@ explained in [Table 8.1, “libnds Key Defines”](#libnds_key_defines).
 
 <a name="libnds_key_defines"></a>
 
-### Table 8.1. libnds Key Defines
+#### Table 8.1. libnds Key Defines
 
 | Key Define | Mask Bit | Associated Input |
 | ---------- | -------- | ---------------- |
@@ -43,7 +44,7 @@ explained in [Table 8.1, “libnds Key Defines”](#libnds_key_defines).
 | `KEY_TOUCH` | `1 << 12` | Pen Touching Screen (no coordinates) |
 | `KEY_LID` | `1 << 13` | Lid shutting (useful for sleeping) |
 
-## Touch!
+### Touch!
 
 Utada Hikaru (<https://www.youtube.com/watch?v=bYoVeIGl0ao>) wants to touch it.
 You have to code it. Let's go!
@@ -62,7 +63,7 @@ touch->px; // This contains the x pixel location.
 touch->py; // This contains the y pixel location.
 ```
 
-### What is the IPC?
+#### What is the IPC?
 
 <!-- Note -->
 You may see code that uses something called the IPC to interact with the touch
@@ -71,7 +72,7 @@ it and should not depend on it being there in the future. The method we use to
 read values from the touch screen does not use the IPC struct and is safe for
 future use.
 
-## Writing an Input Updating Function
+### Writing an Input Updating Function
 
 Now that we know a bit about how input is laid out on the Nintendo DS, let's
 write a function in our `main.cpp` to collect the input for us. We'll call it
@@ -88,7 +89,7 @@ void updateInput(touchPosition * touch) {
 }
 ```
 
-## Writing an Input Handling Function
+### Writing an Input Handling Function
 
 This function will be part of our game state updating game loop component. It
 will react to outside input and modify the game state accordingly. As such, it
@@ -176,7 +177,7 @@ instead of one. If we had wanted to be more clean, we could have even produced
 a game state struct that contained all the game state and all operations on it
 in one place.
 
-## Creating the Main Game Loop, Again
+### Creating the Main Game Loop, Again
 
 Let's check back in on our `main()` function now. We need to make some
 adjustments to our game loop since we've now added the ability to collect input
@@ -261,7 +262,7 @@ int main() {
 }
 ```
 
-## Compiling
+### Compiling
 
 Again, we should double check that we have all the proper includes before
 compiling.
@@ -288,7 +289,7 @@ Shuttle”](#chapter_8_screen_shot). Now if only we had some aliens to kill…
 
 <a name="chapter_8_screen_shot"></a>
 
-### Figure 8.1. Flying around in the Orange Shuttle
+#### Figure 8.1. Flying around in the Orange Shuttle
 
 ![Splash](images/splash.png)
 

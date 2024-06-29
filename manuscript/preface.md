@@ -1,6 +1,6 @@
 # Preface
 
-## The Main Issue
+### The Main Issue
 
 You love playing games on your Nintendo DS. Every game you've played has been a
 wonderful experience, each one leaving a lovely aftertaste on your gaming
@@ -16,7 +16,7 @@ your own games. Join us, the homebrew community. You'll have a great time
 giving others a great time, collaborating on projects, and feeling the rush of
 intense and under pressure coding for numerous programming competitions.
 
-## The Solution
+### The Solution
 
 This manual is the start of the solution. In it, I will cover the basics of
 programming the Nintendo DS starting with an explanation of the politics behind
@@ -27,7 +27,7 @@ backgrounds, using sprites, and basic game programming techniques. All these
 things will be discussed in the context of the creation of a simple game I
 concocted one weekend entitled "Orange Spaceship."
 
-## How to Use this Manual
+### How to Use this Manual
 
 I assume you know a bit of C or C++ coding. If not, spend at least 20 hours
 making a variety of programs on your own in addition to completing some

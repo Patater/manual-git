@@ -1,6 +1,7 @@
-# How do I get programs into my Nintendo DS?
+# Chapter 3
+## How do I get programs into my Nintendo DS?
 
-## The Methods
+### The Methods
 
 There are a few ways of getting your code into the Nintendo DS. The first of
 which is the simple GBA flash cart. These flash carts are generally quite
@@ -18,14 +19,14 @@ should be avoided. It is recommended to use the GBA Movie Player (GBAMP) if you
 want to use a Slot-2 device. With Slot-1 devices, we don't have too much of a
 choice but to choose the lesser of many evils.
 
-## Which Slot-1 Device should I buy?
+### Which Slot-1 Device should I buy?
 
 As there are no homebrew produced devices made by hombrew people for homebrew
 people (yet), we regretfully have to buy devices designed and sold for piracy
 when buying NoPass or Slot-1 devices. That said, the most important feature to
 consider when buying one of these devices is DLDI support.
 
-## What is DLDI?
+### What is DLDI?
 
 DLDI stands for dynamically linked device interface. In order for the homebrew
 filesystem, known as libfat, to work, you'll need a device which supports the
@@ -42,14 +43,14 @@ supporting that kind of company with our business.
 You can learn more about DLDI and how to use it at the DLDI Wiki website,
 <http://dldi.drunkencoders.com/index.php?title=Main_Page>.
 
-## So, which Slot-1 devices are good?
+### So, which Slot-1 devices are good?
 
 There are so many Slot-1 devices on the market today. Choosing one of them has
 become very difficult, as the choices are so many. In this manual, I'll discuss
 the devices I'm familiar with, which nifty features they propport, and how they
 compare to one another.
 
-## R4DS
+### R4DS
 
 This device is built well. It is the most sturdy of the three. It uses microSD
 cards for storage and supports DLDI. This means that you can run homebrew
@@ -63,7 +64,7 @@ current models. The R4DS is a great device overall and well supported by the
 Nintendo DS homebrew community, but it does not support running GBA software
 unfortunately.
 
-## M3 Real
+### M3 Real
 
 This device comes in varying configurations for your various needs. It comes
 with both a Slot-1 device and a Slot-2 device. The Slot-2 device is what
@@ -84,7 +85,7 @@ need to be patched on a PC before being transferred to the SD card.
 The M3 Real supports microSD and microSDHC cards, unlike the R4DS. So if you
 are in the mood for massive storage, the M3 Real can be your friend.
 
-## Cyclo DS Evolution
+### Cyclo DS Evolution
 
 This device has very recently come to market, but is already making a big
 impression in the community. The Cyclo DS Evolution has the best looking and
@@ -117,7 +118,7 @@ priced with the others, which is good. While it doesn't support running GBA
 software, it feature rich on the Nintendo DS side of things. I recommend the
 Cyclo DS Evlolution to meet all of your Slot-1 needs and desires.
 
-## Where do I get one of these Slot-1 devices?</title>
+### Where do I get one of these Slot-1 devices?</title>
 
 Out of the many places to buy these devices, I've been most happy with
 electrobee. electrobee is run by a trusted member of the homebrew community and
@@ -126,7 +127,7 @@ prices are quite often the best, too. When you are ready to purchase a Slot-1
 device, I recommend that you visit
 [electrobee.com](http://electrobee.com/index.php?ref=16)>.
 
-## The Slot-2 Device of Choice
+### The Slot-2 Device of Choice
 
 If you decide that GBA software development is important for you, you might
 want to consider getting a NoPass and a Slot-2 device. The NoPass will allow
@@ -145,7 +146,7 @@ a GBA flash cart (right) inserted into a DS”](#gbamp_vs_gba_flash_cart).
 
 <a name="gbamp_vs_gba_flash_cart"></a>
 
-### Figure 3.1. Comparison of GBAMP (left) and a GBA flash cart (right) inserted into a DS
+#### Figure 3.1. Comparison of GBAMP (left) and a GBA flash cart (right) inserted into a DS
 
 ![Comparison of a GBAMP (left) and a GBA flash cart (right) inserted into a
 DS](./images/comparison_insertion.png)
@@ -159,7 +160,7 @@ DS, as can be seen in [Figure 3.1, “Comparison of GBAMP (left) and a GBA flash
 cart (right) inserted into a DS”](#gbamp_vs_gba_flash_cart).
 
 
-## Running Multiple Software Titles
+### Running Multiple Software Titles
 
 If you chose to go with the GBA flash cart, you can use a utility called
 Darkain’s MultiNDS Loader to load multiple programs onto your flash cart. This

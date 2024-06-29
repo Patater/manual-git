@@ -1,6 +1,7 @@
-# What about the sounds?
+# Chapter 9
+## What about the sounds?
 
-## A Sound Theory
+### A Sound Theory
 
 Sounds are essential in any game. Our little project should be no exception.
 Sounds bring life to various elements in the game, such as space ships, weapon
@@ -15,7 +16,7 @@ Sound effects on the other hand, are quite useful. A word of warning, however,
 a game with bad sounds (scratchy, annoying, too repetitive, etc.) is worse than
 a silent game. Take care when engineering sounds for your game.
 
-## The Hardware
+### The Hardware
 
 The Nintendo DS has amazing sound hardware. We will only be able to scratch the
 surface of it, and even still, we won't leave any scratch marks. The Nintendo
@@ -24,7 +25,7 @@ special channels. All channels can play ADPCM or PCM sounds, while 8-13 are the
 only channels that can play PSG sounds and 14-15 the only that can generate
 noise. We will only be experimenting with PCM sounds.
 
-## Making the Sounds
+### Making the Sounds
 
 To play our sounds, we will use the unbelievebly impressive homebrew audtio
 library, maxmod. maxmod is distributed with libnds, so you should already have
@@ -33,7 +34,7 @@ as mod, it, s3m, xm, and wav, but we'll just be using it as a wav player to
 play our sound effects. For more information and deeper coverage of the
 library, visit <http://maxmod.org/>.
 
-## Using the Sounds
+### Using the Sounds
 
 The makefile I've included with my manual has a custom rule for creating a
 `soundbank.bin` file from all audio files in the `audio` project folder. The
@@ -43,7 +44,7 @@ file and creates the `soundbank_bin.h` file. All of these header files will be
 located in the `build` folder after a build, if you wish to review their
 contents.
 
-## Getting Down with the Code
+### Getting Down with the Code
 
 Now it's finally time for some code. maxmod simplifies sound playing quite a
 bit. All we need to do is initialize the library, let it know where our
@@ -195,7 +196,7 @@ In summary, we simply set up our sound in the `main()` function, and had the
 `handleInput()` function play our sound whenever the up key is initially
 pressed.
 
-## The all powerful maxmod
+### The all powerful maxmod
 
 We are barely touching what maxmod can do in this case study. maxmod can stop
 sounds after they've started playing, loop sounds, play music, and more without
@@ -204,7 +205,7 @@ highly recommend you read about it on [its homepage](http://maxmod.org/), or at
 least run the maxmod demo (featured on said homepage) on a real Nintendo DS.
 You won't be disappointed.
 
-## Compiling
+### Compiling
 
 Check your includes.
 
@@ -236,7 +237,7 @@ around in the Orange Shuttle, with sound!”](#chapter_9_screen_shot).
 
 <a name="chapter_9_screen_shot"></a>
 
-## Figure 9.1. Flying around in the Orange Shuttle, with sound!
+#### Figure 9.1. Flying around in the Orange Shuttle, with sound!
 
 ![Splash](images/splash.png)
 
