@@ -40,7 +40,7 @@ screen, the hardware pieces these tiles together, like a puzzle where the
 pieces have no distinguishing edges. There are two ways to tile sprites, 1D and
 2D. In a 2D layout, the sprite memory is treated like a giant image from which
 sprite tiles are obtained by making a box the size of the sprite and placing it
-over the giant image. In a 1D layout, the sprites are layed out in a linear
+over the giant image. In a 1D layout, the sprites are laid out in a linear
 fashion, as discussed in [Figure 6.1](#sprite_tile_layout).
 
 The conversion process is very similar to that for backgrounds. We simple make
@@ -150,7 +150,7 @@ provides the means to do other things that we'll be doing with sprites though,
 like move them, we'll be doing. We'll use the libnds API wherever possible.
 Let's write some functions to do each of those, in that order.
 
-I provide you with a header file, located with the acompanying source at
+I provide you with a header file, located with the accompanying source at
 `code/chapter_6-sprites/include/sprites.h` that contains a collection of sprite
 related function declarations. We'll be working on the definitions for each of
 these functions together in a new file called `sprites.cpp`. Our first step
@@ -162,15 +162,15 @@ will be to create a that new source code file. Put a new file called
 Instead of keeping track of things directly in the OAM, we'll manage a copy of
 the OAM in memory that we will copy over every frame using `updateOAM()`. The
 reason we do this is because writes to OAM are locked during all times but
-during vblank. We will wait for vblank to occur before copying our copy of the
-OAM into the actualy OAM.
+during VBlank. We will wait for VBlank to occur before copying our copy of the
+OAM into the actually OAM.
 
 Updating the OAM is very straightforward. We do this by copying our copy of the
 OAM to the real OAM. Our copy of the OAM might still be stuck in the cache and
 may not have made it into main memory yet, so we first flush local memory (a
 must whenever performing a DMA operation) to ensure that DMA sees the correct
 data. The data we want to copy might be stuck in cache still and may not have
-made it into main memory yet. Then, we tell the OAM to look into the OAMTable
+made it into main memory yet. Then, we tell the OAM to look into the `OAMTable`
 instance we will create later for information about each one of our sprites.
 
 ```C++
@@ -323,14 +323,14 @@ spriteEntry->y = 0;
 
 ### Setting Sprite Priorities
 
-The ability to set a sprites priorty is essential when dealing with multiple
+The ability to set a sprites priority is essential when dealing with multiple
 sprites, as we will be doing. As such, we'll now discuss sprite priorities and
 how to set them.
 
-A sprite, like a background, has a priorty which determines how the sprite will
+A sprite, like a background, has a priority which determines how the sprite will
 appear with respect to other sprites and to backgrounds. A sprite with the same
-number priorty as a background will appear above it. A sprite with a lower
-priorty number than another sprite will appear above that other sprite. There
+number priority as a background will appear above it. A sprite with a lower
+priority number than another sprite will appear above that other sprite. There
 are four priorities per graphics engine available for sprites, similar to
 background priorities.
 
@@ -431,7 +431,7 @@ uint16 * tileVramAddress = &SPRITE_GFX[shuttle->gfxIndex *
                        OFFSET_MULTIPLIER];
 ```
 
-We usually want to copy more than one tile into vram at a time, however.
+We usually want to copy more than one tile into VRAM at a time, however.
 Luckily, when converting images to sprites with grit, it will tell us the
 length in bytes of our tile data for that sprite. After we have the length in
 bytes, we can use `dmaCopyHalfwords()` (which uses byte lengths for copying) to
@@ -652,8 +652,8 @@ expansions. You'll have to include `assert.h` in order to use them.
 
 The assert macro allows the programmer to make assumptions about what is going
 on in the code. To use them, you just place some kind of "fact" in between the
-paranthesis. Whenever this assumption fails, the program will quit. Assertions
-are evaluated at runtime.
+parenthesis. Whenever this assumption fails, the program will quit. Assertions
+are evaluated at run time.
 
 Assertions help you avoid developing obscure bugs later on since they'll stop
 them right where something first goes wrong. Assertions are a good thing and

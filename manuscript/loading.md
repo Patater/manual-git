@@ -21,7 +21,7 @@ choice but to choose the lesser of many evils.
 
 ### Which Slot-1 Device should I buy?
 
-As there are no homebrew produced devices made by hombrew people for homebrew
+As there are no homebrew produced devices made by homebrew people for homebrew
 people (yet), we regretfully have to buy devices designed and sold for piracy
 when buying NoPass or Slot-1 devices. That said, the most important feature to
 consider when buying one of these devices is DLDI support.
@@ -47,7 +47,7 @@ You can learn more about DLDI and how to use it at the DLDI Wiki website,
 
 There are so many Slot-1 devices on the market today. Choosing one of them has
 become very difficult, as the choices are so many. In this manual, I'll discuss
-the devices I'm familiar with, which nifty features they propport, and how they
+the devices I'm familiar with, which nifty features they purport, and how they
 compare to one another.
 
 ### R4DS
@@ -78,7 +78,7 @@ third and most expensive configuration, dubbed the "GBA Expansion Package",
 provides a Slot-2 pack with rumble, SRAM, and 32MB of RAM. <!-- XXX verify this
 information with Natrium42 -->
 
-The M3 Real supports DLDI as well. I'm not sure if it can automatially patch
+The M3 Real supports DLDI as well. I'm not sure if it can automatically patch
 homebrew with its own driver on the fly, however. The homebrew software may
 need to be patched on a PC before being transferred to the SD card.
 

@@ -11,8 +11,8 @@ GameCube, and the Nintendo DS. The toolchain we are most interested in is known
 as devkitARM.
 
 devkitARM is a specific toolchain of devkitPro. It allows the compiling of ARM
-binaries from most all computers. It is based on gcc, the gnu compiler
-collection. devkitARM includes everything you'll need to create software for
+binaries from most all computers. It is based on gcc, the GNU Compiler
+Collection. devkitARM includes everything you'll need to create software for
 the Nintendo DS, GBA, and GP32; all of which are run by the ARM processor.
 However, we will be using something to make our job much easier in addition to
 just devkitARM.
@@ -71,7 +71,7 @@ source code, you'll have to install it from source.
 
 Now that you have devkitARM and libnds installed on your computer, you have
 everything you need to start coding, excepting perhaps a bit of knowledge on
-how to code specifically for the unique harware of the Nintendo DS. In the next
-chapter, we'll cover the basics of displaying a bitmap on the screen.
+how to code specifically for the unique hardware of the Nintendo DS. In the
+next chapter, we'll cover the basics of displaying a bitmap on the screen.
 
 ![](./images/devkitlogo.png)

@@ -44,7 +44,7 @@ against it.
 
 When you buy a piece of hardware, you own it. This means that you are free to
 break it open, dive into it, reverse engineer it, and so forth. You may void
-your warranty, but thats the price for learning the intimacies of any system.
+your warranty, but that's the price for learning the intimacies of any system.
 The only illegal things on this line would be to put into production and sell
 products made with patented features (without negotiating a production deal
 with he patent owner), bypassing or breaking copy-protection, or stealing
@@ -66,7 +66,7 @@ Companies often don't have a problem with homebrew because it increases the
 demand for their gaming systems and helps them to learn more about their
 consumer base. One example of this is with the Xbox. The Xbox homebrew
 community made the Xbox do things that Microsoft never thought consumers wanted
-like playindie games, emulate classic game systems, run the Linux operating
+like play indie games, emulate classic game systems, run the Linux operating
 system, and so forth. Microsoft then included a lot of these features
 (excepting Linux, of course) in their most recent gaming console, the Xbox 360
 via a system called XNA Game Sudio and Xbox LIVE Arcade (XBLA). If a company
@@ -87,4 +87,4 @@ developers know this, and as the amateur brothers of the official game
 developers, they share the pain. Homebrew will usually keep all information
 regarding copy-protection in high secrecy; even if they know how to copy games,
 they will not share the information. The homebrew community does not want to
-see the the system they so dearly love come to an early death.
+see the system they so dearly love come to an early death.

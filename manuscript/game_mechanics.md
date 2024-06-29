@@ -66,7 +66,7 @@ Acceleration is probably one of the most important things your ships can do. To
 accelerate, we simply increase our velocity by a certain increment, that being
 the thrust capability of the ship, in the angle we are headed. Here is where
 some simple trigonometry comes into play. Since our velocity is stored as a two
-dimensional vecotr (x and y component), we have to shadow our thrust vector
+dimensional vector (x and y component), we have to shadow our thrust vector
 onto each direction. We do this we multiply the thrust by sin(angle) for our x
 component, and by -cos(angle) for the y direction. Next, after we have computed
 the increment for both x and y, we add them onto our current velocity, making
@@ -268,7 +268,7 @@ the game state. Based on inputs the game received in the previous frame (to the
 one we'll render next) and the passing of time, the game state will change (if
 anything interesting is happening). The final component of the game loop is the
 rendering component. In our case, we have to update the OAM to let it know of
-the changes that occured in the game state and that it needs to reflect those
+the changes that occurred in the game state and that it needs to reflect those
 changes.
 
 Now that we know what a game loop is, it's time for us to start creating one to
@@ -279,11 +279,11 @@ ship’s position. Then we update the sprite attributes with new information
 about our ship, as some properties of the ship have now changed (i.e. its angle
 and position). Note that the `rotateSprite()` function performs a
 counter-clockwise rotation and our ship tracks its angle as a clockwise
-rotation; this is resolved by simplying negating the angle to rotate by.
-Finally, we call a function that will make sure our program does not exceed
-60fps (speed of the graphics on the Nintendo DS) by waiting for vblank, and
-then we update the OAM, telling it that we changed some attributes on the
-sprites and it needs to handle that.
+rotation; this is resolved by simply negating the angle to rotate by. Finally,
+we call a function that will make sure our program does not exceed 60fps (speed
+of the graphics on the Nintendo DS) by waiting for VBlank, and then we update
+the OAM, telling it that we changed some attributes on the sprites and it needs
+to handle that.
 
 ```C++
   for (;;) {

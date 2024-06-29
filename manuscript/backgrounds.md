@@ -12,7 +12,7 @@ that control it provide an interface to the graphics engines on the Nintendo DS
 that is very much like a raster display.
 
 So what is a raster display? Put simply, it is just like a television display.
-A beam of electrons blasts away at the back of a phoshor coated screen in a
+A beam of electrons blasts away at the back of a phosphor coated screen in a
 deterministic way (known as a raster scan). The beam, from the perspective of a
 person watching the television, travels from left to right, one scan line at a
 time. The beam never blast electrons from right to left. After the beam reaches
@@ -24,9 +24,9 @@ this process in an exaggerated fashion.
 
 Two things are important to remember here. First, that the period of time
 during which the beam goes from right to left (not drawing anything) is called
-the horizontal blanking period, or hblank. Second, that the period of time
+the horizontal blanking period, or HBlank. Second, that the period of time
 during which the beam goes from bottom to top (again, not drawing anything) is
-called the vertical blanking period, or vblank. Knowing about vblank is useful
+called the vertical blanking period, or VBlank. Knowing about VBlank is useful
 for us as Nintendo DS programmers because it is the period of time in which we
 will tell the Nintendo DS to draw things. If we didn't, then the Nintendo DS
 display might be in the middle of drawing the screen when we tell it what to
@@ -78,7 +78,7 @@ Mode 5 consists of four different backgrounds each with their own capabilities.
 
 ### A Fine Affine Background
 
-An affine background, also known as an external rotation background or exrot
+An affine background, also known as an external rotation background or "exrot"
 background, is one that has the ability to be transformed by an affine
 transformation matrix[^affine_transformation_matrix]. Since linear algebra is
 beyond the scope of this manual, I will cover briefly how to set up a basic
@@ -347,13 +347,13 @@ In our program, we will use `dmaCopyHalfWords()` to load some graphics into
 memory. We use the function `dmaCopyHalfWords()` instead of `dmaCopy()` because
 it is more explicit as to how it is copying and it lets us specify which DMA
 channel to use when copying. We'll use the same channel (channel 3) that the
-ordinary `dmaCopy()` uses, though. It also let's us specify which DMA channel
-to use when copying. Let's start out by writing some functions to display our
-backgrounds. Since we've already set up the hardware to display the data in the
-desired manner, right after the copy we will get some nice images displayed on
-our screens. If we didn't set up our backgrounds first, we'd most likely get
-garbage on the screen until we eventually did set up the background control
-registers.
+ordinary `dmaCopy()` uses, though.
+
+Let's start out by writing some functions to display our backgrounds. Since
+we've already set up the hardware to display the data in the desired manner,
+right after the copy we will get some nice images displayed on our screens. If
+we didn't set up our backgrounds first, we'd most likely get garbage on the
+screen until we eventually did set up the background control registers.
 
 ```C++
 /* Select a low priority DMA channel to perform our background
@@ -423,7 +423,7 @@ into the `gfx` directory and having the makefile use `grit` on them.
 
 With the emergence of the awesome and multi-platform tool, `grit` there is no
 reason to not learn how to use it. It is now a standard tool in Nintendo DS and
-GBA development where aforeto there was no universal method of image
+GBA development where afore to there was no universal method of image
 conversion.
 
 To use grit, we make a grit rule file. This file has the .grit file extension

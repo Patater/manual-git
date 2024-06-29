@@ -27,7 +27,7 @@ noise. We will only be experimenting with PCM sounds.
 
 ### Making the Sounds
 
-To play our sounds, we will use the unbelievebly impressive homebrew audtio
+To play our sounds, we will use the unbelievably impressive homebrew audio
 library, maxmod. maxmod is distributed with libnds, so you should already have
 it installed. maxmod can play music as well as sound effects, in such formats
 as mod, it, s3m, xm, and wav, but we'll just be using it as a wav player to
