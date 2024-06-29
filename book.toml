@@ -1,0 +1,15 @@
+[book]
+title = "Introduction to Nintendo DS Programming"
+author = "Jaeden Amero"
+description = "Learn Nintendo DS programming by making a simple game"
+src = "manuscript"
+language = "en"
+
+[build]
+build-dir = "_site"
+create-missing = false
+
+[output.html]
+git-repository-url = "https://github.com/Patater/manual-git"
+edit-url-template = "https://github.com/Patater/manual-git/edit/master/{path}"
+site-url = "/manual-git/"

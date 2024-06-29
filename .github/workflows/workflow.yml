@@ -6,9 +6,6 @@ on:
       - master
   pull_request:
 
-env:
-  DOCBOOK_XSL: /usr/share/xml/docbook/stylesheet/docbook-xsl/xhtml/docbook.xsl
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,41 +16,13 @@ jobs:
 
       - name: Install build environment
         run: |
-            sudo apt-get update
-            sudo apt-get install \
-                docbook \
-                docbook-xml \
-                docbook-xsl \
-                docbook-xsl-doc-html \
-                docbook-xsl-doc-pdf \
-                docbook-xsl-doc-pdf \
-                librsvg2-bin \
-                pandoc \
-                texlive \
-                texlive-latex-extra \
-                xsltproc \
+          mkdir bin
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.40/mdbook-v0.4.40-x86_64-unknown-linux-gnu.tar.gz \
+          | tar xz --directory=bin
 
       - name: Build HTML
         run: |
-            make -C manuscript manual.html
-            make -C manuscript index.html
-
-      - name: Build PDF
-        run: |
-            make -C manuscript manual.pdf
-
-      - name: Build EPUB
-        run: |
-            make -C manuscript manual.epub
-
-      - name: Prepare GitHub Pages site
-        run: |
-          cp -a manuscript/index.html _site/
-          cp -a manuscript/manual.pdf _site/
-          cp -a manuscript/manual.epub _site/
-          cp -a manuscript/manual.html _site/
-          cp -a manuscript/manual.css _site/
-          cp -a manuscript/images _site/
+          ./bin/mdbook build
 
       - name: Upload _site to GitHub
         uses: actions/upload-pages-artifact@v3

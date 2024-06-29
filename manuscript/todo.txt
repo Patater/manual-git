@@ -1,0 +1,4 @@
+Finish Docbooking Appendix A
+Add multiple sprite explanation (where to place the next one, etc.)
+Write section on interprocessor communication and FIFO
+Build an index and a glossary

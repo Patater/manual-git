@@ -1,4 +1,5 @@
 # Ignore build artifacts
+_site
 build
 *.arm9
 *.nds
