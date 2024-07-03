@@ -705,6 +705,10 @@ int main() {
   swiWaitForVBlank();
   updateOAM(oam);
 
+  /* Loop forever so that the Nintendo DS doesn't reboot upon program
+   * completion. */
+  for (;;);
+
   return 0;
 }
 ```
