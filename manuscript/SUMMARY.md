@@ -1,5 +1,6 @@
 # Summary
 
+[Cover](cover.md)
 [Foreword](foreword.md)
 [Preface](preface.md)
 [Acknowledgements](acknowledgements.md)
