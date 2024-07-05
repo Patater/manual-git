@@ -125,7 +125,7 @@ electrobee. electrobee is run by a trusted member of the homebrew community and
 ships worldwide from good ol' Canada (as opposed to who knows where). Their
 prices are quite often the best, too. When you are ready to purchase a Slot-1
 device, I recommend that you visit
-[electrobee.com](http://electrobee.com/index.php?ref=16)>.
+[electrobee.com](http://electrobee.com/index.php?ref=16).
 
 ### The Slot-2 Device of Choice
 
