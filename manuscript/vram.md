@@ -118,8 +118,7 @@ backgrounds. In this case, some code we might use to set up `BG2` and `BG3`
 might look like the following.
 
 ```C++
-BG2_CR = BG_BMP16_256x256 | BG_BMP_BASE(0) | BG_PRIORITY(3); //on the bottom
-BG3_CR = BG_BMP16_256x256 | BG_BMP_BASE(8) | BG_PRIORITY(0); //on the top
+{{#include snippets/vram/1/main.cpp:set_up_bg}}
 ```
 
 Slots are not readable or writable by the ARM9 or the ARM7. No usage is

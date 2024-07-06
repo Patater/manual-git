@@ -73,32 +73,7 @@ the increment for both x and y, we add them onto our current velocity, making
 sure we don’t go over the ship's maximum speed.
 
 ```C++
-void Ship::accelerate() {
-  float incX = thrust * sin(angle);
-  float incY = -(thrust * cos(angle));
-
-  //the following method of speed limitation is not accurate, traveling
-  //diagonally is faster than straight, which is not the desired limitation
-  //a more accurate method is needed at a later time
-
-  velocity.x += incX;
-  //make sure can't go too fast in x direction
-  if (velocity.x > maxSpeed) {
-    velocity.x = maxSpeed;
-  }
-  if (velocity.x < -maxSpeed) {
-    velocity.x = -maxSpeed;
-  }
-
-  velocity.y += incY;
-  //make sure can't go too fast in y direction
-  if (velocity.y > maxSpeed) {
-    velocity.y = maxSpeed;
-  }
-  if (velocity.y < -maxSpeed) {
-    velocity.y = -maxSpeed;
-  }
-}
+{{#include snippets/game_mechanics/1/ship.cpp:accelerate}}
 ```
 
 ### Moving the Ship
@@ -108,14 +83,7 @@ do is increment our position by our velocity. The hardware takes care of any
 wrapping or offscreen issues.
 
 ```C++
-void Ship::moveShip() {
-  //move the ship
-  position.x += velocity.x;
-  position.y += velocity.y;
-
-  //hw does wrap around for us, so we don't have to have any of that sort of
-  //logic in here
-}
+{{#include snippets/game_mechanics/1/ship.cpp:move}}
 ```
 
 ### Reversing the Ship's Direction
@@ -127,9 +95,7 @@ angle of our velocity with respect to 0 degrees, and then will do a 180 from
 that angle.
 
 ```C++
-void Ship::reverseTurn() {
-  angle = (2 * PI) - atan2(velocity.x, velocity.y);
-}
+{{#include snippets/game_mechanics/1/ship.cpp:reverse_turn}}
 ```
 
 ### Rotating the Ship
@@ -140,12 +106,7 @@ the angle of the ship as a clockwise rotation. This will be important to
 remember for later when we update the ship sprite.
 
 ```C++
-void Ship::turnClockwise() {
-    angle += turnSpeed;
-}
-void Ship::turnCounterClockwise() {
-    angle -= turnSpeed;
-}
+{{#include snippets/game_mechanics/1/ship.cpp:rotate}}
 ```
 
 ### Getting the Ship's Position
@@ -153,9 +114,7 @@ void Ship::turnCounterClockwise() {
 Return the ship’s position.
 
 ```C++
-MathVector2D<float> Ship::getPosition() {
-    return position;
-}
+{{#include snippets/game_mechanics/1/ship.cpp:position}}
 ```
 
 ### Getting the Ship's Angle
@@ -185,12 +144,7 @@ Then, we make a function to return a converted angle value, for whenever we
 need it.
 
 ```C++
-int Ship::radToDeg(float rad) {
-    return (int)(rad * (DEGREES_IN_A_CIRCLE/(2 * PI)));
-}
-int Ship::getAngleDeg() {
-    return radToDeg(angle);
-}
+{{#include snippets/game_mechanics/1/ship.cpp:angle}}
 ```
 
 ### Linking the Ship into our Program
@@ -204,54 +158,7 @@ what we wrote is working. Let's make the ship move around on its own by telling
 the ship to trust ten times.
 
 ```C++
-int main() {
-  /*  Turn on the 2D graphics core. */
-  powerOn(POWER_ALL_2D);
-
-  /*
-   *  Configure the VRAM and background control registers.
-   *
-   *  Place the main screen on the bottom physical screen. Then arrange the
-   *  VRAM banks. Next, confiure the background control registers.
-   */
-  lcdMainOnBottom();
-  initVideo();
-  initBackgrounds();
-
-  /* Set up a few sprites. */
-  SpriteInfo spriteInfo[SPRITE_COUNT];
-  OAMTable *oam = new OAMTable();
-  iniOAMTable(oam);
-  initSprites(oam, spriteInfo);
-
-  /* Display the backgrounds. */
-  displayStarField();
-  displayPlanet();
-  displaySplash();
-
-  /* Make the ship object */
-  static const int SHUTTLE_OAM_ID = 0;
-  SpriteEntry * shipEntry = &oam->oamBuffer[SHUTTLE_OAM_ID];
-  SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];
-  Ship * ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
-
-  /* Accelerate the ship for a little while to make it move. */
-  for (int i = 0; i < 10; i++) {
-    ship->accelerate();
-  }
-
-  /*
-   *  Update the OAM.
-   *
-   *  We have to copy our copy of OAM data into the actual
-   *  OAM during VBlank (writes to it are locked during
-   *  other times).
-   */
-  swiWaitForVBlank();
-  updateOAM(oam);
-
-  return 0;
-}
+{{#include snippets/game_mechanics/1/main.cpp:main_1}}
 ```
 
 ### Creating the Main Game Loop
@@ -286,28 +193,7 @@ the OAM, telling it that we changed some attributes on the sprites and it needs
 to handle that.
 
 ```C++
-  for (;;) {
-    /* Update the game state. */
-    ship->moveShip();
-
-    /* Update sprite attributes. */
-    MathVector2D<float> position = ship->getPosition();
-    shipEntry->x = (int)position.x;
-    shipEntry->y = (int)position.y;
-    rotateSprite(shipRotation, -ship->getAngleDeg());
-
-    /*
-     *  Update the OAM.
-     *
-     *  We have to copy our copy of OAM data into the actual OAM during
-     *  VBlank (writes to it are locked during other times).
-     */
-    swiWaitForVBlank();
-    updateOAM(oam);
-  }
-
-  return 0;
-}
+{{#include snippets/game_mechanics/1/main.cpp:main_loop}}
 ```
 
 The OAM really shines through here. The all powerful Nintendo DS hardware, an
@@ -321,18 +207,7 @@ Verify that you are including all the files you need to include now, before
 compiling.
 
 ```C++
-#include <nds.h>
-#include <assert.h>
-#include "sprites.h"
-#include "ship.h"
-
-/* Backgrounds */
-#include "starField.h"
-#include "planet.h"
-#include "splash.h"
-/* Sprites */
-#include "orangeShuttle.h"
-#include "moon.h"
+{{#include snippets/game_mechanics/1/main.cpp:headers}}
 ```
 
 Everything should compile for you fine at this point if you wish to play around
