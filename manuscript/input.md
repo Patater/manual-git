@@ -57,7 +57,7 @@ Whenever you want to read the current touch location, simply call the function
 `touchRead()`. This function assigns values to a struct that contains the x and
 y coordinate of the touch. You use it like so.
 
-```C
+```C++
 /* To read from the touch screen, we can do this stuff. */
 touchPosition touch;
 touchRead(&touch);
