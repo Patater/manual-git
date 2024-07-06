@@ -145,6 +145,11 @@ int main() {
   /* Turn on the 2D graphics core. */
   powerOn(POWER_ALL_2D);
 
+  /* Loop forever so that the Nintendo DS doesn't reboot upon program
+   * completion. */
+  for (;;)
+    ;
+
   return 0;
 }
 // ANCHOR_END: main_loop_1
@@ -163,6 +168,11 @@ int main() {
   displayStarField();
   displayPlanet();
   displaySplash();
+
+  /* Loop forever so that the Nintendo DS doesn't reboot upon program
+   * completion. */
+  for (;;)
+    ;
 
   return 0;
 }
