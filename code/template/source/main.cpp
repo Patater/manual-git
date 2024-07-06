@@ -2,7 +2,7 @@
 
 int main() {
 
-    /* This program doesn't do very much, yet. */
+  /* This program doesn't do very much, yet. */
 
-	return 0;
+  return 0;
 }

@@ -6,27 +6,26 @@
 #include "sprites.h"
 
 /* Backgrounds */
-#include "starField.h"
 #include "planet.h"
 #include "splash.h"
+#include "starField.h"
 /* Sprites */
-#include "orangeShuttle.h"
-#include "moon.h"
 #include <assert.h>
+
+#include "moon.h"
+#include "orangeShuttle.h"
 // ANCHOR_END: headers
 
 // ANCHOR: update_oam
-void updateOAM(OAMTable * oam) {
+void updateOAM(OAMTable *oam) {
   DC_FlushAll();
-  dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-           oam->oamBuffer,
-           OAM,
-           SPRITE_COUNT * sizeof(SpriteEntry));
+  dmaCopyHalfWords(SPRITE_DMA_CHANNEL, oam->oamBuffer, OAM,
+                   SPRITE_COUNT * sizeof(SpriteEntry));
 }
 // ANCHOR_END: update_oam
 
 // ANCHOR: init_oam
-void iniOAMTable(OAMTable * oam) {
+void iniOAMTable(OAMTable *oam) {
   /*
    * For all 128 sprites on the DS, disable and clear any attributes they
    * might have. This prevents any garbage from being displayed and gives
@@ -52,7 +51,7 @@ void iniOAMTable(OAMTable * oam) {
 // ANCHOR_END: init_oam
 
 // ANCHOR: rotate_sprite
-void rotateSprite(SpriteRotation * spriteRotation, int angle) {
+void rotateSprite(SpriteRotation *spriteRotation, int angle) {
   s16 s = sinLerp(angle) >> 4;
   s16 c = cosLerp(angle) >> 4;
 
@@ -64,8 +63,8 @@ void rotateSprite(SpriteRotation * spriteRotation, int angle) {
 // ANCHOR_END: rotate_sprite
 
 // ANCHOR: sprite_visibility
-void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
-             bool doubleBound) {
+void setSpriteVisibility(SpriteEntry *spriteEntry, bool hidden, bool affine,
+                         bool doubleBound) {
   if (hidden) {
     /*
      * Make the sprite invisible.
@@ -76,8 +75,8 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
      * redundant, but it is faster than a branch to just set it regardless
      * of whether or not it is already set.
      */
-    spriteEntry->isRotateScale = false; // Bit 9 off
-    spriteEntry->isHidden = true; // Bit 8 on
+    spriteEntry->isRotateScale = false;  // Bit 9 off
+    spriteEntry->isHidden = true;        // Bit 8 on
   } else {
     /* Make the sprite visible.*/
     if (affine) {
@@ -106,22 +105,20 @@ void setSpriteVisibility(SpriteEntry * spriteEntry, bool hidden, bool affine,
 // ANCHOR_END: sprite_visibility
 
 void demo(void) {
-// ANCHOR: moving_sprites
-    /* This is what we'd do if we wanted to move a sprite. */
-    spriteEntry->x = 0;
-    spriteEntry->y = 0;
-// ANCHOR_END: moving_sprites
-// ANCHOR: setting_priority
-    spriteEntry->priority = OBJPRIORITY_3;
-// ANCHOR_END: setting_priority
-// ANCHOR: tile_computation
-    static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
-                         * (can be set in REG_DISPCNT) */
-    static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
-                       sizeof(SPRITE_GFX[0]);
-    uint16 * tileVramAddress = &SPRITE_GFX[shuttle->gfxIndex *
-                           OFFSET_MULTIPLIER];
-// ANCHOR_END: tile_computation
+  // ANCHOR: moving_sprites
+  /* This is what we'd do if we wanted to move a sprite. */
+  spriteEntry->x = 0;
+  spriteEntry->y = 0;
+  // ANCHOR_END: moving_sprites
+  // ANCHOR: setting_priority
+  spriteEntry->priority = OBJPRIORITY_3;
+  // ANCHOR_END: setting_priority
+  // ANCHOR: tile_computation
+  static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
+                                         * (can be set in REG_DISPCNT) */
+  static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE / sizeof(SPRITE_GFX[0]);
+  uint16 *tileVramAddress = &SPRITE_GFX[shuttle->gfxIndex * OFFSET_MULTIPLIER];
+  // ANCHOR_END: tile_computation
 }
 
 // ANCHOR: init_video
@@ -143,29 +140,27 @@ void initVideo() {
    *
    *  We map bank E to main screen sprite memory (aka object memory).
    */
-  vramSetPrimaryBanks(VRAM_A_MAIN_BG_0x06000000,
-                      VRAM_B_MAIN_BG_0x06020000,
-                      VRAM_C_SUB_BG_0x06200000,
-                      VRAM_D_LCD);
+  vramSetPrimaryBanks(VRAM_A_MAIN_BG_0x06000000, VRAM_B_MAIN_BG_0x06020000,
+                      VRAM_C_SUB_BG_0x06200000, VRAM_D_LCD);
 
   vramSetBankE(VRAM_E_MAIN_SPRITE);
 
   /*  Set the video mode on the main screen. */
-  videoSetMode(MODE_5_2D | // Set the graphics mode to Mode 5
-         DISPLAY_BG2_ACTIVE | // Enable BG2 for display
-         DISPLAY_BG3_ACTIVE | // Enable BG3 for display
-         DISPLAY_SPR_ACTIVE | // Enable sprites for display
-         DISPLAY_SPR_1D     // Enable 1D tiled sprites
-         );
+  videoSetMode(MODE_5_2D |           // Set the graphics mode to Mode 5
+               DISPLAY_BG2_ACTIVE |  // Enable BG2 for display
+               DISPLAY_BG3_ACTIVE |  // Enable BG3 for display
+               DISPLAY_SPR_ACTIVE |  // Enable sprites for display
+               DISPLAY_SPR_1D        // Enable 1D tiled sprites
+  );
 
   /*  Set the video mode on the sub screen. */
-  videoSetModeSub(MODE_5_2D | // Set the graphics mode to Mode 5
-          DISPLAY_BG3_ACTIVE); // Enable BG3 for display
+  videoSetModeSub(MODE_5_2D |           // Set the graphics mode to Mode 5
+                  DISPLAY_BG3_ACTIVE);  // Enable BG3 for display
 }
 // ANCHOR_END: init_video
 
 // ANCHOR: init_sprites
-void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
+void initSprites(OAMTable *oam, SpriteInfo *spriteInfo) {
   /*  Define some sprite configuration specific constants.
    *
    *  We will use these to compute the proper index into memory for certain
@@ -181,9 +176,8 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
   static const int BYTES_PER_16_COLOR_TILE = 32;
   static const int COLORS_PER_PALETTE = 16;
   static const int BOUNDARY_VALUE = 32; /* This is the default boundary value
-                       * (can be set in REG_DISPCNT) */
-  static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE /
-                     sizeof(SPRITE_GFX[0]);
+                                         * (can be set in REG_DISPCNT) */
+  static const int OFFSET_MULTIPLIER = BOUNDARY_VALUE / sizeof(SPRITE_GFX[0]);
 
   /* Keep track of the available tiles */
   int nextAvailableTileIdx = 0;
@@ -191,8 +185,8 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
   /* Create the ship sprite. */
   static const int SHUTTLE_OAM_ID = 0;
   assert(SHUTTLE_OAM_ID < SPRITE_COUNT);
-  SpriteInfo * shuttleInfo = &spriteInfo[SHUTTLE_OAM_ID];
-  SpriteEntry * shuttle = &oam->oamBuffer[SHUTTLE_OAM_ID];
+  SpriteInfo *shuttleInfo = &spriteInfo[SHUTTLE_OAM_ID];
+  SpriteEntry *shuttle = &oam->oamBuffer[SHUTTLE_OAM_ID];
 
   /* Initialize shuttleInfo */
   shuttleInfo->oamId = SHUTTLE_OAM_ID;
@@ -228,8 +222,8 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
    *  set it to a location computed with a macro. OBJSIZE_64, in our case
    *  since we are making a square sprite, creates a 64x64 sprite.
    */
-  shuttle->x = SCREEN_WIDTH / 2 - shuttleInfo->width * 2 +
-          shuttleInfo->width / 2;
+  shuttle->x =
+      SCREEN_WIDTH / 2 - shuttleInfo->width * 2 + shuttleInfo->width / 2;
   shuttle->rotationIndex = shuttleInfo->oamId;
   shuttle->size = OBJSIZE_64;
 
@@ -246,16 +240,15 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
   shuttle->palette = shuttleInfo->oamId;
 
   /* Rotate the sprite */
-  rotateSprite(&oam->matrixBuffer[shuttleInfo->oamId],
-         shuttleInfo->angle);
+  rotateSprite(&oam->matrixBuffer[shuttleInfo->oamId], shuttleInfo->angle);
 
   /*************************************************************************/
 
   /* Create the moon sprite. */
   static const int MOON_OAM_ID = 1;
   assert(MOON_OAM_ID < SPRITE_COUNT);
-  SpriteInfo * moonInfo = &spriteInfo[MOON_OAM_ID];
-  SpriteEntry * moon = &oam->oamBuffer[MOON_OAM_ID];
+  SpriteInfo *moonInfo = &spriteInfo[MOON_OAM_ID];
+  SpriteEntry *moon = &oam->oamBuffer[MOON_OAM_ID];
 
   /* Initialize moonInfo */
   moonInfo->oamId = MOON_OAM_ID;
@@ -311,25 +304,20 @@ void initSprites(OAMTable * oam, SpriteInfo *spriteInfo) {
   /*************************************************************************/
 
   /* Copy over the sprite palettes */
-  dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-           orangeShuttlePal,
-           &SPRITE_PALETTE[shuttleInfo->oamId *
-                   COLORS_PER_PALETTE],
-           orangeShuttlePalLen);
-  dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-           moonPal,
-           &SPRITE_PALETTE[moonInfo->oamId * COLORS_PER_PALETTE],
-           moonPalLen);
+  dmaCopyHalfWords(SPRITE_DMA_CHANNEL, orangeShuttlePal,
+                   &SPRITE_PALETTE[shuttleInfo->oamId * COLORS_PER_PALETTE],
+                   orangeShuttlePalLen);
+  dmaCopyHalfWords(SPRITE_DMA_CHANNEL, moonPal,
+                   &SPRITE_PALETTE[moonInfo->oamId * COLORS_PER_PALETTE],
+                   moonPalLen);
 
   /* Copy the sprite graphics to sprite graphics memory */
-  dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-           orangeShuttleTiles,
-           &SPRITE_GFX[shuttle->gfxIndex * OFFSET_MULTIPLIER],
-           orangeShuttleTilesLen);
-  dmaCopyHalfWords(SPRITE_DMA_CHANNEL,
-           moonTiles,
-           &SPRITE_GFX[moon->gfxIndex * OFFSET_MULTIPLIER],
-           moonTilesLen);
+  dmaCopyHalfWords(SPRITE_DMA_CHANNEL, orangeShuttleTiles,
+                   &SPRITE_GFX[shuttle->gfxIndex * OFFSET_MULTIPLIER],
+                   orangeShuttleTilesLen);
+  dmaCopyHalfWords(SPRITE_DMA_CHANNEL, moonTiles,
+                   &SPRITE_GFX[moon->gfxIndex * OFFSET_MULTIPLIER],
+                   moonTilesLen);
 }
 // ANCHOR_END: init_sprites
 

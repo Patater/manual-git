@@ -1,30 +1,31 @@
 // ANCHOR: headers
-#include <nds.h>
 #include <assert.h>
-#include "sprites.h"
+#include <nds.h>
+
 #include "ship.h"
+#include "sprites.h"
 
 /* Backgrounds */
-#include "starField.h"
 #include "planet.h"
 #include "splash.h"
+#include "starField.h"
 /* Sprites */
-#include "orangeShuttle.h"
 #include "moon.h"
+#include "orangeShuttle.h"
 // ANCHOR_END: headers
 
 void demo(void) {
-// ANCHOR: touch_stuff
-    /* To read from the touch screen, we can do this stuff. */
-    touchPosition touch;
-    touchRead(&touch);
-    touch->px; // This contains the x pixel location.
-    touch->py; // This contains the y pixel location.
-// ANCHOR_END: touch_stuff
+  // ANCHOR: touch_stuff
+  /* To read from the touch screen, we can do this stuff. */
+  touchPosition touch;
+  touchRead(&touch);
+  touch->px;  // This contains the x pixel location.
+  touch->py;  // This contains the y pixel location.
+  // ANCHOR_END: touch_stuff
 }
 
 // ANCHOR: update_input
-void updateInput(touchPosition * touch) {
+void updateInput(touchPosition *touch) {
   // Update the key registers with current values.
   scanKeys();
 
@@ -34,24 +35,23 @@ void updateInput(touchPosition * touch) {
 // ANCHOR_END: update_input
 
 // ANCHOR: handle_input
-void handleInput(Ship * ship, MathVector2D<int> * moonPos,
-         SpriteInfo * moonInfo, touchPosition * touch) {
-
+void handleInput(Ship *ship, MathVector2D<int> *moonPos, SpriteInfo *moonInfo,
+                 touchPosition *touch) {
   /* Handle up and down parts of D-Pad. */
   if (keysHeld() & KEY_UP) {
-    //accelerate ship
+    // accelerate ship
     ship->accelerate();
   } else if (keysHeld() & KEY_DOWN) {
-    //reverse ship direction
+    // reverse ship direction
     ship->reverseTurn();
   }
 
   /* Handle left and right parts of D-Pad. */
   if (keysHeld() & KEY_LEFT) {
-    //rotate counter clockwise
+    // rotate counter clockwise
     ship->turnCounterClockwise();
   } else if (keysHeld() & KEY_RIGHT) {
-    //rotate clockwise
+    // rotate clockwise
     ship->turnClockwise();
   }
 
@@ -62,7 +62,7 @@ void handleInput(Ship * ship, MathVector2D<int> * moonPos,
    *  of the moon. It isn't essential to know how this code works to
    *  understand how to reach values from the touch screen, but it was cool
    *  enough that I wanted to put it in the case study.
-  */
+   */
   static MathVector2D<int> moonGrip;
   if (keysDown() & KEY_TOUCH) {
     /* Record the grip */
@@ -128,15 +128,15 @@ int main() {
 
   /* Make the ship object */
   static const int SHUTTLE_AFFINE_ID = 0;
-  SpriteEntry * shipEntry = &oam->oamBuffer[SHUTTLE_AFFINE_ID];
-  SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
-  Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+  SpriteEntry *shipEntry = &oam->oamBuffer[SHUTTLE_AFFINE_ID];
+  SpriteRotation *shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
+  Ship *ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
 
   /* Make the moon */
   static const int MOON_AFFINE_ID = 1;
-  SpriteEntry * moonEntry = &oam->oamBuffer[MOON_AFFINE_ID];
-  SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
-  MathVector2D<int> * moonPos = new MathVector2D<int>();
+  SpriteEntry *moonEntry = &oam->oamBuffer[MOON_AFFINE_ID];
+  SpriteInfo *moonInfo = &spriteInfo[MOON_AFFINE_ID];
+  MathVector2D<int> *moonPos = new MathVector2D<int>();
   moonPos->x = moonEntry->x;
   moonPos->y = moonEntry->y;
 

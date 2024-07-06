@@ -1,16 +1,17 @@
 // ANCHOR: headers
-#include <nds.h>
 #include <assert.h>
-#include "sprites.h"
+#include <nds.h>
+
 #include "ship.h"
+#include "sprites.h"
 
 /* Backgrounds */
-#include "starField.h"
 #include "planet.h"
 #include "splash.h"
+#include "starField.h"
 /* Sprites */
-#include "orangeShuttle.h"
 #include "moon.h"
+#include "orangeShuttle.h"
 // ANCHOR_END: headers
 
 #if MAIN_1
@@ -42,9 +43,9 @@ int main() {
 
   /* Make the ship object */
   static const int SHUTTLE_OAM_ID = 0;
-  SpriteEntry * shipEntry = &oam->oamBuffer[SHUTTLE_OAM_ID];
-  SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];
-  Ship * ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
+  SpriteEntry *shipEntry = &oam->oamBuffer[SHUTTLE_OAM_ID];
+  SpriteRotation *shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];
+  Ship *ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
 
   /* Accelerate the ship for a little while to make it move. */
   for (int i = 0; i < 10; i++) {
@@ -92,16 +93,16 @@ int main() {
 
   /* Make the ship object */
   static const int SHUTTLE_OAM_ID = 0;
-  SpriteEntry * shipEntry = &oam->oamBuffer[SHUTTLE_OAM_ID];
-  SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];
-  Ship * ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
+  SpriteEntry *shipEntry = &oam->oamBuffer[SHUTTLE_OAM_ID];
+  SpriteRotation *shipRotation = &oam->matrixBuffer[SHUTTLE_OAM_ID];
+  Ship *ship = new Ship(&spriteInfo[SHUTTLE_OAM_ID]);
 
   /* Accelerate the ship for a little while to make it move. */
   for (int i = 0; i < 10; i++) {
     ship->accelerate();
   }
 
-// ANCHOR: main_loop
+  // ANCHOR: main_loop
   for (;;) {
     /* Update the game state. */
     ship->moveShip();

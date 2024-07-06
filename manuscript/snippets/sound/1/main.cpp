@@ -1,47 +1,45 @@
 // ANCHOR: headers
-#include <nds.h>
-#include <maxmod9.h>
 #include <assert.h>
-#include "sprites.h"
+#include <maxmod9.h>
+#include <nds.h>
+
 #include "ship.h"
+#include "sprites.h"
 
 /* Backgrounds */
-#include "starField.h"
 #include "planet.h"
 #include "splash.h"
+#include "starField.h"
 /* Sprites */
-#include "orangeShuttle.h"
 #include "moon.h"
+#include "orangeShuttle.h"
 /* Sounds */
 #include "soundbank.h"
 #include "soundbank_bin.h"
 // ANCHOR_END: headers
 
 // ANCHOR: sound
-void handleInput(Ship * ship,
-         MathVector2D<int> * moonPos,
-         SpriteInfo * moonInfo,
-         touchPosition * touch) {
-
+void handleInput(Ship *ship, MathVector2D<int> *moonPos, SpriteInfo *moonInfo,
+                 touchPosition *touch) {
   /* Handle up and down parts of D-Pad. */
   if (keysDown() & KEY_UP) {
     // Play our sound only when the button is initially pressed
     mmEffect(SFX_THRUST);
   }
   if (keysHeld() & KEY_UP) {
-    //accelerate ship
+    // accelerate ship
     ship->accelerate();
   } else if (keysHeld() & KEY_DOWN) {
-    //reverse ship direction
+    // reverse ship direction
     ship->reverseTurn();
   }
 
   /* Handle left and right parts of D-Pad. */
   if (keysHeld() & KEY_LEFT) {
-    //rotate counter clockwise
+    // rotate counter clockwise
     ship->turnCounterClockwise();
   } else if (keysHeld() & KEY_RIGHT) {
-    //rotate clockwise
+    // rotate clockwise
     ship->turnClockwise();
   }
 
@@ -112,15 +110,15 @@ int main() {
 
   /* Make the ship object */
   static const int SHUTTLE_AFFINE_ID = 0;
-  SpriteEntry * shipEntry = &oam->oamBuffer[SHUTTLE_AFFINE_ID];
-  SpriteRotation * shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
-  Ship * ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
+  SpriteEntry *shipEntry = &oam->oamBuffer[SHUTTLE_AFFINE_ID];
+  SpriteRotation *shipRotation = &oam->matrixBuffer[SHUTTLE_AFFINE_ID];
+  Ship *ship = new Ship(&spriteInfo[SHUTTLE_AFFINE_ID]);
 
   /* Make the moon */
   static const int MOON_AFFINE_ID = 1;
-  SpriteEntry * moonEntry = &oam->oamBuffer[MOON_AFFINE_ID];
-  SpriteInfo * moonInfo = &spriteInfo[MOON_AFFINE_ID];
-  MathVector2D<int> * moonPos = new MathVector2D<int>();
+  SpriteEntry *moonEntry = &oam->oamBuffer[MOON_AFFINE_ID];
+  SpriteInfo *moonInfo = &spriteInfo[MOON_AFFINE_ID];
+  MathVector2D<int> *moonPos = new MathVector2D<int>();
   moonPos->x = moonEntry->x;
   moonPos->y = moonEntry->y;
 
@@ -130,7 +128,7 @@ int main() {
   for (;;) {
     /* Update the game state. */
     updateInput(&touch);
-    handleInput(ship, moonPos, moonInfo,&touch);
+    handleInput(ship, moonPos, moonInfo, &touch);
     ship->moveShip();
 
     /* Update ship sprite attributes. */
