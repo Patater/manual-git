@@ -49,6 +49,8 @@ explained in [Table 8.1, “libnds Key Defines”](#libnds_key_defines).
 Utada Hikaru (<https://www.youtube.com/watch?v=bYoVeIGl0ao>) wants to touch it.
 You have to code it. Let's go!
 
+[![Utada Hikaru](https://i.ytimg.com/vi/bYoVeIGl0ao/hqdefault.jpg)](https://www.youtube.com/watch?v=bYoVeIGl0ao)
+
 The touch screen a big part of what makes the Nintendo DS awesome. The libnds
 API for using it is cake easy too. We'll be ready for Utada Hikaru in no time.
 Whenever you want to read the current touch location, simply call the function
