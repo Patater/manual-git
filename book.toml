@@ -13,3 +13,4 @@ create-missing = false
 git-repository-url = "https://github.com/Patater/manual-git"
 edit-url-template = "https://github.com/Patater/manual-git/edit/master/{path}"
 site-url = "/manual-git/"
+mathjax-support = true

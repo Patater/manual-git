@@ -171,7 +171,7 @@ with.
 
 #### Figure 5.2. libnds Affine Background API
 
-![libnds Affine Background API](./images/libnds_affine_bg_api.svg)
+\begin{bmatrix}BG3{\text{\_}}XDX & BG3{\text{\_}}XDY\\\\BG3{\text{\_}}YDX & BG3{\text{\_}}YDY\end{bmatrix}
 
 What we'll do now is add three backgrounds. We'll put a splash screen on the
 top physical screen, a starfield on the bottom physical screen, and a planet
@@ -217,7 +217,17 @@ fractions.”](#fixed_point) illustrates the concept of fixed point numbers.
 
 #### Figure 5.3. Integer variables can be used to represent fractions.
 
-![Integer variables can be used to represent fractions](images/fixed_point.svg)
+##### Bits Positions:
+
+\\[ 15{\text{ }}14{\text{ }}13{\text{ }}12{\text{ }} 11{\text{ }}10{\text{ }}9{\text{ }}8{\text{ }}7{\text{ }}6{\text{ }}5{\text{ }}4{\text{ }}3{\text{ }}2{\text{ }}1{\text{ }}0 \\]
+
+##### Normal Interpretation:
+
+\\[ 2^{15} + 2^{14} + 2^{13} + 2^{12} + 2^{11} + 2^{10} + 2^{9} + 2^{8} + 2^{7} + 2^{6} + 2^{5} + 2^{4} + 2^{3} + 2^{2} + 2^{1} + 2^{0} \\]
+
+##### Fixed Point (8.8) Interpretation:
+
+\\[ 2^{7} + 2^{6} + 2^{5} + 2^{4} + 2^{3} + 2^{2} + 2^{1} + 2^{0} + 2^{-1} + 2^{-2} + 2^{-3} + 2^{-4} + 2^{-5} + 2^{-6} + 2^{-7} + 2^{-8} \\]
 
 ### The Basics of DMA
 
