@@ -9,3 +9,4 @@
   ones.
 * Explain caching better, to provide context around the functions like
   DC_FlushAll and DC_FlushRange, hopefully making them more understandable.
+* Add proper DS header and icon
