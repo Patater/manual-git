@@ -208,6 +208,12 @@ slightly differently from the background affine transformation matrix. If you
 have a background in linear algebra, I'd recommend reading up on this portion
 of the hardware at <http://www.coranac.com/tonc/text/affine.htm>.
 
+<a name="libnds_affine_sprite"></a>
+
+#### Figure 6.2. libnds Affine Sprite API
+
+\begin{bmatrix}HDX & HDY\\\\VDX & VDY\end{bmatrix}
+
 ```C++
 {{#include snippets/sprites/1/main.cpp:rotate_sprite}}
 ```
@@ -403,13 +409,13 @@ probably even forgot to let you know about some of them.)
 ```
 
 If all goes well, you’ll compile with no problems and the output will look as
-in [Figure 6.2, “Output with both backgrounds and a
+in [Figure 6.3, “Output with both backgrounds and a
 sprite”](#chapter_6_screen_shot).
 
 
 <a name="chapter_6_screen_shot"></a>
 
-#### Figure 6.2. Output with both backgrounds and a sprite</title>
+#### Figure 6.3. Output with both backgrounds and a sprite</title>
 
 ![Splash](images/splash.png)
 
