@@ -1,0 +1,47 @@
+name: Build code for each chapter
+
+on:
+  push:
+    branches: []
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: devkitpro/devkitarm:20240511
+
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@master
+
+      - name: Build Template
+        run: |
+          make -C code/template
+
+      - name: Build Chapter 0
+        run: |
+          make -C code/chapter_0-starting_system
+
+      - name: Build Chapter 5
+        run: |
+          make -C code/chapter_5-backgrounds
+
+      - name: Build Chapter 6
+        run: |
+          make -C code/chapter_6-sprites
+
+      - name: Build Chapter 7
+        run: |
+          make -C code/chapter_7-game
+
+      - name: Build Chapter 8
+        run: |
+          make -C code/chapter_8-input
+
+      - name: Build Chapter 9
+        run: |
+          make -C code/chapter_9-sounds
+
+      - name: Build All
+        run: |
+          make -C code
