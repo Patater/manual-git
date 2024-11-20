@@ -89,7 +89,7 @@ transformation matrix, you can rotate, scale, and sheer an affine background,
 among other interesting effects. If you want to learn about the cool effects
 you can do with an affine background and an affine transformation matrix, I
 recommend you look at Cearn's tutorial on affine transformations at
-<http://www.coranac.com/tonc/text/affine.htm>.
+<https://gbadev.net/tonc/affine.html>.
 
 ### Coding with this Manual
 

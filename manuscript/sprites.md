@@ -206,7 +206,7 @@ We have to use a transformation derived from our time spent playing with an
 affine transformation matrix. The sprite's affine transformation matrix is used
 slightly differently from the background affine transformation matrix. If you
 have a background in linear algebra, I'd recommend reading up on this portion
-of the hardware at <http://www.coranac.com/tonc/text/affine.htm>.
+of the hardware at <https://gbadev.net/tonc/affine.html>.
 
 <a name="libnds_affine_sprite"></a>
 
