@@ -1,4 +1,4 @@
-# Chapter 3
+# Chapter 2
 ## How do I get programs into my Nintendo DS?
 
 ### The Methods

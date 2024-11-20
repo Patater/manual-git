@@ -1,4 +1,4 @@
-# Chapter 8
+# Chapter 7
 ## Nintendo DS Input Systems
 
 ### Overview

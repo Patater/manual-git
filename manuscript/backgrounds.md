@@ -1,4 +1,4 @@
-# Chapter 5
+# Chapter 4
 ## How do I display a background?
 
 ### Some Background Information

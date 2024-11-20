@@ -1,4 +1,4 @@
-# Chapter 2
+# Appendix C
 ## What is a passthrough device and how do I use one?
 
 ### Purpose of the Passthrough
@@ -10,6 +10,11 @@ slot, are encrypted. Since it might be illegal to break that encryption, as it
 is a form of proprietary copy protection, we have to get the Nintendo DS to run
 code from a different place than the NDS card slot. Also, it is much easier to
 bypass the encryption than to try and break it.
+
+This kind of device was popular at the beginning of the scene of the Nintendo
+DS. Nowadays, they have been replaced by devices that are inserted in the DS
+slot of the console. While it is still possible to use passthrough devices, they
+are mostly a relic from the past.
 
 ### How a PassMe Works
 

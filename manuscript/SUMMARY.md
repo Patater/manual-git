@@ -8,7 +8,6 @@
 # Introduction
 
 - [Politics of the Nintendo DS Homebrew Movement](politics.md)
-- [What is a passthrough device and how do I use one?](passthrough.md)
 - [How do I get programs into my Nintendo DS?](loading.md)
 
 # Creating a Game
@@ -26,5 +25,6 @@
 [Postface](postface.md)
 [Appendix A - VRAM](vram.md)
 [Appendix B - Sprites with Bit Twiddling]()
+[Appendix C - What is a passthrough device and how do I use one?](passthrough.md)
 [Glossary](glossary.md)
 [About the Author](author.md)

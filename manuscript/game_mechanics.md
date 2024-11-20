@@ -1,4 +1,4 @@
-# Chapter 7
+# Chapter 6
 ## Basic Game Mechanics Applied to the Space Shooter Genre
 
 ### The Importance of Object Oriented Programming
