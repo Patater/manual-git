@@ -387,6 +387,20 @@ When you release a production version of your software, the assertions can be
 removed from your code by the preprocessor. To do this with a GNU compiler,
 like the ones we are using, you simply set `NDEBUG`.
 
+Remember to never use assertions for errors that can realistically happen at
+runtime. For example, it is okay to assert that one define is never bigger than
+a different define because it's all evaluated at compile time. It's impossible
+that this changes after the code has been compiled, so it is impossible that an
+end-user of your program will ever find a problem that you haven't seen during
+testing.
+
+However, you should never check that `malloc()` or `fopen()` return a valid
+pointer with `assert()` because it's not guaranteed that they will always do
+what you want them to do. It's possible that your game runs out of RAM because
+the end-user plays in a different way than you during your tests, or that a file
+can't be found because the SD card of the end-user is faulty! Your code needs to
+be able to handle that kind of failures.
+
 ### Displaying the Sprites
 
 In our main function, we now need to initialize our copy of the OAM, create the
