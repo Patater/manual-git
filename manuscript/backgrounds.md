@@ -251,7 +251,10 @@ finished because it will be too late to handle your interrupt.
 DMA copies can be faster, though. If the source and destination memory regions
 are different (like copying data from main RAM to VRAM) it's usually faster than
 doing a CPU copy. However, remember that this will block interrupts until the
-copy is done! It may be a good idea to limit DMA copies to small things.
+copy is done! It may be a good idea to limit DMA copies to small things. When using DMA to copy from
+main memory, do not forget to flush main memory before using DMA. The DMA
+doesn't use the cache where the relevant memory may currently be stored, so
+flushing to main memory guarantees that DMA sees the correct data.
 
 Something very important to consider is the cache of the ARM9. This CPU (the one
 you normally write code for) has an intermediate fast scratch RAM between the

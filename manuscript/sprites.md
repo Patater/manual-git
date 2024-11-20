@@ -387,6 +387,29 @@ When you release a production version of your software, the assertions can be
 removed from your code by the preprocessor. To do this with a GNU compiler,
 like the ones we are using, you simply set `NDEBUG`.
 
+Remember to never use assertions for errors that end-users of your program
+could see in production. Assertions are best used for errors that occur due to
+programmer mistakes, not user mistakes (especially since users can't do
+anything about them, nor see how they occurred). For fatal errors that can
+happen in production, it's best to display a readable error message to the
+user.
+
+For example, it is great to assert programmer assumptions, like one define
+having a value bigger than the size of a particular `struct`. Because these are
+all all evaluated at compile time, it's impossible that this changes after the
+code has been compiled, and thus impossible that an user of your program will
+ever find a problem that you haven't seen during testing.
+
+Furthermore, you should never check that `malloc()` or `fopen()` return a valid
+pointer with `assert()` because it's not guaranteed that they will always
+succeed under ordinary conditions. If only use assumptions to check for these
+kinds of errors and you had removed assumptions before production by setting
+`NDEBUG`, you would miss handling these errors in production. For example, it's
+possible that your game runs out of RAM because the user plays in a different
+way than you during your tests, or that a file can't be found because the SD
+card of the user is faulty. Your code needs to be able to handle these kinds of
+run-time failures.
+
 ### Displaying the Sprites
 
 In our main function, we now need to initialize our copy of the OAM, create the
