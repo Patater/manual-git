@@ -1,4 +1,4 @@
-# Chapter 9
+# Chapter 8
 ## What about the sounds?
 
 ### A Sound Theory

@@ -1,4 +1,4 @@
-# Chapter 6
+# Chapter 5
 ## What is a sprite? How do I use them?
 
 ### Magical Fairies?

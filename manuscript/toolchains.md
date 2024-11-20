@@ -1,4 +1,4 @@
-# Chapter 4
+# Chapter 3
 ## How do I create programs?
 
 ### All About devkitPro
