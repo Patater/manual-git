@@ -238,17 +238,47 @@ efficient for memory fill operations, however, as the data to fill with needs
 to be read once for every write. Libnds provides us with a few functions to
 make use of the DMA hardware in the Nintendo DS.
 
-Whenever you have the opportunity to use DMA, you should. It is always better
-to use DMA than to use a for loop to copy data. When using DMA to copy from
-main memory, do not forget to flush main memory before using DMA. The DMA
-doesn't use the cache where the relevant memory may currently be stored, so
-flushing to main memory guarantees that DMA sees the correct data. Another
-issue to consider would be that in the middle of a DMA, the main CPUs are
-prevented from using certain memory hardware<!--(XXX bus contention or
-something?)-->. This can cause awkward bugs with interrupt handling. For this
-reason, and `swifastcopy()` may be safer, and is not too much slower. The
-safest bet is always `memcopy()` and `memset()`, if you are running into some
-bugs.
+Copying data is a complex topic. Sometimes it isn't easy to decide whether to do
+copies with the CPU or DMA.
+
+CPU copies can be done with standard C library functions like `memcpy()` or
+`memmove()`, with Nintendo DS BIOS functions like `swiFastCopy()`, or with your
+own custom functions. They don't block the CPU itself, and they can be
+interrupted by hardware interrupts. This is very important if your game requires
+fast handling of interrupts. Sometimes you just can't wait until a DMA copy is
+finished because it will be too late to handle your interrupt.
+
+DMA copies can be faster, though. If the source and destination memory regions
+are different (like copying data from main RAM to VRAM) it's usually faster than
+doing a CPU copy. However, remember that this will block interrupts until the
+copy is done! It may be a good idea to limit DMA copies to small things.
+
+Something very important to consider is the cache of the ARM9. This CPU (the one
+you normally write code for) has an intermediate fast scratch RAM between the
+CPU and the main RAM. This is critical to ensure that the performance is
+reasonable (disabling the cache will have a dramatic effect in any program). The
+main problem is that the only device that can see the cache is the ARM9 itself.
+Whenever you copy data from one place to the other with the CPU, the CPU may
+store data in the cache for faster future access. However, if you're trying to
+copy that data to VRAM, for example, it means that VRAM may never actually
+contain what you want it to contain. In order to force the cache to update the
+destination, you need to "flush" the cache.
+
+Cearn has written two great articles about this topic:
+
+<https://web.archive.org/web/20210622053504/https://www.coranac.com/2009/05/dma-vs-arm9-fight/>
+
+<https://web.archive.org/web/20210622053550/https://www.coranac.com/2010/03/dma-vs-arm9-round-2/>
+
+When using the CPU to copy from main memory, do not forget to flush the
+destination memory after the copy. This will ensure that the destination memory
+contains what you want it to contain.
+
+When using DMA to copy from main memory, do not forget to flush main memory
+before using DMA. The DMA doesn't use the cache where the relevant memory may
+currently be stored, so flushing to main memory guarantees that DMA sees the
+correct source data to be copied. You don't need to flush the destination in
+this case.
 
 The declaration of `dmaCopyHalfWords()` from libnds is as follows.
 
