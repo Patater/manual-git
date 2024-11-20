@@ -305,7 +305,7 @@ We'll be using the same memory alignment (boundary) as the GBA uses for our
 sprites. Tile VRAM addresses must be aligned to 32 bytes. If you feel shorted
 by this, since you can't use all 1024 addressable tiles when using 256 color
 tiles, for instance, then you can look up how to use other alignments at
-<http://nocash.emubase.de/gbatek.htm#dsvideoobjs>. You'll have to set
+<https://problemkaputt.de/gbatek.htm#dsvideoobjs>. You'll have to set
 `REG_DISPCNT` (via `videoSetMode()`) with a value defined in
 `libnds/include/nds/arm9/video.h` akin to `DISPLAY_SPR_1D_SIZE_XXX` (the
 default, and the method the GBA and we use, is `DISPLAY_SPR_1D_SIZE_32`).
