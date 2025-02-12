@@ -44,7 +44,7 @@ The Nintendo DS has two screens. As such, it has two graphics engines, one for
 each screen. The first engine is referred to as the "main" engine, while the
 second is called the "sub" engine. Both of these engines can put in charge of
 either screen. By default, libnds tells the main engine to operate the top
-physical screen and the sub screen the bottom physical screen.
+physical screen and the sub engine the bottom physical screen.
 
 Each engine supports up to four backgrounds and up to 128 sprites. They operate
 independently of each other, each with their own control registers,
