@@ -14,7 +14,7 @@
 #include <nds/arm9/trig_lut.h>
 
 void updateOAM(OAMTable *oam) {
-  DC_FlushAll();
+  DC_FlushRange(oam->oamBuffer, SPRITE_COUNT * sizeof(SpriteEntry));
   dmaCopyHalfWords(SPRITE_DMA_CHANNEL, oam->oamBuffer, OAM,
                    SPRITE_COUNT * sizeof(SpriteEntry));
 }
