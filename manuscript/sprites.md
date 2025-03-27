@@ -167,11 +167,12 @@ OAM into the actually OAM.
 
 Updating the OAM is very straightforward. We do this by copying our copy of the
 OAM to the real OAM. Our copy of the OAM might still be stuck in the cache and
-may not have made it into main memory yet, so we first flush local memory (a
-must whenever performing a DMA operation) to ensure that DMA sees the correct
-data. The data we want to copy might be stuck in cache still and may not have
-made it into main memory yet. Then, we tell the OAM to look into the `OAMTable`
-instance we will create later for information about each one of our sprites.
+may not have made it into main memory yet, so we first flush the source buffer
+in local memory (a must whenever performing a DMA operation) to ensure that the
+values in cache are saved to RAM and DMA sees the correct data. The data we want
+to copy might be stuck in cache still and may not have made it into main memory
+yet. Then, we tell the OAM to look into the `OAMTable` instance we will create
+later for information about each one of our sprites.
 
 ```C++
 {{#include snippets/sprites/1/main.cpp:update_oam}}
