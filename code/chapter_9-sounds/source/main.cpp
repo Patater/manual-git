@@ -128,7 +128,7 @@ void initSprites(OAMTable *oam, SpriteInfo *spriteInfo) {
    *  tiles or palettes.
    *
    *  OFFSET_MULTIPLIER is calculated based on the following formula from
-   *  GBATEK (http://nocash.emubase.de/gbatek.htm#dsvideoobjs):
+   *  GBATEK (https://problemkaputt.de/gbatek.htm#dsvideoobjs):
    *      TileVramAddress = TileNumber * BoundaryValue
    *  Since SPRITE_GFX is a uint16*, the compiler will increment the address
    *  it points to by 2 for each change in 1 of the array index into
