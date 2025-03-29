@@ -71,13 +71,13 @@ Compact Flash card. Compact Flash cards are very cheap and in high supply. If
 you have more SD cards than CF cards around, unfortunately, the only way to run
 NDS software from an SD card at this time is with the SD versions of the
 SuperCard or M3 Adapter. The GBAMP also sticks out from the bottom of the
-Nintendo DS a little, as shown in [Figure 3.1, “Comparison of GBAMP (left) and
+Nintendo DS a little, as shown in [Figure 2.1, “Comparison of GBAMP (left) and
 a GBA flash cart (right) inserted into a DS”](#gbamp_vs_gba_flash_cart).
 
 
 <a name="gbamp_vs_gba_flash_cart"></a>
 
-#### Figure 3.1. Comparison of GBAMP (left) and a GBA flash cart (right) inserted into a DS
+#### Figure 2.1. Comparison of GBAMP (left) and a GBA flash cart (right) inserted into a DS
 
 ![Comparison of a GBAMP (left) and a GBA flash cart (right) inserted into a
 DS](./images/comparison_insertion.png)
@@ -87,7 +87,7 @@ bit slow. Also, each GBA flash cart writer is specific to certain carts and
 often have closed source drivers. This means that most flash carts will be
 incompatible with Linux or Macintosh computers. In actuality, the only good
 thing about a GBA flash cart is that it does not stick out from the Nintendo
-DS, as can be seen in [Figure 3.1, “Comparison of GBAMP (left) and a GBA flash
+DS, as can be seen in [Figure 2.1, “Comparison of GBAMP (left) and a GBA flash
 cart (right) inserted into a DS”](#gbamp_vs_gba_flash_cart).
 
 

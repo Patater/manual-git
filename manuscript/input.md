@@ -21,11 +21,11 @@ pressing, we simply call `scanKeys()`, then check one of three input functions,
 recently pressed, use `keysDown()`. To see which keys are currently held, use
 `keysHeld()`. To see which keys have just been released, use `keysUp()`. libnds
 provides us with defines for some key masks as well. How they are set up is
-explained in [Table 8.1, “libnds Key Defines”](#libnds_key_defines).
+explained in [Table 7.1, “libnds Key Defines”](#libnds_key_defines).
 
 <a name="libnds_key_defines"></a>
 
-#### Table 8.1. libnds Key Defines
+#### Table 7.1. libnds Key Defines
 
 | Key Define | Mask Bit | Associated Input |
 | ---------- | -------- | ---------------- |
@@ -136,13 +136,13 @@ compiling.
 ```
 
 Now we can control our ship with the D-Pad. What fun! The game should now
-appear as in [Figure 8.1, “Flying around in the Orange
-Shuttle”](#chapter_8_screen_shot). Now if only we had some aliens to kill…
+appear as in [Figure 7.2, “Flying around in the Orange
+Shuttle”](#chapter_7_screen_shot). Now if only we had some aliens to kill…
 
 
-<a name="chapter_8_screen_shot"></a>
+<a name="chapter_7_screen_shot"></a>
 
-#### Figure 8.1. Flying around in the Orange Shuttle
+#### Figure 7.2. Flying around in the Orange Shuttle
 
 ![Splash](images/splash.png)
 

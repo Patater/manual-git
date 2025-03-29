@@ -41,7 +41,7 @@ pieces have no distinguishing edges. There are two ways to tile sprites, 1D and
 2D. In a 2D layout, the sprite memory is treated like a giant image from which
 sprite tiles are obtained by making a box the size of the sprite and placing it
 over the giant image. In a 1D layout, the sprites are laid out in a linear
-fashion, as discussed in [Figure 6.1](#sprite_tile_layout).
+fashion, as discussed in [Figure 5.1](#sprite_tile_layout).
 
 The conversion process is very similar to that for backgrounds. We simple make
 grit rule files that tell grit how we want our images converted, and it
@@ -51,7 +51,7 @@ into the same place as background images, the `gfx` folder.
 
 <a name="sprite_tile_layout"></a>
 
-#### Figure 6.1. The upper text shows information as it would be on a non-tiled background. The lower text shows the same data, tiled, for use in tiled graphic modes.
+#### Figure 5.1. The upper text shows information as it would be on a non-tiled background. The lower text shows the same data, tiled, for use in tiled graphic modes.
 
 <code>
 const u16 data[] = {
@@ -151,7 +151,7 @@ like move them, we'll be doing. We'll use the libnds API wherever possible.
 Let's write some functions to do each of those, in that order.
 
 I provide you with a header file, located with the accompanying source at
-`code/chapter_6-sprites/include/sprites.h` that contains a collection of sprite
+`code/chapter_5-sprites/include/sprites.h` that contains a collection of sprite
 related function declarations. We'll be working on the definitions for each of
 these functions together in a new file called `sprites.cpp`. Our first step
 will be to create a that new source code file. Put a new file called
@@ -211,7 +211,7 @@ of the hardware at <https://gbadev.net/tonc/affine.html>.
 
 <a name="libnds_affine_sprite"></a>
 
-#### Figure 6.2. libnds Affine Sprite API
+#### Figure 5.2. libnds Affine Sprite API
 
 \begin{bmatrix}HDX & HDY\\\\VDX & VDY\end{bmatrix}
 
@@ -342,7 +342,7 @@ information about sprites that aren't explicitly contained in the `SpriteEntry`
 struct. We'll be using it to help us manage our information about sprites
 better.
 
-#### Procedure 6.1. To Create a Sprite
+#### Procedure 5.1. To Create a Sprite
 
 1. We'll begin by filling in our `SpriteInfo` struct for the sprite. Each
    sprite will have its own `SpriteInfo` struct. The first thing we need to do
@@ -433,13 +433,13 @@ probably even forgot to let you know about some of them.)
 ```
 
 If all goes well, you’ll compile with no problems and the output will look as
-in [Figure 6.3, “Output with both backgrounds and a
-sprite”](#chapter_6_screen_shot).
+in [Figure 5.3, “Output with both backgrounds and a
+sprite”](#chapter_5_screen_shot).
 
 
-<a name="chapter_6_screen_shot"></a>
+<a name="chapter_5_screen_shot"></a>
 
-#### Figure 6.3. Output with both backgrounds and a sprite</title>
+#### Figure 5.3. Output with both backgrounds and a sprite</title>
 
 ![Splash](images/splash.png)
 

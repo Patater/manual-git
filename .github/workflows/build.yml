@@ -23,25 +23,25 @@ jobs:
         run: |
           make -C code/chapter_0-starting_system
 
+      - name: Build Chapter 4
+        run: |
+          make -C code/chapter_4-backgrounds
+
       - name: Build Chapter 5
         run: |
-          make -C code/chapter_5-backgrounds
+          make -C code/chapter_5-sprites
 
       - name: Build Chapter 6
         run: |
-          make -C code/chapter_6-sprites
+          make -C code/chapter_6-game
 
       - name: Build Chapter 7
         run: |
-          make -C code/chapter_7-game
+          make -C code/chapter_7-input
 
       - name: Build Chapter 8
         run: |
-          make -C code/chapter_8-input
-
-      - name: Build Chapter 9
-        run: |
-          make -C code/chapter_9-sounds
+          make -C code/chapter_8-sounds
 
       - name: Build All
         run: |
