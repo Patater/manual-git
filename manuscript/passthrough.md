@@ -46,7 +46,7 @@ today, providing a great option when looking to purchase a passthrough device.
 
 <a name="early_passme"></a>
 
-#### Figure 2.1. Picture of an early PassMe and an FPGA
+#### Figure C.1. Picture of an early PassMe and an FPGA
 
 ![Picture of an early PassMe](./images/passme.png) ![Picture of an FPGA](./images/ufb-x_profil.jpg)
 
@@ -134,11 +134,11 @@ is found in different places within different DS games.
 There are a few tricks you can pull to determine your firmware version. It
 involves pictochat and pulling a cartridge out of your Nintendo DS. The screen
 will change a certain color. Based on this color you can determine if you need
-a PassMe 2 or not. <a href="#game_eject_firmware_table">Table 2.1, “When
+a PassMe 2 or not. <a href="#game_eject_firmware_table">Table C.1, “When
 ejecting the game, you'll discover your firmware version as shown."</a> will
 help you discover which firmware version you have.
 
-#### Procedure 2.1. Checking the Firmware Version
+#### Procedure C.1. Checking the Firmware Version
 
 1. Insert and Nintendo DS game into the DS card slot.
 1. Turn on the Nintendo DS. (If you have auto start enabled, hold down Start
@@ -149,7 +149,7 @@ help you discover which firmware version you have.
 1. You will notice either Pictochat freezing or both screens will
    change color.
 
-#### Table 2.1. When ejecting the game, you'll discover your firmware version as shown.
+#### Table C.1. When ejecting the game, you'll discover your firmware version as shown.
 
 <a name="game_eject_firmware_table"></a>
 | Observed Results | Firmware Version |
@@ -182,13 +182,13 @@ isn't enough.
 
 Using a passthrough device is quite simple. Simply insert a game into the card
 slot on the passthrough and plug the device into the DS card slot on the top of
-your DS, like any other game. <a href="#passme_in_use">Figure 2.2, “The PassMe
+your DS, like any other game. <a href="#passme_in_use">Figure C.2, “The PassMe
 inserted into the DS card slot”</a> illustrates what this looks like.
 
 
 <a name="passme_in_use"></a>
 
-#### Figure 2.2. The PassMe inserted into the DS card slot
+#### Figure C.2. The PassMe inserted into the DS card slot
 
 ![The passme inserted into the DS card slot](./images/passme_insert_ds.png)
 

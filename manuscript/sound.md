@@ -81,13 +81,13 @@ Check your includes.
 This is the final iteration of the Orange Spaceship demo that we will cover in
 this edition of the manual. Compile it and enjoy the fruits of your labors.
 Mmm, tasty. You should hear a nice sound when you press the thrust button. The
-game output should now look like the screen shots in [Figure 9.1, “Flying
-around in the Orange Shuttle, with sound!”](#chapter_9_screen_shot).
+game output should now look like the screen shots in [Figure 8.1, “Flying
+around in the Orange Shuttle, with sound!”](#chapter_8_screen_shot).
 
 
-<a name="chapter_9_screen_shot"></a>
+<a name="chapter_8_screen_shot"></a>
 
-#### Figure 9.1. Flying around in the Orange Shuttle, with sound!
+#### Figure 8.1. Flying around in the Orange Shuttle, with sound!
 
 ![Splash](images/splash.png)
 

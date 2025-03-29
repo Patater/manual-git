@@ -19,7 +19,7 @@ time. The beam never blast electrons from right to left. After the beam reaches
 the right edge of the screen, it turns off and moves to the left edge and down
 one line. When the beam finally reaches the bottom line of the screen, it
 travels back up to the upper left of the screen and begins this drawing process
-all over again. [Figure 5.1, “The Raster Display”](#raster_display) illustrates
+all over again. [Figure 4.1, “The Raster Display”](#raster_display) illustrates
 this process in an exaggerated fashion.
 
 Two things are important to remember here. First, that the period of time
@@ -34,7 +34,7 @@ draw. This would give us strange artifacts and is generally undesirable.
 
 <a name="raster_display"></a>
 
-#### Figure 5.1, “The Raster Display”
+#### Figure 4.1, “The Raster Display”
 
 ![The Raster Display](./images/raster_display.svg)
 
@@ -62,12 +62,12 @@ common graphic modes, Mode 5. It is commonly used because it is very flexible
 and allows for some amazing special effects. We'll learn how to display
 multiple 15-bit color 1-bit alpha affine[^affine] backgrounds in this chapter.
 Mode 5 consists of four different backgrounds each with their own capabilities.
-[Table 5.1, “Mode 5 Information”](#mode_5_information) shows how flexible Mode
+[Table 4.1, “Mode 5 Information”](#mode_5_information) shows how flexible Mode
 5 can be.
 
 <a name="mode_5_information"></a>
 
-#### Table 5.1, “Mode 5 Information”
+#### Table 4.1, “Mode 5 Information”
 
 | Background | Purpose |
 | ---------- | ------- |
@@ -136,7 +136,7 @@ later. Let's make a function called `initVideo()`.
 {{#include snippets/backgrounds/1/main.cpp:init_video}}
 ```
 
-There are nine VRAM banks in total on the Nintendo DS. See [Table 5.2, “VRAM
+There are nine VRAM banks in total on the Nintendo DS. See [Table 4.2, “VRAM
 Bank Information”](#vram_bank_information) for details about them. Our 16-bit
 background images take up 128KB of memory each. Thus, each background has to
 have one whole VRAM bank assigned to it. Not all VRAM banks can be used for all
@@ -144,7 +144,7 @@ purposes, however. Refer to [Appendix A](vram.md), for more detailed information
 
 <a name="vram_bank_information"></a>
 
-#### Table 5.2. VRAM Bank Information
+#### Table 4.2. VRAM Bank Information
 
 | VRAM Bank | Control Register Address | Control Register | VRAM Bank Size |
 | --------- | ------------------------ | ---------------- | -------------- |
@@ -163,13 +163,13 @@ purposes, however. Refer to [Appendix A](vram.md), for more detailed information
 libnds helps us once again by provide a nice API[^api] for accessing the affine
 transformation matrix of a particular affine background. libnds provides access
 to a background's affine transformation matrix through four variables. [Figure
-5.2, “libnds Affine Background API”](#libnds_affine_bg_api) shows the names of
+4.2, “libnds Affine Background API”](#libnds_affine_bg_api) shows the names of
 these variables and which part of the affine transformation matrix they align
 with.
 
 <a name="libnds_affine_bg_api"></a>
 
-#### Figure 5.2. libnds Affine Background API
+#### Figure 4.2. libnds Affine Background API
 
 \begin{bmatrix}BG3{\text{\_}}XDX & BG3{\text{\_}}XDY\\\\BG3{\text{\_}}YDX & BG3{\text{\_}}YDY\end{bmatrix}
 
@@ -209,13 +209,13 @@ interpret this notation, we read from right to left. First, we find the number
 of bits used to specify fractional parts. The next number will be the number of
 bits for whole number parts. And, if there is another number, it will usually
 indicate the sign of the number as being either positive or negative with one
-bit. [Figure 5.3, “Integer variables can be used to represent
+bit. [Figure 4.3, “Integer variables can be used to represent
 fractions.”](#fixed_point) illustrates the concept of fixed point numbers.
 
 
 <a name="fixed_point"></a>
 
-#### Figure 5.3. Integer variables can be used to represent fractions.
+#### Figure 4.3. Integer variables can be used to represent fractions.
 
 ##### Bits Positions:
 
@@ -373,14 +373,14 @@ your project directory. Bring up the command line and set your current working
 directory to the directory which contains the makefile for your project. Type
 `make` and if all goes well, you'll have good success.
 
-See [Figure 5.4, “The program should look like this when
-run.”](#chapter_5_screen_shot). Copy your program to your DS using the method
+See [Figure 4.4, “The program should look like this when
+run.”](#chapter_4_screen_shot). Copy your program to your DS using the method
 you have chosen.
 
 
-<a name="chapter_5_screen_shot"></a>
+<a name="chapter_4_screen_shot"></a>
 
-#### Figure 5.4. The program should look like this when run.
+#### Figure 4.4. The program should look like this when run.
 
 ![Splash](images/splash.png)
 
